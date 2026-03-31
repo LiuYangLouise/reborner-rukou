@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello, Reborner!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', 'Noto Sans SC', sans-serif;
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        body.light-mode {
+            background-color: #FFFFFF;
+            color: #1A1A1A;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            min-height: 600px;
+            background-color: #1A1A1A;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        body.light-mode .container {
+            background-color: #FFFFFF;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+        
+        .hexagon-icon {
+            position: relative;
+            width: 60px;
+            height: 70px;
+            margin-bottom: 15px;
+        }
+        
+        .hexagon {
+            position: absolute;
+            width: 60px;
+            height: 70px;
+            background-color: transparent;
+            border: 2px solid #FFFFFF;
+            border-radius: 2px;
+        }
+        
+        body.light-mode .hexagon {
+            border-color: #1A1A1A;
+        }
+        
+        .hexagon:nth-child(1) { top: 0; left: 0; }
+        .hexagon:nth-child(2) { top: 10px; left: 35px; transform: scale(0.85); opacity: 0.8; }
+        .hexagon:nth-child(3) { top: 10px; left: -35px; transform: scale(0.85); opacity: 0.8; }
+        .hexagon:nth-child(4) { top: 40px; left: 18px; transform: scale(0.7); opacity: 0.6; }
+        .hexagon:nth-child(5) { top: 40px; left: -18px; transform: scale(0.7); opacity: 0.6; }
+        
+        .logo-main {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #CCCCCC;
+            letter-spacing: 3px;
+            margin-top: 10px;
+        }
+        
+        body.light-mode .subtitle {
+            color: #666;
+        }
+        
+        .password-card {
+            background: #262626;
+            border-radius: 16px;
+            padding: 30px 25px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            border: 1px solid #3a3a3a;
+        }
+        
+        body.light-mode .password-card {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+        }
+        
+        .password-label {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #ccc;
+        }
+        
+        body.light-mode .password-label {
+            color: #333;
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 1rem;
+            background: #1A1A1A;
+            border: 1px solid #3a3a3a;
+            border-radius: 12px;
+            color: #fff;
+            text-align: center;
+            outline: none;
+        }
+        
+        body.light-mode .password-input {
+            background: #fff;
+            color: #000;
+            border: 1px solid #ccc;
+        }
+        
+        .confirm-btn {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background: #2c2c2c;
+            color: #fff;
+            border: none;
+            border-radius: 40px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #121212;
+        }
+        
+        body.light-mode .confirm-btn {
+            background: #e0e0e0;
+            color: #000;
+            box-shadow: 0 5px 0 #b0b0b0;
+        }
+        
+        .confirm-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #121212;
+        }
+        
+        .error-message {
+            color: #ff6b6b;
+            text-align: center;
+            margin-top: 15px;
+            height: 20px;
+        }
+        
+        .theme-slider-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        
+        .theme-slider {
+            width: 60px;
+            height: 30px;
+            background: #262626;
+            border-radius: 15px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        body.light-mode .theme-slider {
+            background: #e0e0e0;
+        }
+        
+        .slider-dot {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: #fff;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        
+        body.light-mode .slider-dot {
+            left: 33px;
+            background: #1A1A1A;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="theme-slider-container">
+            <div class="theme-slider" id="themeSwitch">
+                <div class="slider-dot"></div>
+            </div>
+        </div>
+
+        <div class="logo-section">
+            <div class="hexagon-icon">
+                <div class="hexagon"></div>
+                <div class="hexagon"></div>
+                <div class="hexagon"></div>
+                <div class="hexagon"></div>
+                <div class="hexagon"></div>
+            </div>
+            <div class="logo-main">Hello, Reborner!</div>
+            <div class="subtitle">Veni • Vidi • Vici</div>
+        </div>
+
+        <div class="password-card">
+            <div class="password-label">请输入密码</div>
+            <input type="password" id="pwd" class="password-input" placeholder="••••••••">
+            <div class="error-message" id="tip"></div>
+            <button class="confirm-btn" onclick="checkPassword()">确认进入</button>
+        </div>
+    </div>
+
+    <script>
+        // 密码（和你之前一样）
+        const MY_PASSWORD = "123456";
+
+        // 主题切换
+        const themeSwitch = document.getElementById('themeSwitch');
+        themeSwitch.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+        });
+
+        // 密码正确 → 跳转到总目录
+        function checkPassword() {
+            const input = document.getElementById('pwd').value;
+            const tip = document.getElementById('tip');
+
+            if (input === MY_PASSWORD) {
+                window.location.href = "main.html";
+            } else {
+                tip.textContent = "密码错误，请重试";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reborn提优，just join in！</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', 'Noto Sans SC', sans-serif;
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        body.light-mode {
+            background-color: #FFFFFF;
+            color: #1A1A1A;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            min-height: 600px;
+            background-color: #1A1A1A;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 40px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        body.light-mode .container {
+            background-color: #FFFFFF;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .hexagon-icon {
+            position: relative;
+            width: 60px;
+            height: 70px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .hexagon {
+            position: absolute;
+            width: 60px;
+            height: 70px;
+            background-color: transparent;
+            border: 2px solid #FFFFFF;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        body.light-mode .hexagon {
+            border-color: #1A1A1A;
+        }
+        
+        .hexagon:nth-child(1) { top: 0; left: 0; }
+        .hexagon:nth-child(2) { top: 10px; left: 35px; transform: scale(0.85); opacity: 0.8; }
+        .hexagon:nth-child(3) { top: 10px; left: -35px; transform: scale(0.85); opacity: 0.8; }
+        .hexagon:nth-child(4) { top: 40px; left: 18px; transform: scale(0.7); opacity: 0.6; }
+        .hexagon:nth-child(5) { top: 40px; left: -18px; transform: scale(0.7); opacity: 0.6; }
+        
+        .logo-text {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        body.light-mode .logo-text {
+            color: #1A1A1A;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            font-weight: 300;
+            color: #CCCCCC;
+            letter-spacing: 3px;
+            margin-top: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        body.light-mode .subtitle {
+            color: #666666;
+        }
+        
+        .main-content {
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+        }
+        
+        .button-section {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+        
+        .button {
+            background-color: #262626;
+            border: none;
+            border-radius: 10px;
+            padding: 22px 24px;
+            color: #FFFFFF;
+            font-size: 1.2rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 1px;
+        }
+        
+        body.light-mode .button {
+            background-color: #F0F0F0;
+            color: #1A1A1A;
+        }
+        
+        .button:hover {
+            transform: translateY(-3px);
+            font-weight: 600;
+        }
+        
+        .footer {
+            width: 100%;
+            padding-top: 20px;
+            border-top: 1px solid #262626;
+            font-size: 0.9rem;
+            color: #999999;
+            text-align: center;
+        }
+        
+        body.light-mode .footer {
+            border-top-color: #E0E0E0;
+            color: #666666;
+        }
+        
+        .theme-slider-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        
+        .theme-slider {
+            width: 60px;
+            height: 30px;
+            background: #262626;
+            border-radius: 15px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        body.light-mode .theme-slider {
+            background: #e0e0e0;
+        }
+        
+        .slider-dot {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: #fff;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        
+        body.light-mode .slider-dot {
+            left: 33px;
+            background: #1A1A1A;
+        }
+        
+        @keyframes hexagonGroupAppear {
+            0%{opacity:0;transform:scale(.8)rotate(10deg);}
+            20%{opacity:1;transform:scale(1)rotate(0);}
+            80%{opacity:1;transform:scale(1)rotate(0);}
+            100%{opacity:0;transform:scale(.8)rotate(-10deg);}
+        }
+        
+        .hexagon { animation:hexagonGroupAppear 3.5s infinite; opacity:0; }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="theme-slider-container">
+            <div class="theme-slider" id="themeSwitch">
+                <div class="slider-dot"></div>
+            </div>
+        </div>
+        
+        <div class="logo-section">
+            <div class="logo-container">
+                <div class="hexagon-icon">
+                    <div class="hexagon"></div>
+                    <div class="hexagon"></div>
+                    <div class="hexagon"></div>
+                    <div class="hexagon"></div>
+                    <div class="hexagon"></div>
+                </div>
+                <div class="logo-text">Reborn提优，just join in！</div>
+            </div>
+            <div class="subtitle">Veni • Vidi • Vici</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="button-section">
+                <button class="button" onclick="window.open('https://liuyanglouise.github.io/yasi-cihui-quan/','_blank')">核心词汇</button>
+                <button class="button" onclick="window.open('https://liuyanglouise.github.io/ielt-speaking-26.1-4-quan-02/','_blank')">口语题库</button>
+                <button class="button" onclick="window.open('https://liuyanglouise.github.io/reborn-ielts-listening-mock-test/','_blank')">听力密卷</button>
+                <button class="button" onclick="window.open('https://liuyanglouise.github.io/reborn-ielts-reading-mock-test/','_blank')">阅读密卷</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            天天进步，每日新生
+        </div>
+    </div>
+
+    <script>
+        const ts = document.getElementById('themeSwitch');
+        ts.addEventListener('click',()=>{
+            document.body.classList.toggle('light-mode');
+        });
+    </script>
+</body>
+</html>
