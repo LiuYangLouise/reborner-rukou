@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>REBORN新生留学 · 流程图双模式练习</title>
+    <style>
+        :root {
+            --primary: #2D593E;
+            --secondary: #EBEDD4;
+            --accent: #AE7645;
+            --text-dark: #021502;
+            --text-light: #975625;
+            --bg-light: #F4F3EC;
+            --white: #FFFFFF;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 1.5rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            width: 100%;
+            background: var(--white);
+            border-radius: 28px;
+            padding: 2rem 1.8rem;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 1px;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-subtitle {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: var(--text-light);
+            background: var(--secondary);
+            display: inline-block;
+            padding: 0.3rem 1.8rem;
+            border-radius: 30px;
+            letter-spacing: 0.5px;
+        }
+
+        .mode-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .mode-tab {
+            padding: 10px 32px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .mode-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .mode-tab:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .mode-panel {
+            display: none;
+        }
+
+        .mode-panel.active {
+            display: block;
+        }
+
+        .section-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 1.6rem 1.4rem;
+            margin-bottom: 1.8rem;
+            border: 1px solid rgba(45, 89, 62, 0.1);
+            box-shadow: var(--shadow);
+            transition: all 0.2s;
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-size: 1.4rem;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 650;
+        }
+
+        .section-title-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title-left::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 24px;
+            background: var(--accent);
+            margin-right: 12px;
+            border-radius: 6px;
+        }
+
+        .toggle-en-btn {
+            padding: 4px 18px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .toggle-en-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .toggle-en-btn.showing {
+            background: var(--primary);
+            color: white;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 500px;
+        }
+
+        th {
+            background: var(--secondary);
+            color: var(--primary);
+            text-align: left;
+            padding: 12px 10px;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        .zh-text {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .en-text {
+            font-weight: 500;
+            color: var(--primary);
+            font-family: 'Georgia', 'Times New Roman', serif;
+        }
+
+        .en-hidden .en-text {
+            display: none;
+        }
+
+        .control-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.2rem;
+            margin: 1.8rem 0 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+            transition: all 0.2s;
+            letter-spacing: 0.4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1e3d2a;
+        }
+
+        .btn-sm {
+            padding: 6px 18px;
+            font-size: 0.85rem;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .timer-box {
+            background: var(--secondary);
+            padding: 0.5rem 1.4rem;
+            border-radius: 30px;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .practice-item {
+            background: #fafaf5;
+            border-radius: 18px;
+            padding: 1.4rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .practice-zh {
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .practice-tag {
+            font-size: 0.7rem;
+            background: var(--primary);
+            color: white;
+            padding: 2px 12px;
+            border-radius: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #ddd;
+            border-radius: 14px;
+            font-family: 'Georgia', serif;
+            font-size: 0.95rem;
+            resize: vertical;
+            min-height: 70px;
+            background: white;
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(45, 89, 62, 0.08);
+        }
+
+        .feedback {
+            margin-top: 0.6rem;
+            font-size: 0.9rem;
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .answer-toggle-area {
+            margin-top: 0.6rem;
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .answer-box {
+            display: none;
+            background: #e8f5e9;
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            font-family: 'Georgia', serif;
+            color: var(--primary);
+            font-weight: 600;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .answer-box.visible {
+            display: block;
+        }
+
+        .summary-container {
+            margin-top: 2rem;
+            background: var(--white);
+            border-radius: 24px;
+            padding: 1.8rem;
+            border: 2px dashed var(--primary);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .summary-item {
+            background: #f9f9f6;
+            padding: 12px;
+            border-radius: 14px;
+        }
+
+        .summary-zh {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .summary-user {
+            color: #c62828;
+            font-family: 'Georgia', serif;
+        }
+
+        .summary-correct {
+            color: var(--primary);
+            font-weight: 600;
+            font-family: 'Georgia', serif;
+        }
+
+        .summary-item.is-correct .summary-user {
+            color: #2e7d32;
+        }
+
+        .export-area {
+            margin-top: 1.2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        @media (min-width: 768px) {
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        footer {
+            margin-top: 2rem;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container" id="appRoot">
+        <header>
+            <h1 class="header-title">REBORN新生留学 雅思写作提分表达</h1>
+            <p class="header-subtitle">流程图 · 词组与句型双模式练习</p>
+        </header>
+
+        <!-- 模式切换 -->
+        <div class="mode-tabs">
+            <button class="mode-tab active" data-mode="phrase">📚 词组检查</button>
+            <button class="mode-tab" data-mode="sentence">✍️ 句型检查</button>
+        </div>
+
+        <!-- ===================== 模式一：词组检查 ===================== -->
+        <div id="phrasePanel" class="mode-panel active">
+            <div id="phraseStudyMode">
+                <div id="phraseTableSections"></div>
+            </div>
+
+            <div class="control-bar">
+                <div id="phraseTimer" class="timer-box hidden">⏳ 05:00</div>
+                <button id="phraseStartBtn" class="btn btn-primary">📋 开始检查</button>
+                <button id="phraseSubmitBtn" class="btn btn-outline hidden">⏹️ 提前提交</button>
+                <button id="phraseReshuffleBtn" class="btn btn-outline hidden">🔄 换一组</button>
+                <button id="phraseRetryBtn" class="btn btn-outline hidden">🔁 再来一次</button>
+            </div>
+
+            <div id="phrasePracticeContainer" class="hidden"></div>
+
+            <div id="phraseSummary" class="summary-container hidden">
+                <h2 style="color:var(--primary); margin-bottom:1rem;">📸 检查结果对照</h2>
+                <div id="phraseSummaryGrid" class="summary-grid"></div>
+                <div class="export-area">
+                    <button id="phraseExportBtn" class="btn btn-outline">📤 导出结果 (文本)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== 模式二：句型检查 ===================== -->
+        <div id="sentencePanel" class="mode-panel">
+            <div id="sentenceStudyMode">
+                <div id="sentenceTableSections"></div>
+            </div>
+
+            <div class="control-bar">
+                <button id="sentenceStartBtn" class="btn btn-primary">📋 开始句型练习</button>
+                <button id="sentenceRetryBtn" class="btn btn-outline hidden">🔁 再来一次</button>
+            </div>
+
+            <div id="sentencePracticeContainer" class="hidden"></div>
+        </div>
+
+        <footer>© REBORN新生留学 · 流程图常用表达</footer>
+    </div>
+
+    <script>
+        (function() {
+            // ============================================================
+            // 1. 数据：词表（词组检查用）
+            // ============================================================
+            const expressionData = {
+                "流程通用衔接词": [
+                    { zh: "首先", en: "first / initially" },
+                    { zh: "第一步", en: "in the first stage" },
+                    { zh: "接下来", en: "next / then / subsequently" },
+                    { zh: "之后", en: "after that / following this" },
+                    { zh: "与此同时", en: "meanwhile" },
+                    { zh: "最后", en: "finally / eventually" },
+                    { zh: "总共分为……阶段", en: "the whole process consists of ... stages" },
+                    { zh: "整个流程分为……步骤", en: "the process is divided into ... steps" },
+                    { zh: "之后紧接着", en: "followed by" },
+                    { zh: "作为结果", en: "as a result" },
+                    { zh: "在此之后", en: "after which" }
+                ],
+                "基础动作动词": [
+                    { zh: "开始", en: "start / begin" },
+                    { zh: "结束", en: "finish" },
+                    { zh: "完成", en: "complete" },
+                    { zh: "进入", en: "enter" },
+                    { zh: "离开", en: "leave" },
+                    { zh: "产生", en: "produce" },
+                    { zh: "生成", en: "generate" },
+                    { zh: "变成", en: "become" },
+                    { zh: "转化", en: "transform" },
+                    { zh: "改变", en: "change" },
+                    { zh: "加工", en: "process" },
+                    { zh: "制作", en: "manufacture" },
+                    { zh: "准备", en: "prepare" },
+                    { zh: "收集", en: "collect" },
+                    { zh: "运输", en: "transport" },
+                    { zh: "储存", en: "store" },
+                    { zh: "加热", en: "heat" },
+                    { zh: "冷却", en: "cool" },
+                    { zh: "煮沸", en: "boil" },
+                    { zh: "过滤", en: "filter" },
+                    { zh: "混合", en: "mix" },
+                    { zh: "干燥", en: "dry" },
+                    { zh: "切割", en: "cut" },
+                    { zh: "包装", en: "package" },
+                    { zh: "回收", en: "recycle" }
+                ],
+                "流程阶段描述": [
+                    { zh: "在第一阶段", en: "in the initial stage" },
+                    { zh: "在中间环节", en: "in the middle stage" },
+                    { zh: "在最后阶段", en: "in the final stage" },
+                    { zh: "被送入", en: "be sent to" },
+                    { zh: "被运送到", en: "be transported to" },
+                    { zh: "紧接着进行下一步", en: "the next step follows" },
+                    { zh: "循环往复", en: "the process is cyclic" },
+                    { zh: "形成闭环", en: "form a closed loop" }
+                ],
+                "被动句式": [
+                    { zh: "被收集", en: "be collected" },
+                    { zh: "被清洗", en: "be cleaned" },
+                    { zh: "被加工", en: "be processed" },
+                    { zh: "被加热", en: "be heated" },
+                    { zh: "被冷却", en: "be cooled" },
+                    { zh: "被过滤", en: "be filtered" },
+                    { zh: "被混合", en: "be mixed" },
+                    { zh: "被干燥", en: "be dried" },
+                    { zh: "被切割", en: "be cut" },
+                    { zh: "被包装", en: "be packaged" },
+                    { zh: "被储存", en: "be stored" },
+                    { zh: "被运送", en: "be transported" },
+                    { zh: "被转化", en: "be transformed" }
+                ],
+                "生命类动词": [
+                    // ===== 出生与早期阶段 =====
+                    { zh: "出生", en: "be born" },
+                    { zh: "诞生", en: "emerge / come into being" },
+                    { zh: "孵化", en: "hatch" },
+                    { zh: "孵化出", en: "hatch into" },
+                    { zh: "破壳", en: "break out of the shell" },
+                    { zh: "产仔", en: "give birth" },
+                    { zh: "孕育", en: "nurture / incubate" },
+                    { zh: "孕育出", en: "give rise to" },
+
+                    // ===== 发芽与生长 =====
+                    { zh: "发芽", en: "germinate" },
+                    { zh: "抽芽/长出嫩芽", en: "sprout" },
+                    { zh: "生根", en: "take root" },
+                    { zh: "扎根", en: "root" },
+                    { zh: "生长", en: "grow" },
+                    { zh: "长出", en: "grow into / develop into" },
+                    { zh: "长出叶子", en: "grow leaves" },
+                    { zh: "长高", en: "grow taller" },
+                    { zh: "变大", en: "enlarge / expand" },
+                    { zh: "变长", en: "lengthen" },
+                    { zh: "变重", en: "gain weight" },
+                    { zh: "发育", en: "develop" },
+                    { zh: "变形", en: "transform" },
+                    { zh: "蜕变", en: "undergo metamorphosis" },
+                    { zh: "蜕皮", en: "moult / molt" },
+                    { zh: "蜕壳", en: "shed the shell" },
+                    { zh: "换羽", en: "moult feathers" },
+                    { zh: "冬眠", en: "hibernate" },
+                    { zh: "休眠", en: "lie dormant" },
+                    { zh: "苏醒", en: "wake up / revive" },
+
+                    // ===== 成熟与开花 =====
+                    { zh: "成熟", en: "mature" },
+                    { zh: "开花", en: "bloom / blossom" },
+                    { zh: "绽放", en: "come into bloom" },
+                    { zh: "含苞", en: "be in bud" },
+                    { zh: "结果", en: "bear fruit" },
+                    { zh: "结籽", en: "produce seeds" },
+                    { zh: "落叶", en: "shed leaves" },
+
+                    // ===== 繁殖与扩散 =====
+                    { zh: "繁殖", en: "reproduce" },
+                    { zh: "繁育", en: "breed" },
+                    { zh: "繁衍", en: "multiply" },
+                    { zh: "授粉", en: "pollinate" },
+                    { zh: "受精", en: "fertilise / fertilize" },
+                    { zh: "交配", en: "mate" },
+                    { zh: "产卵", en: "lay eggs" },
+                    { zh: "产下", en: "lay / produce" },
+                    { zh: "扩散", en: "spread" },
+                    { zh: "传播", en: "disperse" },
+                    { zh: "迁徙", en: "migrate" },
+                    { zh: "寄生", en: "parasitise / parasitize" },
+
+                    // ===== 繁盛与衰退 =====
+                    { zh: "繁盛", en: "flourish" },
+                    { zh: "枯萎", en: "wither" },
+                    { zh: "凋零", en: "fade" },
+                    { zh: "衰老", en: "age / senesce" },
+                    { zh: "退化", en: "degenerate" },
+                    { zh: "枯死", en: "die off" },
+
+                    // ===== 死亡与分解 =====
+                    { zh: "死亡", en: "die" },
+                    { zh: "病死", en: "die of disease" },
+                    { zh: "灭绝", en: "become extinct" },
+                    { zh: "消亡", en: "die out" },
+                    { zh: "腐烂", en: "decay" },
+                    { zh: "腐败", en: "rot" },
+                    { zh: "变质", en: "spoil" },
+                    { zh: "分解", en: "decompose" },
+                    { zh: "分解成", en: "break down into" },
+                    { zh: "降解", en: "degrade" },
+                    { zh: "转化为", en: "be converted into" },
+                    { zh: "回归自然", en: "return to nature" },
+                    { zh: "再生", en: "regenerate" },
+
+                    // ===== 昆虫与动物发育阶段 =====
+                    { zh: "幼虫", en: "larva" },
+                    { zh: "幼虫（毛毛虫/蛆）", en: "grub / caterpillar" },
+                    { zh: "成虫", en: "adult" },
+                    { zh: "蛹", en: "pupa" },
+                    { zh: "蝶蛹", en: "chrysalis" },
+                    { zh: "结茧", en: "spin a cocoon" },
+                    { zh: "吐丝", en: "spin silk" },
+                    { zh: "作茧", en: "form a cocoon" },
+                    { zh: "化蛹", en: "pupate" },
+                    { zh: "羽化", en: "emerge as an adult" },
+                    { zh: "破茧而出", en: "emerge from the cocoon" },
+                    { zh: "变态发育", en: "undergo metamorphosis" },
+                    { zh: "完全变态", en: "complete metamorphosis" },
+                    { zh: "不完全变态", en: "incomplete metamorphosis" },
+                    { zh: "孵化成幼虫", en: "hatch into a larva" },
+                    { zh: "发育成", en: "develop into" },
+                    { zh: "长成成虫", en: "grow into an adult" },
+                    { zh: "产卵孵化", en: "lay eggs that hatch" },
+
+                    // ===== 植物生命周期 =====
+                    { zh: "种子", en: "seed" },
+                    { zh: "播种", en: "sow" },
+                    { zh: "萌发", en: "germinate" },
+                    { zh: "幼苗", en: "seedling" },
+                    { zh: "成株", en: "mature plant" },
+                    { zh: "花蕾", en: "bud" },
+
+                    // ===== 人工干预与培育 =====
+                    { zh: "种植", en: "plant" },
+                    { zh: "栽培", en: "cultivate" },
+                    { zh: "培育", en: "nurture / cultivate" },
+                    { zh: "饲养", en: "raise" },
+                    { zh: "养殖", en: "farm" },
+                    { zh: "收获", en: "harvest" },
+                    { zh: "采摘", en: "pick" },
+                    { zh: "收割", en: "reap" }
+                ],
+                "生长阶段固定短语": [
+                    // ===== 生命周期总述 =====
+                    { zh: "该图展示了……的生命周期", en: "the diagram illustrates the life cycle of ..." },
+                    { zh: "整个生命周期分为若干阶段", en: "the life cycle consists of several stages" },
+                    { zh: "该过程包含……个主要阶段", en: "the process consists of ... main stages" },
+                    { zh: "生命周期始于……", en: "the life cycle begins with ..." },
+                    { zh: "第一阶段是……", en: "the first stage is ..." },
+                    { zh: "完成生命周期", en: "complete the life cycle" },
+                    { zh: "整个过程循环往复", en: "the whole process is cyclical" },
+                    { zh: "生命周期不断重复", en: "the life cycle repeats itself" },
+
+                    // ===== 阶段衔接 =====
+                    { zh: "随后/接下来", en: "subsequently / after that" },
+                    { zh: "与此同时", en: "at the same time / meanwhile" },
+                    { zh: "最终", en: "eventually / finally" },
+                    { zh: "经过……天/周", en: "after ... days / weeks" },
+                    { zh: "在……之后", en: "following ... / after ..." },
+                    { zh: "在此期间", en: "during this period" },
+                    { zh: "在这个阶段", en: "at this stage" },
+                    { zh: "直到……才", en: "not until ... does ..." },
+                    { zh: "一旦……就……", en: "once ..., ..." },
+
+                    // ===== 植物阶段 =====
+                    { zh: "产卵", en: "lay eggs" },
+                    { zh: "结籽", en: "produce seeds" },
+                    { zh: "生根", en: "take root" },
+                    { zh: "从种子发芽", en: "germinate from seeds" },
+                    { zh: "种子萌发", en: "seeds germinate" },
+                    { zh: "长出第一片叶子", en: "produce the first leaves" },
+                    { zh: "形成花蕾", en: "form buds" },
+                    { zh: "花朵绽放", en: "flowers come into bloom" },
+                    { zh: "授粉后结果", en: "bear fruit after pollination" },
+                    { zh: "果实成熟", en: "the fruit ripens" },
+                    { zh: "种子散落", en: "seeds are dispersed" },
+                    { zh: "逐渐生长", en: "grow gradually" },
+                    { zh: "慢慢发育", en: "develop slowly" },
+                    { zh: "长成成年个体", en: "grow into adults" },
+                    { zh: "达到成熟期", en: "reach maturity" },
+                    { zh: "进入繁殖期", en: "enter the breeding period" },
+                    { zh: "自然死亡", en: "die naturally" },
+                    { zh: "分解为养分", en: "decompose into nutrients" },
+
+                    // ===== 昆虫/动物阶段 =====
+                    { zh: "卵孵化成幼虫", en: "eggs hatch into larvae" },
+                    { zh: "幼虫不断进食", en: "larvae feed continuously" },
+                    { zh: "幼虫结茧", en: "the larva spins a cocoon" },
+                    { zh: "在茧中化蛹", en: "pupate inside the cocoon" },
+                    { zh: "成虫破茧而出", en: "the adult emerges from the cocoon" },
+                    { zh: "成虫交配产卵", en: "adults mate and lay eggs" },
+                    { zh: "新一代诞生", en: "a new generation is born" },
+
+                    // ===== 被动语态 =====
+                    { zh: "被产下", en: "are laid" },
+                    { zh: "被孵化", en: "are hatched" },
+                    { zh: "被种植", en: "are planted" },
+                    { zh: "被收割", en: "are harvested" },
+                    { zh: "被加工", en: "are processed" },
+                    { zh: "被运输", en: "are transported" },
+                    { zh: "被分解", en: "are decomposed" },
+                    { zh: "被转化为", en: "are converted into" }
+                ]
+            };
+
+            // 扁平化所有词组
+            const allPhrases = [];
+            for (let [category, items] of Object.entries(expressionData)) {
+                items.forEach(item => allPhrases.push({ ...item, category }));
+            }
+
+            // ============================================================
+            // 2. 数据：句型（句型检查用）
+            // ============================================================
+            const sentencePool = [
+                { zh: "整个生产过程总共包含五个主要阶段，从原材料的收集开始，到最终产品的包装结束。",
+                    en: "The whole manufacturing process consists of five main stages, starting with the collection of raw materials and ending with the packaging of the final products.",
+                    category: "工艺制造" },
+                { zh: "首先，成熟的果实被工人从树上手工采摘下来，然后被运送到附近的加工厂。",
+                    en: "Initially, the ripe fruits are picked by hand from the trees and then transported to the nearby processing factory.",
+                    category: "工艺制造" },
+                { zh: "在进入下一个环节之前，这些原材料需要在60摄氏度的温度下加热约两小时。",
+                    en: "Before entering the next stage, these raw materials need to be heated at 60 degrees Celsius for about two hours.",
+                    category: "工艺制造" },
+                { zh: "当混合物被充分搅拌均匀后，随后被倒入特定的模具中进行冷却和定型。",
+                    en: "After the mixture has been stirred thoroughly, it is then poured into specific moulds for cooling and shaping.",
+                    category: "工艺制造" },
+                { zh: "蚕的生命周期分为四个主要阶段：首先，成虫产卵；大约十天后，卵孵化成幼虫。",
+                    en: "The life cycle of a silkworm is divided into four main stages: first, the adult lays eggs; approximately ten days later, the eggs hatch into larvae.",
+                    category: "生命科学" },
+                { zh: "随着幼虫不断进食桑叶，它们会迅速生长并经历几次蜕皮，最终发育成熟并开始吐丝结茧。",
+                    en: "As the larvae keep eating mulberry leaves, they grow rapidly and undergo several moults, eventually maturing and beginning to spin cocoons.",
+                    category: "生命科学" },
+                { zh: "一旦水稻的种子发芽并长出幼苗，它们就被移植到水田里，经过几个月的生长后达到成熟期。",
+                    en: "Once the seeds of rice germinate and sprout, they are transplanted into paddy fields, reaching maturity after several months of growth.",
+                    category: "生命科学" },
+                { zh: "在最后阶段，成虫从茧中破壳而出，完成整个生命周期，然后开始新一轮的繁殖。",
+                    en: "In the final stage, the adult emerges from the cocoon, completing the life cycle, and then begins a new round of reproduction.",
+                    category: "生命科学" },
+                { zh: "整个流程是一个闭环，废弃物被收集后经过加工处理，重新转化为可用的原材料。",
+                    en: "The whole process is a closed loop, where waste is collected and processed, then transformed back into usable raw materials.",
+                    category: "循环回收" },
+                { zh: "玻璃瓶首先被清洗和分类，随后被送入熔炉中加热至高温，最后被塑造成新的容器。",
+                    en: "Glass bottles are first cleaned and sorted, then sent into a furnace and heated to a high temperature, and finally shaped into new containers.",
+                    category: "循环回收" },
+                { zh: "废水经过过滤和化学处理后，被排入河流；与此同时，固体残渣被运往垃圾填埋场进行处理。",
+                    en: "After being filtered and chemically treated, the waste water is discharged into the river; meanwhile, the solid residue is transported to a landfill site for disposal.",
+                    category: "循环回收" },
+                { zh: "塑料回收的过程如下：首先收集废旧塑料，然后将其切碎并清洗，最后熔化制成颗粒供后续使用。",
+                    en: "The process of plastic recycling is as follows: first, used plastic is collected, then it is cut into pieces and cleaned, and finally melted into pellets for future use.",
+                    category: "循环回收" }
+            ];
+
+            // ============================================================
+            // 3. DOM 引用 - 词组模式
+            // ============================================================
+            const phraseStudyMode = document.getElementById('phraseStudyMode');
+            const phraseTableSections = document.getElementById('phraseTableSections');
+            const phrasePracticeContainer = document.getElementById('phrasePracticeContainer');
+            const phraseSummary = document.getElementById('phraseSummary');
+            const phraseSummaryGrid = document.getElementById('phraseSummaryGrid');
+            const phraseTimer = document.getElementById('phraseTimer');
+            const phraseStartBtn = document.getElementById('phraseStartBtn');
+            const phraseSubmitBtn = document.getElementById('phraseSubmitBtn');
+            const phraseReshuffleBtn = document.getElementById('phraseReshuffleBtn');
+            const phraseRetryBtn = document.getElementById('phraseRetryBtn');
+            const phraseExportBtn = document.getElementById('phraseExportBtn');
+
+            let phraseQuestions = [];
+            let phraseTimerInterval = null;
+            let phraseTimeLeft = 300;
+            let phraseActive = false;
+
+            // ============================================================
+            // 4. DOM 引用 - 句型模式
+            // ============================================================
+            const sentenceStudyMode = document.getElementById('sentenceStudyMode');
+            const sentenceTableSections = document.getElementById('sentenceTableSections');
+            const sentencePracticeContainer = document.getElementById('sentencePracticeContainer');
+            const sentenceStartBtn = document.getElementById('sentenceStartBtn');
+            const sentenceRetryBtn = document.getElementById('sentenceRetryBtn');
+
+            let sentenceActive = false;
+
+            // ============================================================
+            // 5. 渲染函数 - 词组静态表格
+            // ============================================================
+            function renderPhraseTables() {
+                let html = '';
+                for (let [title, items] of Object.entries(expressionData)) {
+                    html += `
+                        <div class="section-card">
+                            <div class="section-title">
+                                <span class="section-title-left">${title}</span>
+                                <button class="toggle-en-btn" data-panel="phrase" data-category="${title}">👁️ 显示英文</button>
+                            </div>
+                            <div class="table-container">
+                                <table class="phrase-table en-hidden" data-category="${title}">
+                                    <thead><tr><th>中文表达</th><th>英文表达</th></tr></thead>
+                                    <tbody>
+                                        ${items.map(i => `<tr><td class="zh-text">${i.zh}</td><td class="en-text">${i.en}</td></tr>`).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                }
+                phraseTableSections.innerHTML = html;
+
+                document.querySelectorAll('#phraseTableSections .toggle-en-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const category = this.getAttribute('data-category');
+                        const table = document.querySelector(
+                            `#phraseTableSections .phrase-table[data-category="${category}"]`);
+                        if (table) {
+                            table.classList.toggle('en-hidden');
+                            const isHidden = table.classList.contains('en-hidden');
+                            this.textContent = isHidden ? '👁️ 显示英文' : '🙈 隐藏英文';
+                            this.classList.toggle('showing', !isHidden);
+                        }
+                    });
+                });
+            }
+
+            // ============================================================
+            // 6. 渲染函数 - 句型静态表格
+            // ============================================================
+            function renderSentenceTables() {
+                let html = `
+                    <div class="section-card">
+                        <div class="section-title">
+                            <span class="section-title-left">📝 汉英对照句型</span>
+                            <button class="toggle-en-btn" id="sentenceTableToggle">👁️ 显示英文</button>
+                        </div>
+                        <div class="table-container">
+                            <table id="sentenceTable" class="en-hidden">
+                                <thead><tr><th>中文句子</th><th>英文翻译</th></tr></thead>
+                                <tbody>
+                                    ${sentencePool.map((s, idx) => `
+                                        <tr>
+                                            <td class="zh-text">${idx+1}. ${s.zh}</td>
+                                            <td class="en-text">${s.en}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+                sentenceTableSections.innerHTML = html;
+
+                const toggleBtn = document.getElementById('sentenceTableToggle');
+                const table = document.getElementById('sentenceTable');
+                if (toggleBtn && table) {
+                    toggleBtn.addEventListener('click', function() {
+                        table.classList.toggle('en-hidden');
+                        const isHidden = table.classList.contains('en-hidden');
+                        this.textContent = isHidden ? '👁️ 显示英文' : '🙈 隐藏英文';
+                        this.classList.toggle('showing', !isHidden);
+                    });
+                }
+            }
+
+            // ============================================================
+            // 7. 词组模式逻辑
+            // ============================================================
+            function selectPhraseQuestions(count = 20) {
+                const shuffled = [...allPhrases].sort(() => 0.5 - Math.random());
+                return shuffled.slice(0, Math.min(count, allPhrases.length));
+            }
+
+            function renderPhrasePractice() {
+                phrasePracticeContainer.innerHTML = '';
+                if (!phraseQuestions.length) return;
+                phraseQuestions.forEach((q, idx) => {
+                    const div = document.createElement('div');
+                    div.className = 'practice-item';
+                    div.innerHTML = `
+                        <div class="practice-zh">
+                            <span>${idx + 1}. ${q.zh}</span>
+                            <span class="practice-tag">${q.category}</span>
+                        </div>
+                        <textarea id="phraseQ-${idx}" placeholder="请输入对应的英文表达..."></textarea>
+                        <div id="phraseFeedback-${idx}" class="feedback"></div>
+                    `;
+                    phrasePracticeContainer.appendChild(div);
+                });
+            }
+
+            function stopPhraseTimer() {
+                if (phraseTimerInterval) {
+                    clearInterval(phraseTimerInterval);
+                    phraseTimerInterval = null;
+                }
+            }
+
+            function startPhraseTimer() {
+                stopPhraseTimer();
+                phraseTimeLeft = 300;
+                updatePhraseTimerDisplay();
+                phraseTimer.classList.remove('hidden');
+                phraseTimerInterval = setInterval(() => {
+                    phraseTimeLeft--;
+                    updatePhraseTimerDisplay();
+                    if (phraseTimeLeft <= 0) {
+                        stopPhraseTimer();
+                        submitPhraseCheck();
+                    }
+                }, 1000);
+            }
+
+            function updatePhraseTimerDisplay() {
+                const mins = Math.floor(phraseTimeLeft / 60);
+                const secs = phraseTimeLeft % 60;
+                phraseTimer.textContent = `⏳ ${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            }
+
+            function enterPhraseMode() {
+                phraseStudyMode.classList.add('hidden');
+                phrasePracticeContainer.classList.remove('hidden');
+                phraseSummary.classList.add('hidden');
+                phraseQuestions = selectPhraseQuestions(20);
+                renderPhrasePractice();
+                startPhraseTimer();
+                phraseActive = true;
+                phraseStartBtn.classList.add('hidden');
+                phraseSubmitBtn.classList.remove('hidden');
+                phraseReshuffleBtn.classList.remove('hidden');
+                phraseRetryBtn.classList.remove('hidden');
+                phraseTimer.classList.remove('hidden');
+            }
+
+            function submitPhraseCheck() {
+                if (!phraseActive) return;
+                stopPhraseTimer();
+                phraseActive = false;
+                phraseSummaryGrid.innerHTML = '';
+                phraseQuestions.forEach((q, idx) => {
+                    const textarea = document.getElementById(`phraseQ-${idx}`);
+                    const userAnswer = textarea ? textarea.value.trim() : '';
+                    const feedbackDiv = document.getElementById(`phraseFeedback-${idx}`);
+                    if (feedbackDiv) {
+                        feedbackDiv.style.display = 'block';
+                        feedbackDiv.innerHTML = `✓ 正确答案：<strong style="color:var(--primary);">${q.en}</strong>`;
+                    }
+                    const isCorrect = userAnswer.toLowerCase() === q.en.toLowerCase();
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = `summary-item ${isCorrect ? 'is-correct' : ''}`;
+                    itemDiv.innerHTML = `
+                        <div class="summary-zh">${idx+1}. ${q.zh}</div>
+                        <div class="summary-user">你的答案：${userAnswer || '(未填写)'}</div>
+                        <div class="summary-correct">正确：${q.en}</div>
+                    `;
+                    phraseSummaryGrid.appendChild(itemDiv);
+                });
+                phraseSummary.classList.remove('hidden');
+                phraseSubmitBtn.classList.add('hidden');
+                phraseReshuffleBtn.classList.add('hidden');
+                phraseTimer.classList.add('hidden');
+                phraseRetryBtn.classList.remove('hidden');
+                document.querySelectorAll('#phrasePracticeContainer textarea').forEach(ta => ta.disabled = true);
+            }
+
+            function resetPhrase() {
+                stopPhraseTimer();
+                phraseActive = false;
+                phraseStudyMode.classList.remove('hidden');
+                phrasePracticeContainer.classList.add('hidden');
+                phraseSummary.classList.add('hidden');
+                phraseStartBtn.classList.remove('hidden');
+                phraseSubmitBtn.classList.add('hidden');
+                phraseReshuffleBtn.classList.add('hidden');
+                phraseRetryBtn.classList.add('hidden');
+                phraseTimer.classList.add('hidden');
+                phraseQuestions = [];
+                phrasePracticeContainer.innerHTML = '';
+                phraseSummaryGrid.innerHTML = '';
+            }
+
+            function reshufflePhrase() {
+                if (!phraseActive) return;
+                stopPhraseTimer();
+                phraseQuestions = selectPhraseQuestions(20);
+                renderPhrasePractice();
+                phraseSummary.classList.add('hidden');
+                document.querySelectorAll('#phrasePracticeContainer textarea').forEach(ta => ta.disabled = false);
+                startPhraseTimer();
+                phraseActive = true;
+                phraseSubmitBtn.classList.remove('hidden');
+                phraseReshuffleBtn.classList.remove('hidden');
+                phraseRetryBtn.classList.remove('hidden');
+            }
+
+            function exportPhraseResults() {
+                if (!phraseQuestions.length) return;
+                let text = "REBORN 雅思写作表达检查结果 (流程图·词组)\n================================\n";
+                phraseQuestions.forEach((q, idx) => {
+                    const textarea = document.getElementById(`phraseQ-${idx}`);
+                    const userAns = textarea ? textarea.value.trim() : '';
+                    text += `${idx+1}. ${q.zh}\n`;
+                    text += `   你的答案: ${userAns || '未填写'}\n`;
+                    text += `   正确答案: ${q.en}\n\n`;
+                });
+                const blob = new Blob([text], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'flow_phrases_result.txt';
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            // ============================================================
+            // 8. 句型模式逻辑
+            // ============================================================
+            function renderSentencePractice() {
+                sentencePracticeContainer.innerHTML = '';
+                sentencePool.forEach((q, idx) => {
+                    const div = document.createElement('div');
+                    div.className = 'practice-item';
+                    div.innerHTML = `
+                        <div class="practice-zh">
+                            <span>${idx + 1}. ${q.zh}</span>
+                            <span class="practice-tag">${q.category}</span>
+                        </div>
+                        <textarea id="sentenceQ-${idx}" placeholder="请输入对应的英文翻译..." style="min-height:80px;"></textarea>
+                        <div class="answer-toggle-area">
+                            <button class="btn btn-outline btn-sm toggle-answer-btn" data-idx="${idx}">👁️ 查看答案</button>
+                            <div id="sentenceAnswer-${idx}" class="answer-box">${q.en}</div>
+                        </div>
+                    `;
+                    sentencePracticeContainer.appendChild(div);
+                });
+
+                document.querySelectorAll('.toggle-answer-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const idx = this.getAttribute('data-idx');
+                        const answerBox = document.getElementById(`sentenceAnswer-${idx}`);
+                        if (answerBox.classList.contains('visible')) {
+                            answerBox.classList.remove('visible');
+                            this.textContent = '👁️ 查看答案';
+                        } else {
+                            answerBox.classList.add('visible');
+                            this.textContent = '🙈 隐藏答案';
+                        }
+                    });
+                });
+            }
+
+            function enterSentenceMode() {
+                sentenceStudyMode.classList.add('hidden');
+                sentencePracticeContainer.classList.remove('hidden');
+                renderSentencePractice();
+                sentenceActive = true;
+                sentenceStartBtn.classList.add('hidden');
+                sentenceRetryBtn.classList.remove('hidden');
+            }
+
+            function resetSentence() {
+                sentenceActive = false;
+                sentenceStudyMode.classList.remove('hidden');
+                sentencePracticeContainer.classList.add('hidden');
+                sentenceStartBtn.classList.remove('hidden');
+                sentenceRetryBtn.classList.add('hidden');
+                sentencePracticeContainer.innerHTML = '';
+            }
+
+            // ============================================================
+            // 9. 模式切换
+            // ============================================================
+            const modeTabs = document.querySelectorAll('.mode-tab');
+            const phrasePanel = document.getElementById('phrasePanel');
+            const sentencePanel = document.getElementById('sentencePanel');
+
+            modeTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    modeTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    const mode = this.getAttribute('data-mode');
+                    if (mode === 'phrase') {
+                        phrasePanel.classList.add('active');
+                        sentencePanel.classList.remove('active');
+                    } else {
+                        sentencePanel.classList.add('active');
+                        phrasePanel.classList.remove('active');
+                    }
+                });
+            });
+
+            // ============================================================
+            // 10. 事件绑定
+            // ============================================================
+            phraseStartBtn.addEventListener('click', enterPhraseMode);
+            phraseSubmitBtn.addEventListener('click', () => { if (phraseActive) { stopPhraseTimer();
+                    submitPhraseCheck(); } });
+            phraseReshuffleBtn.addEventListener('click', reshufflePhrase);
+            phraseRetryBtn.addEventListener('click', resetPhrase);
+            phraseExportBtn.addEventListener('click', exportPhraseResults);
+
+            sentenceStartBtn.addEventListener('click', enterSentenceMode);
+            sentenceRetryBtn.addEventListener('click', resetSentence);
+
+            // ============================================================
+            // 11. 初始化
+            // ============================================================
+            renderPhraseTables();
+            renderSentenceTables();
+        })();
+    </script>
+</body>
+</html>

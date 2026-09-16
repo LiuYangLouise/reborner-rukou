@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>REBORN新生留学 · 静态图双模式练习</title>
+    <style>
+        :root {
+            --primary: #2D593E;
+            --secondary: #EBEDD4;
+            --accent: #AE7645;
+            --text-dark: #021502;
+            --text-light: #975625;
+            --bg-light: #F4F3EC;
+            --white: #FFFFFF;
+            --shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 1.5rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            width: 100%;
+            background: var(--white);
+            border-radius: 28px;
+            padding: 2rem 1.8rem;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 1px;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-subtitle {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: var(--text-light);
+            background: var(--secondary);
+            display: inline-block;
+            padding: 0.3rem 1.8rem;
+            border-radius: 30px;
+            letter-spacing: 0.5px;
+        }
+
+        .mode-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .mode-tab {
+            padding: 10px 32px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .mode-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .mode-tab:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .mode-panel {
+            display: none;
+        }
+
+        .mode-panel.active {
+            display: block;
+        }
+
+        .section-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 1.6rem 1.4rem;
+            margin-bottom: 1.8rem;
+            border: 1px solid rgba(45,89,62,0.1);
+            box-shadow: var(--shadow);
+            transition: all 0.2s;
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-size: 1.4rem;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 650;
+        }
+
+        .section-title-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title-left::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 24px;
+            background: var(--accent);
+            margin-right: 12px;
+            border-radius: 6px;
+        }
+
+        .toggle-en-btn {
+            padding: 4px 18px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .toggle-en-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .toggle-en-btn.showing {
+            background: var(--primary);
+            color: white;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 500px;
+        }
+
+        th {
+            background: var(--secondary);
+            color: var(--primary);
+            text-align: left;
+            padding: 12px 10px;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        .zh-text {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .en-text {
+            font-weight: 500;
+            color: var(--primary);
+            font-family: 'Georgia', 'Times New Roman', serif;
+        }
+
+        .en-hidden .en-text {
+            display: none;
+        }
+
+        .control-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.2rem;
+            margin: 1.8rem 0 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            transition: all 0.2s;
+            letter-spacing: 0.4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1e3d2a;
+        }
+
+        .btn-sm {
+            padding: 6px 18px;
+            font-size: 0.85rem;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .timer-box {
+            background: var(--secondary);
+            padding: 0.5rem 1.4rem;
+            border-radius: 30px;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .practice-item {
+            background: #fafaf5;
+            border-radius: 18px;
+            padding: 1.4rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .practice-zh {
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .practice-tag {
+            font-size: 0.7rem;
+            background: var(--primary);
+            color: white;
+            padding: 2px 12px;
+            border-radius: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #ddd;
+            border-radius: 14px;
+            font-family: 'Georgia', serif;
+            font-size: 0.95rem;
+            resize: vertical;
+            min-height: 70px;
+            background: white;
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(45,89,62,0.08);
+        }
+
+        .feedback {
+            margin-top: 0.6rem;
+            font-size: 0.9rem;
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .answer-toggle-area {
+            margin-top: 0.6rem;
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .answer-box {
+            display: none;
+            background: #e8f5e9;
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            font-family: 'Georgia', serif;
+            color: var(--primary);
+            font-weight: 600;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .answer-box.visible {
+            display: block;
+        }
+
+        .summary-container {
+            margin-top: 2rem;
+            background: var(--white);
+            border-radius: 24px;
+            padding: 1.8rem;
+            border: 2px dashed var(--primary);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .summary-item {
+            background: #f9f9f6;
+            padding: 12px;
+            border-radius: 14px;
+        }
+
+        .summary-zh {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .summary-user {
+            color: #c62828;
+            font-family: 'Georgia', serif;
+        }
+
+        .summary-correct {
+            color: var(--primary);
+            font-weight: 600;
+            font-family: 'Georgia', serif;
+        }
+
+        .summary-item.is-correct .summary-user {
+            color: #2e7d32;
+        }
+
+        .export-area {
+            margin-top: 1.2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        @media (min-width: 768px) {
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        footer {
+            margin-top: 2rem;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="main-container" id="appRoot">
+    <header>
+        <h1 class="header-title">REBORN新生留学 雅思写作提分表达</h1>
+        <p class="header-subtitle">静态图 · 词组与句型双模式练习</p>
+    </header>
+
+    <div class="mode-tabs">
+        <button class="mode-tab active" data-mode="phrase">📚 词组检查</button>
+        <button class="mode-tab" data-mode="sentence">✍️ 句型检查</button>
+    </div>
+
+    <!-- 词组检查 -->
+    <div id="phrasePanel" class="mode-panel active">
+        <div id="phraseStudyMode">
+            <div id="phraseTableSections"></div>
+        </div>
+        <div class="control-bar">
+            <div id="phraseTimer" class="timer-box hidden">⏳ 05:00</div>
+            <button id="phraseStartBtn" class="btn btn-primary">📋 开始检查</button>
+            <button id="phraseSubmitBtn" class="btn btn-outline hidden">⏹️ 提前提交</button>
+            <button id="phraseReshuffleBtn" class="btn btn-outline hidden">🔄 换一组</button>
+            <button id="phraseRetryBtn" class="btn btn-outline hidden">🔁 再来一次</button>
+        </div>
+        <div id="phrasePracticeContainer" class="hidden"></div>
+        <div id="phraseSummary" class="summary-container hidden">
+            <h2 style="color:var(--primary); margin-bottom:1rem;">📸 检查结果对照</h2>
+            <div id="phraseSummaryGrid" class="summary-grid"></div>
+            <div class="export-area">
+                <button id="phraseExportBtn" class="btn btn-outline">📤 导出结果 (文本)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 句型检查 -->
+    <div id="sentencePanel" class="mode-panel">
+        <div id="sentenceStudyMode">
+            <div id="sentenceTableSections"></div>
+        </div>
+        <div class="control-bar">
+            <button id="sentenceStartBtn" class="btn btn-primary">📋 开始句型练习</button>
+            <button id="sentenceRetryBtn" class="btn btn-outline hidden">🔁 再来一次</button>
+        </div>
+        <div id="sentencePracticeContainer" class="hidden"></div>
+    </div>
+
+    <footer>© REBORN新生留学 · 静态图常用表达</footer>
+</div>
+
+<script>
+    (function() {
+        // ============================================================
+        // 1. 词组数据
+        // ============================================================
+        const expressionData = {
+            "整体概括表达": [
+                { zh: "整体来看", en: "overall" },
+                { zh: "显而易见", en: "it is clear that" },
+                { zh: "数据显示", en: "the data shows" },
+                { zh: "表格体现出", en: "the table illustrates" },
+                { zh: "占比最高", en: "have the highest proportion" },
+                { zh: "占比最低", en: "have the lowest percentage" },
+                { zh: "数值相近", en: "have similar figures" },
+                { zh: "差距明显", en: "there is a marked difference" }
+            ],
+            "占比描述动词": [
+                { zh: "占（比例）", en: "account for" },
+                { zh: "占；代表", en: "represent" },
+                { zh: "构成；占", en: "constitute" },
+                { zh: "包含；占", en: "comprise" },
+                { zh: "组成；占", en: "make up" }
+            ],
+            "高低极值表达": [
+                { zh: "位居榜首", en: "rank first" },
+                { zh: "排名第二", en: "rank second" },
+                { zh: "垫底", en: "rank last" },
+                { zh: "达到最高点", en: "stand at the highest level" },
+                { zh: "处于最低点", en: "remain the lowest" },
+                { zh: "远超其余项目", en: "be far higher than other items" },
+                { zh: "明显低于其他类别", en: "be significantly lower than others" }
+            ],
+            "数量程度修饰": [
+                { zh: "大概", en: "approximately" },
+                { zh: "将近", en: "almost" },
+                { zh: "接近", en: "close to" },
+                { zh: "仅仅", en: "merely" },
+                { zh: "略高于", en: "slightly above" },
+                { zh: "略低于", en: "slightly below" },
+                { zh: "远高于", en: "considerably higher than" },
+                { zh: "远多于", en: "far more than" },
+                { zh: "远低于", en: "much lower than" }
+            ],
+            "相近/相同对比表达": [
+                { zh: "与……持平", en: "be the same as" },
+                { zh: "与……相近", en: "be similar to" },
+                { zh: "几乎一致", en: "be almost identical" },
+                { zh: "差距微小", en: "have a slight difference" },
+                { zh: "差距极大", en: "have a huge difference" }
+            ],
+            "表倍数": [
+                { zh: "是两倍", en: "twice as much as" },
+                { zh: "增至两倍数量", en: "double in number" },
+                { zh: "是三倍", en: "three times as much as" },
+                { zh: "是四倍", en: "four times as much as" },
+                { zh: "远超三倍", en: "more than three times" },
+                { zh: "大约是两倍", en: "roughly twice as many as" },
+                { zh: "几乎是三倍", en: "almost three times as much as" },
+                { zh: "比……多出一倍", en: "twice the figure of" },
+                { zh: "是……的两倍多", en: "more than twice" },
+                { zh: "是……的一半", en: "half of" },
+                { zh: "是……的三分之一", en: "one third of" },
+                { zh: "是……的四分之一", en: "one quarter of" },
+                { zh: "减半", en: "halve" },
+                { zh: "相差两倍", en: "a two-fold difference" }
+            ]
+        };
+
+        const allPhrases = [];
+        for (let [category, items] of Object.entries(expressionData)) {
+            items.forEach(item => allPhrases.push({ ...item, category }));
+        }
+
+        // ============================================================
+        // 2. 句型数据（12句）
+        // ============================================================
+        const sentencePool = [
+            { zh: "交通运输部门占总能源消耗的32%。",
+                en: "The transport sector accounted for 32% of the total energy consumption.",
+                category: "占比描述" },
+            { zh: "年轻人占该行业劳动力的45%。",
+                en: "Young people represented 45% of the workforce in this sector.",
+                category: "占比描述" },
+            { zh: "可再生能源、核能和其他能源分别占总发电量的28%、16%和56%。",
+                en: "Renewable energy, nuclear power and other sources constituted 28%, 16% and 56% of the total electricity generation respectively.",
+                category: "占比描述" },
+            { zh: "在所有国家中，日本的人均寿命排名第一，紧随其后的是澳大利亚和瑞士。",
+                en: "Among all the countries, Japan ranked first in life expectancy, closely followed by Australia and Switzerland.",
+                category: "极值与排序" },
+            { zh: "制造业在所有行业中占比最高，达到GDP的32%，而农业占比最低，仅为3%。",
+                en: "Manufacturing had the highest proportion among all sectors, accounting for 32% of GDP, while agriculture had the lowest percentage, at only 3%.",
+                category: "极值与排序" },
+            { zh: "该公司2022年的利润远高于其他竞争对手。",
+                en: "The company's profit in 2022 was considerably higher than that of its competitors.",
+                category: "极值与排序" },
+            { zh: "A市的房价是B市的两倍。",
+                en: "House prices in City A are twice as much as in City B.",
+                category: "倍数表达" },
+            { zh: "中国的人口数量大约是美国的四倍。",
+                en: "The population of China is roughly four times as many as that of the United States.",
+                category: "倍数表达" },
+            { zh: "亚洲地区的新增就业岗位数量是欧洲的三倍多。",
+                en: "The number of new jobs created in Asia was more than three times that in Europe.",
+                category: "倍数表达" },
+            { zh: "2020年男女员工的薪资水平几乎一致。",
+                en: "The salary levels of male and female employees in 2020 were almost identical.",
+                category: "对比与相近" },
+            { zh: "日本和韩国的老龄化人口比例相近，分别约为28%和26%。",
+                en: "The proportions of the elderly population in Japan and South Korea were similar, at approximately 28% and 26% respectively.",
+                category: "对比与相近" },
+            { zh: "在2022年，住宅部门用电量最高，占总量的38%，其次是商业部门，占29%，而工业部门占比最低，仅为18%。",
+                en: "In 2022, the residential sector consumed the most electricity, accounting for 38% of the total, followed by the commercial sector at 29%, while the industrial sector had the lowest percentage, at only 18%.",
+                category: "综合" }
+        ];
+
+        // ============================================================
+        // 3. DOM - 词组模式
+        // ============================================================
+        const phraseStudyMode = document.getElementById('phraseStudyMode');
+        const phraseTableSections = document.getElementById('phraseTableSections');
+        const phrasePracticeContainer = document.getElementById('phrasePracticeContainer');
+        const phraseSummary = document.getElementById('phraseSummary');
+        const phraseSummaryGrid = document.getElementById('phraseSummaryGrid');
+        const phraseTimer = document.getElementById('phraseTimer');
+        const phraseStartBtn = document.getElementById('phraseStartBtn');
+        const phraseSubmitBtn = document.getElementById('phraseSubmitBtn');
+        const phraseReshuffleBtn = document.getElementById('phraseReshuffleBtn');
+        const phraseRetryBtn = document.getElementById('phraseRetryBtn');
+        const phraseExportBtn = document.getElementById('phraseExportBtn');
+
+        let phraseQuestions = [];
+        let phraseTimerInterval = null;
+        let phraseTimeLeft = 300;
+        let phraseActive = false;
+
+        // ============================================================
+        // 4. DOM - 句型模式
+        // ============================================================
+        const sentenceStudyMode = document.getElementById('sentenceStudyMode');
+        const sentenceTableSections = document.getElementById('sentenceTableSections');
+        const sentencePracticeContainer = document.getElementById('sentencePracticeContainer');
+        const sentenceStartBtn = document.getElementById('sentenceStartBtn');
+        const sentenceRetryBtn = document.getElementById('sentenceRetryBtn');
+
+        // ============================================================
+        // 5. 渲染函数 - 词组
+        // ============================================================
+        function renderPhraseTables() {
+            let html = '';
+            for (let [title, items] of Object.entries(expressionData)) {
+                html += `
+                    <div class="section-card">
+                        <div class="section-title">
+                            <span class="section-title-left">${title}</span>
+                            <button class="toggle-en-btn" data-panel="phrase" data-category="${title}">👁️ 显示英文</button>
+                        </div>
+                        <div class="table-container">
+                            <table class="phrase-table en-hidden" data-category="${title}">
+                                <thead><tr><th>中文表达</th><th>英文表达</th></tr></thead>
+                                <tbody>
+                                    ${items.map(i => `<tr><td class="zh-text">${i.zh}</td><td class="en-text">${i.en}</td></tr>`).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            }
+            phraseTableSections.innerHTML = html;
+
+            document.querySelectorAll('#phraseTableSections .toggle-en-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    const table = document.querySelector(`#phraseTableSections .phrase-table[data-category="${category}"]`);
+                    if (table) {
+                        table.classList.toggle('en-hidden');
+                        const isHidden = table.classList.contains('en-hidden');
+                        this.textContent = isHidden ? '👁️ 显示英文' : '🙈 隐藏英文';
+                        this.classList.toggle('showing', !isHidden);
+                    }
+                });
+            });
+        }
+
+        // ============================================================
+        // 6. 渲染函数 - 句型
+        // ============================================================
+        function renderSentenceTables() {
+            let html = `
+                <div class="section-card">
+                    <div class="section-title">
+                        <span class="section-title-left">📝 汉英对照句型</span>
+                        <button class="toggle-en-btn" id="sentenceTableToggle">👁️ 显示英文</button>
+                    </div>
+                    <div class="table-container">
+                        <table id="sentenceTable" class="en-hidden">
+                            <thead><tr><th>中文句子</th><th>英文翻译</th></tr></thead>
+                            <tbody>
+                                ${sentencePool.map((s, idx) => `
+                                    <tr>
+                                        <td class="zh-text">${idx+1}. ${s.zh}</td>
+                                        <td class="en-text">${s.en}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            sentenceTableSections.innerHTML = html;
+
+            const toggleBtn = document.getElementById('sentenceTableToggle');
+            const table = document.getElementById('sentenceTable');
+            if (toggleBtn && table) {
+                toggleBtn.addEventListener('click', function() {
+                    table.classList.toggle('en-hidden');
+                    const isHidden = table.classList.contains('en-hidden');
+                    this.textContent = isHidden ? '👁️ 显示英文' : '🙈 隐藏英文';
+                    this.classList.toggle('showing', !isHidden);
+                });
+            }
+        }
+
+        // ============================================================
+        // 7. 词组逻辑
+        // ============================================================
+        function selectPhraseQuestions(count = 20) {
+            const shuffled = [...allPhrases].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, Math.min(count, allPhrases.length));
+        }
+
+        function renderPhrasePractice() {
+            phrasePracticeContainer.innerHTML = '';
+            if (!phraseQuestions.length) return;
+            phraseQuestions.forEach((q, idx) => {
+                const div = document.createElement('div');
+                div.className = 'practice-item';
+                div.innerHTML = `
+                    <div class="practice-zh">
+                        <span>${idx + 1}. ${q.zh}</span>
+                        <span class="practice-tag">${q.category}</span>
+                    </div>
+                    <textarea id="phraseQ-${idx}" placeholder="请输入对应的英文表达..."></textarea>
+                    <div id="phraseFeedback-${idx}" class="feedback"></div>
+                `;
+                phrasePracticeContainer.appendChild(div);
+            });
+        }
+
+        function stopPhraseTimer() {
+            if (phraseTimerInterval) {
+                clearInterval(phraseTimerInterval);
+                phraseTimerInterval = null;
+            }
+        }
+
+        function startPhraseTimer() {
+            stopPhraseTimer();
+            phraseTimeLeft = 300;
+            updatePhraseTimerDisplay();
+            phraseTimer.classList.remove('hidden');
+            phraseTimerInterval = setInterval(() => {
+                phraseTimeLeft--;
+                updatePhraseTimerDisplay();
+                if (phraseTimeLeft <= 0) {
+                    stopPhraseTimer();
+                    submitPhraseCheck();
+                }
+            }, 1000);
+        }
+
+        function updatePhraseTimerDisplay() {
+            const mins = Math.floor(phraseTimeLeft / 60);
+            const secs = phraseTimeLeft % 60;
+            phraseTimer.textContent = `⏳ ${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        function enterPhraseMode() {
+            phraseStudyMode.classList.add('hidden');
+            phrasePracticeContainer.classList.remove('hidden');
+            phraseSummary.classList.add('hidden');
+            phraseQuestions = selectPhraseQuestions(20);
+            renderPhrasePractice();
+            startPhraseTimer();
+            phraseActive = true;
+            phraseStartBtn.classList.add('hidden');
+            phraseSubmitBtn.classList.remove('hidden');
+            phraseReshuffleBtn.classList.remove('hidden');
+            phraseRetryBtn.classList.remove('hidden');
+            phraseTimer.classList.remove('hidden');
+        }
+
+        function submitPhraseCheck() {
+            if (!phraseActive) return;
+            stopPhraseTimer();
+            phraseActive = false;
+            phraseSummaryGrid.innerHTML = '';
+            phraseQuestions.forEach((q, idx) => {
+                const textarea = document.getElementById(`phraseQ-${idx}`);
+                const userAnswer = textarea ? textarea.value.trim() : '';
+                const feedbackDiv = document.getElementById(`phraseFeedback-${idx}`);
+                if (feedbackDiv) {
+                    feedbackDiv.style.display = 'block';
+                    feedbackDiv.innerHTML = `✓ 正确答案：<strong style="color:var(--primary);">${q.en}</strong>`;
+                }
+                const isCorrect = userAnswer.toLowerCase() === q.en.toLowerCase();
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `summary-item ${isCorrect ? 'is-correct' : ''}`;
+                itemDiv.innerHTML = `
+                    <div class="summary-zh">${idx+1}. ${q.zh}</div>
+                    <div class="summary-user">你的答案：${userAnswer || '(未填写)'}</div>
+                    <div class="summary-correct">正确：${q.en}</div>
+                `;
+                phraseSummaryGrid.appendChild(itemDiv);
+            });
+            phraseSummary.classList.remove('hidden');
+            phraseSubmitBtn.classList.add('hidden');
+            phraseReshuffleBtn.classList.add('hidden');
+            phraseTimer.classList.add('hidden');
+            phraseRetryBtn.classList.remove('hidden');
+            document.querySelectorAll('#phrasePracticeContainer textarea').forEach(ta => ta.disabled = true);
+        }
+
+        function resetPhrase() {
+            stopPhraseTimer();
+            phraseActive = false;
+            phraseStudyMode.classList.remove('hidden');
+            phrasePracticeContainer.classList.add('hidden');
+            phraseSummary.classList.add('hidden');
+            phraseStartBtn.classList.remove('hidden');
+            phraseSubmitBtn.classList.add('hidden');
+            phraseReshuffleBtn.classList.add('hidden');
+            phraseRetryBtn.classList.add('hidden');
+            phraseTimer.classList.add('hidden');
+            phraseQuestions = [];
+            phrasePracticeContainer.innerHTML = '';
+            phraseSummaryGrid.innerHTML = '';
+        }
+
+        function reshufflePhrase() {
+            if (!phraseActive) return;
+            stopPhraseTimer();
+            phraseQuestions = selectPhraseQuestions(20);
+            renderPhrasePractice();
+            phraseSummary.classList.add('hidden');
+            document.querySelectorAll('#phrasePracticeContainer textarea').forEach(ta => ta.disabled = false);
+            startPhraseTimer();
+            phraseActive = true;
+            phraseSubmitBtn.classList.remove('hidden');
+            phraseReshuffleBtn.classList.remove('hidden');
+            phraseRetryBtn.classList.remove('hidden');
+        }
+
+        function exportPhraseResults() {
+            if (!phraseQuestions.length) return;
+            let text = "REBORN 雅思写作表达检查结果 (静态图·词组)\n================================\n";
+            phraseQuestions.forEach((q, idx) => {
+                const textarea = document.getElementById(`phraseQ-${idx}`);
+                const userAns = textarea ? textarea.value.trim() : '';
+                text += `${idx+1}. ${q.zh}\n`;
+                text += `   你的答案: ${userAns || '未填写'}\n`;
+                text += `   正确答案: ${q.en}\n\n`;
+            });
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'static_phrases_result.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // ============================================================
+        // 8. 句型逻辑
+        // ============================================================
+        function renderSentencePractice() {
+            sentencePracticeContainer.innerHTML = '';
+            sentencePool.forEach((q, idx) => {
+                const div = document.createElement('div');
+                div.className = 'practice-item';
+                div.innerHTML = `
+                    <div class="practice-zh">
+                        <span>${idx + 1}. ${q.zh}</span>
+                        <span class="practice-tag">${q.category}</span>
+                    </div>
+                    <textarea id="sentenceQ-${idx}" placeholder="请输入对应的英文翻译..." style="min-height:80px;"></textarea>
+                    <div class="answer-toggle-area">
+                        <button class="btn btn-outline btn-sm toggle-answer-btn" data-idx="${idx}">👁️ 查看答案</button>
+                        <div id="sentenceAnswer-${idx}" class="answer-box">${q.en}</div>
+                    </div>
+                `;
+                sentencePracticeContainer.appendChild(div);
+            });
+
+            document.querySelectorAll('.toggle-answer-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const idx = this.getAttribute('data-idx');
+                    const answerBox = document.getElementById(`sentenceAnswer-${idx}`);
+                    if (answerBox.classList.contains('visible')) {
+                        answerBox.classList.remove('visible');
+                        this.textContent = '👁️ 查看答案';
+                    } else {
+                        answerBox.classList.add('visible');
+                        this.textContent = '🙈 隐藏答案';
+                    }
+                });
+            });
+        }
+
+        function enterSentenceMode() {
+            sentenceStudyMode.classList.add('hidden');
+            sentencePracticeContainer.classList.remove('hidden');
+            renderSentencePractice();
+            sentenceStartBtn.classList.add('hidden');
+            sentenceRetryBtn.classList.remove('hidden');
+        }
+
+        function resetSentence() {
+            sentenceStudyMode.classList.remove('hidden');
+            sentencePracticeContainer.classList.add('hidden');
+            sentenceStartBtn.classList.remove('hidden');
+            sentenceRetryBtn.classList.add('hidden');
+            sentencePracticeContainer.innerHTML = '';
+        }
+
+        // ============================================================
+        // 9. 模式切换
+        // ============================================================
+        const modeTabs = document.querySelectorAll('.mode-tab');
+        const phrasePanel = document.getElementById('phrasePanel');
+        const sentencePanel = document.getElementById('sentencePanel');
+
+        modeTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                modeTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                const mode = this.getAttribute('data-mode');
+                if (mode === 'phrase') {
+                    phrasePanel.classList.add('active');
+                    sentencePanel.classList.remove('active');
+                } else {
+                    sentencePanel.classList.add('active');
+                    phrasePanel.classList.remove('active');
+                }
+            });
+        });
+
+        // ============================================================
+        // 10. 事件绑定
+        // ============================================================
+        phraseStartBtn.addEventListener('click', enterPhraseMode);
+        phraseSubmitBtn.addEventListener('click', () => { if (phraseActive) { stopPhraseTimer(); submitPhraseCheck(); } });
+        phraseReshuffleBtn.addEventListener('click', reshufflePhrase);
+        phraseRetryBtn.addEventListener('click', resetPhrase);
+        phraseExportBtn.addEventListener('click', exportPhraseResults);
+
+        sentenceStartBtn.addEventListener('click', enterSentenceMode);
+        sentenceRetryBtn.addEventListener('click', resetSentence);
+
+        // ============================================================
+        // 11. 初始化
+        // ============================================================
+        renderPhraseTables();
+        renderSentenceTables();
+    })();
+</script>
+</body>
+</html>
