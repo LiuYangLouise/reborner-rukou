@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>Reborner · 雅思听力核心词汇 · 选单元</title>
+<style>
+:root {
+    --color-main-green: #2E5938;
+    --color-aux-beige: #F2E9D2;
+    --color-page-bg: #F8F7F0;
+    --color-card-bg: #F5F4EB;
+    --color-input-bg: #FFFFFF;
+    --color-text-dark: #222222;
+    --color-text-placeholder: #999999;
+    --radius-card: 24px;
+    --radius-btn: 16px;
+    --radius-input: 12px;
+    --radius-tag: 999px;
+    --shadow-card: 0 2px 8px rgba(0,0,0,0.06);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans SC', sans-serif;
+    background-color: var(--color-page-bg);
+    color: var(--color-text-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 24px 16px;
+}
+body.light-mode { background: #FFFFFF; }
+.app-container {
+    max-width: 680px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+.brand-card {
+    background: var(--color-card-bg);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    padding: 26px 20px 20px;
+    text-align: center;
+}
+.brand-card h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-main-green);
+    letter-spacing: 2px;
+}
+.brand-card .sub {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--color-text-placeholder);
+    letter-spacing: 4px;
+    margin-top: 4px;
+}
+.section-card {
+    background: var(--color-card-bg);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    padding: 20px 22px;
+}
+.section-title {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.section-title .badge {
+    background: var(--color-main-green);
+    color: #fff;
+    font-size: 12px;
+    padding: 2px 12px;
+    border-radius: var(--radius-tag);
+}
+.pronounce-group { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-accent {
+    background: #fff;
+    border: 1.5px solid #ddd;
+    color: var(--color-text-placeholder);
+    padding: 8px 28px;
+    border-radius: var(--radius-btn);
+    font-weight: 500;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: inherit;
+}
+.btn-accent.active {
+    background: var(--color-main-green);
+    color: #fff;
+    border-color: var(--color-main-green);
+}
+.unit-section .part-group { margin-bottom: 12px; }
+.unit-section .part-group:last-child { margin-bottom: 0; }
+.part-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    background: #fff;
+    border-radius: var(--radius-input);
+    cursor: pointer;
+    border: 1px solid #eee;
+    margin-bottom: 8px;
+}
+.part-header .part-name { font-weight: 600; font-size: 15px; }
+.part-header .part-meta { font-size: 13px; color: var(--color-text-placeholder); }
+.part-body { padding: 0 4px; }
+.unit-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding: 4px 8px 12px;
+}
+.unit-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff;
+    padding: 6px 14px 6px 12px;
+    border-radius: var(--radius-tag);
+    font-size: 14px;
+    border: 1px solid #eaeaea;
+    cursor: pointer;
+    user-select: none;
+}
+.unit-chip:hover { border-color: var(--color-main-green); }
+.unit-chip input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-main-green);
+    cursor: pointer;
+}
+.btn-start {
+    background: var(--color-main-green);
+    color: #fff;
+    border: none;
+    padding: 16px 56px;
+    border-radius: var(--radius-btn);
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 2px;
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+    display: block;
+    box-shadow: 0 4px 0 #1f452b;
+}
+.btn-start:active { transform: translateY(2px); box-shadow: 0 2px 0 #1f452b; }
+.btn-start:disabled { opacity: 0.4; cursor: not-allowed; }
+.start-hint {
+    font-size: 14px;
+    color: var(--color-text-placeholder);
+    margin-top: 10px;
+    text-align: center;
+}
+</style>
+</head>
+<body>
+<div class="app-container">
+    <div class="brand-card">
+        <h1>Reborner 雅思听力核心词汇</h1>
+        <div class="sub">听力默写 · 天天进步</div>
+    </div>
+
+    <div class="section-card">
+        <div class="section-title">① 发音选择 <span class="badge">英音 / 美音</span></div>
+        <div class="pronounce-group">
+            <button class="btn-accent active" data-accent="uk">🇬🇧 英音</button>
+            <button class="btn-accent" data-accent="us">🇺🇸 美音</button>
+        </div>
+    </div>
+
+    <div class="section-card unit-section">
+        <div class="section-title">② 选择单元 <span class="count" id="unitCount" style="font-size:14px;color:#999;margin-left:auto;">已选 0 个</span></div>
+        <div id="partContainer"></div>
+    </div>
+
+    <div class="section-card">
+        <button class="btn-start" id="startBtn" disabled>开始默写</button>
+        <div class="start-hint">每次随机抽取 25 个词 · 15 秒倒计时</div>
+    </div>
+</div>
+
+<script src="vocabulary.js"></script>
+<script>
+window.addEventListener('load', function() {
+    if (typeof window.VOCABULARY_DATA === 'undefined') {
+        document.getElementById('partContainer').innerHTML = '<div style="padding:20px;text-align:center;color:#c00;">⚠️ vocabulary.js 未加载，请确保它在同一目录下</div>';
+        return;
+    }
+
+    var selectedUnits = new Set();
+    var accent = 'uk';
+
+    document.querySelectorAll('.btn-accent').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.btn-accent').forEach(function(b) { b.classList.remove('active'); });
+            this.classList.add('active');
+            accent = this.dataset.accent;
+        });
+    });
+
+    // Part 分组
+    var PART_GROUPS = [
+        { id: 'part1', label: 'Part 1 · 生活场景', units: [] },
+        { id: 'part2', label: 'Part 2 · 社会生活场景', units: [] },
+        { id: 'part3', label: 'Part 3 · 校园学术场景', units: [] },
+        { id: 'part4', label: 'Part 4 · 学术科普场景', units: [] }
+    ];
+
+    // 根据 unit id 前缀分类（1-xxx 归 Part 1，2-xxx 归 Part 2，等等）
+    Object.keys(window.VOCABULARY_DATA).forEach(function(id) {
+        var num = id.split('-')[0];
+        var p = parseInt(num);
+        if (p >= 1 && p <= 4) {
+            var unit = window.VOCABULARY_DATA[id];
+            PART_GROUPS[p-1].units.push({ id: id, name: unit.name || id });
+        }
+    });
+
+    // 渲染
+    var html = '';
+    PART_GROUPS.forEach(function(group) {
+        if (group.units.length === 0) return;
+        html += '<div class="part-group">';
+        html += '<div class="part-header" data-part="' + group.id + '">';
+        html += '<span class="part-name">' + group.label + '</span>';
+        html += '<span class="part-meta"><span id="' + group.id + 'Count">0</span>/' + group.units.length + '</span>';
+        html += '</div>';
+        html += '<div class="part-body">';
+        html += '<div class="unit-grid">';
+        group.units.forEach(function(u) {
+            html += '<label class="unit-chip">';
+            html += '<input type="checkbox" value="' + u.id + '" data-unit="' + u.id + '">';
+            html += '<span>' + u.id + ' ' + u.name + '</span>';
+            html += '</label>';
+        });
+        html += '</div></div></div>';
+    });
+    document.getElementById('partContainer').innerHTML = html;
+
+    document.querySelectorAll('.unit-chip input').forEach(function(cb) {
+        cb.addEventListener('change', function() {
+            if (this.checked) selectedUnits.add(this.value);
+            else selectedUnits.delete(this.value);
+            updateCounts();
+        });
+    });
+
+    function updateCounts() {
+        document.getElementById('unitCount').textContent = '已选 ' + selectedUnits.size + ' 个';
+        PART_GROUPS.forEach(function(group) {
+            var total = group.units.length;
+            var selected = group.units.filter(function(u) { return selectedUnits.has(u.id); }).length;
+            var el = document.getElementById(group.id + 'Count');
+            if (el) el.textContent = selected;
+        });
+        document.getElementById('startBtn').disabled = selectedUnits.size === 0;
+        if (selectedUnits.size > 0) {
+            document.getElementById('startBtn').textContent = '开始默写 (' + selectedUnits.size + ' 个单元)';
+        } else {
+            document.getElementById('startBtn').textContent = '开始默写';
+        }
+    }
+
+    document.getElementById('startBtn').addEventListener('click', function() {
+        if (selectedUnits.size === 0) return;
+        var unitsParam = Array.from(selectedUnits).join(',');
+        window.location.href = 'quiz.html?units=' + unitsParam + '&accent=' + accent;
+    });
+
+    updateCounts();
+});
+</script>
+</body>
+</html>

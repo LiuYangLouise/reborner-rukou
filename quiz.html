@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Reborner · 雅思听力核心词汇 · 听力默写</title>
+    <style>
+        :root {
+            --color-main-green: #2E5938;
+            --color-aux-beige: #F2E9D2;
+            --color-page-bg: #F8F7F0;
+            --color-card-bg: #F5F4EB;
+            --color-input-bg: #FFFFFF;
+            --color-text-dark: #222222;
+            --color-text-placeholder: #999999;
+            --color-error: #b13e3e;
+            --color-orange: #cc6b2c;
+            --radius-card: 24px;
+            --radius-btn: 16px;
+            --radius-input: 12px;
+            --radius-tag: 999px;
+            --shadow-card: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-btn: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans SC', sans-serif;
+            background-color: var(--color-page-bg);
+            color: var(--color-text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 24px 16px;
+        }
+        .app-container { max-width: 680px; width: 100%; display: flex; flex-direction: column; gap: 28px; }
+        .brand-card { background: var(--color-card-bg); border-radius: var(--radius-card); box-shadow: var(--shadow-card); padding: 26px 20px 20px; text-align: center; }
+        .brand-card h1 { font-size: 30px; font-weight: 700; color: var(--color-main-green); letter-spacing: 2px; }
+        .brand-card .sub { font-size: 16px; font-weight: 300; color: var(--color-text-placeholder); letter-spacing: 4px; margin-top: 4px; }
+        .toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-80px); background: var(--color-main-green); color: #fff; padding: 12px 28px; border-radius: var(--radius-tag); font-size: 15px; font-weight: 500; box-shadow: 0 4px 20px rgba(0,0,0,0.18); opacity: 0; transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease; z-index: 999; pointer-events: none; letter-spacing: 0.5px; }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .quiz-card { background: var(--color-card-bg); border-radius: var(--radius-card); box-shadow: var(--shadow-card); padding: 28px 24px 24px; transition: opacity 0.2s; }
+        .quiz-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px 8px; margin-bottom: 16px; }
+        .progress-badge { background: var(--color-main-green); color: #fff; font-size: 14px; font-weight: 500; padding: 4px 16px; border-radius: var(--radius-tag); letter-spacing: 0.5px; }
+        .timer-box { background: var(--color-aux-beige); border-radius: var(--radius-tag); padding: 6px 18px 6px 16px; display: flex; align-items: center; gap: 12px; font-weight: 500; font-size: 17px; }
+        .timer-box .bar { width: 80px; height: 5px; background: rgba(46, 89, 56, 0.18); border-radius: 20px; overflow: hidden; }
+        .timer-box .bar .fill { height: 100%; width: 100%; background: var(--color-main-green); border-radius: 20px; transition: width 0.3s linear; }
+        .sound-hint { background: var(--color-aux-beige); border-radius: var(--radius-input); padding: 16px 12px; text-align: center; color: var(--color-text-placeholder); font-weight: 400; letter-spacing: 1px; font-size: 16px; margin-bottom: 18px; border: 1px dashed #d6d0c0; cursor: pointer; transition: background 0.2s; }
+        .sound-hint:hover { background: #ede6d6; }
+        .sound-hint .icon { font-size: 28px; display: block; margin-bottom: 4px; }
+        .sound-hint .hint-text { color: var(--color-text-placeholder); }
+        .sound-hint .hint-text.playing { color: var(--color-main-green); font-weight: 500; }
+        .input-row { display: flex; gap: 12px; align-items: center; margin-bottom: 18px; position: relative; }
+        .input-row .input-wrap { flex: 1; min-width: 0; }
+        .input-row .input-wrap input { width: 100%; padding: 15px 18px; background: var(--color-input-bg); border: 1.5px solid #ddd; border-radius: var(--radius-input); font-size: 18px; color: var(--color-text-dark); outline: none; transition: border 0.2s, box-shadow 0.2s; font-family: inherit; }
+        .input-row .input-wrap input:focus { border-color: var(--color-main-green); box-shadow: 0 0 0 3px rgba(46, 89, 56, 0.12); }
+        .input-row .input-wrap input::placeholder { color: var(--color-text-placeholder); font-weight: 300; }
+        .input-row .input-wrap input:disabled { background: #f2f2f2; color: #888; }
+        .btn-confirm { background: var(--color-main-green); color: #fff; border: none; padding: 15px 24px; border-radius: var(--radius-btn); font-weight: 600; font-size: 16px; box-shadow: var(--shadow-btn); cursor: pointer; transition: background 0.15s, transform 0.1s; font-family: inherit; white-space: nowrap; flex-shrink: 0; }
+        .btn-confirm:hover { background: #1f452b; }
+        .btn-confirm:active { transform: scale(0.97); }
+        .btn-confirm:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .action-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+        .action-row .left-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-outline { background: #fff; border: 1.5px solid var(--color-main-green); color: var(--color-main-green); padding: 8px 22px; border-radius: var(--radius-btn); font-weight: 500; font-size: 15px; box-shadow: var(--shadow-btn); cursor: pointer; transition: background 0.15s, transform 0.1s; font-family: inherit; }
+        .btn-outline:hover { background: #f0f5ec; }
+        .btn-outline:active { transform: scale(0.97); }
+        .btn-outline:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .hint-key { font-size: 14px; color: var(--color-text-placeholder); }
+        .result-card { background: var(--color-card-bg); border-radius: var(--radius-card); box-shadow: var(--shadow-card); padding: 28px 24px 24px; display: none; }
+        .result-card.visible { display: block; animation: fadeUp 0.4s ease; }
+        @keyframes fadeUp { 0% { opacity: 0; transform: translateY(16px); } 100% { opacity: 1; transform: translateY(0); } }
+        .confetti-line { font-size: 34px; letter-spacing: 8px; text-align: center; padding: 4px 0 2px; }
+        .result-title { text-align: center; font-size: 24px; font-weight: 600; margin: 6px 0 12px; }
+        .result-title.green { color: var(--color-main-green); }
+        .result-title.orange { color: var(--color-orange); }
+        .result-title.red { color: var(--color-error); }
+        .stats-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px 32px; background: #fff; padding: 16px 20px; border-radius: var(--radius-btn); box-shadow: var(--shadow-btn); margin-bottom: 18px; }
+        .stats-grid .stat { display: flex; align-items: baseline; gap: 6px; }
+        .stats-grid .stat .num { font-size: 26px; font-weight: 700; color: var(--color-main-green); }
+        .stats-grid .stat .num.red { color: var(--color-error); }
+        .stats-grid .stat .num.gray { color: #888; }
+        .stats-grid .stat .label { color: var(--color-text-placeholder); font-size: 15px; }
+        .error-list { background: #fff; border-radius: var(--radius-input); padding: 12px 16px; margin: 12px 0 18px; border-left: 4px solid var(--color-main-green); font-size: 15px; }
+        .error-list .row { display: flex; gap: 10px; padding: 5px 0; border-bottom: 1px solid #f0f0f0; flex-wrap: wrap; align-items: baseline; }
+        .error-list .row:last-child { border-bottom: none; }
+        .error-list .wrong { color: var(--color-error); }
+        .error-list .empty { color: #999; }
+        .error-list .bulb { font-size: 18px; margin-right: 4px; }
+        .result-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 6px; }
+        .btn-outline-export { background: #fff; border: 1.5px solid var(--color-orange); color: var(--color-orange); padding: 8px 22px; border-radius: var(--radius-btn); font-weight: 500; font-size: 15px; box-shadow: var(--shadow-btn); cursor: pointer; transition: background 0.15s, transform 0.1s; font-family: inherit; }
+        .btn-outline-export:hover { background: #fdf0e8; }
+        .btn-outline-export:active { transform: scale(0.97); }
+        .btn-retry { background: #fff; border: 1.5px solid var(--color-main-green); color: var(--color-main-green); padding: 8px 22px; border-radius: var(--radius-btn); font-weight: 500; font-size: 15px; box-shadow: var(--shadow-btn); cursor: pointer; transition: background 0.15s, transform 0.1s; font-family: inherit; }
+        .btn-retry:hover { background: #f0f5ec; }
+        .btn-retry:active { transform: scale(0.97); }
+        .btn-home { background: var(--color-aux-beige); border: 1.5px solid var(--color-main-green); color: var(--color-main-green); padding: 8px 22px; border-radius: var(--radius-btn); font-weight: 500; font-size: 15px; box-shadow: var(--shadow-btn); cursor: pointer; transition: background 0.15s, transform 0.1s; font-family: inherit; }
+        .btn-home:hover { background: #e6dbc4; }
+        .btn-home:active { transform: scale(0.97); }
+        .loading-text { text-align: center; padding: 40px 20px; color: var(--color-text-placeholder); font-size: 16px; }
+        @media (max-width: 500px) {
+            .brand-card h1 { font-size: 24px; }
+            .quiz-card { padding: 20px 16px; }
+            .timer-box .bar { width: 50px; }
+            .input-row { flex-wrap: wrap; }
+            .btn-confirm { width: 100%; justify-content: center; padding: 12px; }
+            .action-row { flex-direction: column; align-items: stretch; }
+            .action-row .left-group { justify-content: center; }
+            .result-actions { flex-direction: column; align-items: stretch; }
+            .result-actions button { width: 100%; justify-content: center; }
+            .stats-grid { gap: 10px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="toast" id="toast"></div>
+        <div class="brand-card">
+            <h1>Reborner 雅思听力核心词汇</h1>
+            <div class="sub">听力默写 · 天天进步</div>
+        </div>
+        <div class="quiz-card" id="quizCard">
+            <div class="quiz-header">
+                <span class="progress-badge" id="progressBadge">1 / 25</span>
+                <div class="timer-box">
+                    <span>⏱</span>
+                    <span class="bar"><span class="fill" id="timerFill" style="width:100%"></span></span>
+                    <span id="timerText">15s</span>
+                </div>
+            </div>
+            <div class="sound-hint" id="soundHint">
+                <span class="icon">🔊</span>
+                <span class="hint-text" id="hintText">准备开始...</span>
+            </div>
+            <div class="input-row">
+                <div class="input-wrap">
+                    <input type="text" id="answerInput" placeholder="请输入单词..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="latin">
+                </div>
+                <button class="btn-confirm" id="confirmBtn">确认</button>
+            </div>
+            <div class="action-row">
+                <div class="left-group">
+                    <button class="btn-outline" id="replayBtn">🔊 再放一次</button>
+                    <button class="btn-outline" id="skipBtn">⏭ 跳过</button>
+                </div>
+                <span class="hint-key" id="enterHint">按 Enter 提交</span>
+            </div>
+        </div>
+        <div class="result-card" id="resultCard">
+            <div class="confetti-line">✨ 🎉 ✨ 🎊 ✨ 🌸 ✨</div>
+            <div class="result-title" id="resultTitle">✅ 默写完成！</div>
+            <div class="stats-grid" id="statsGrid"></div>
+            <div style="font-weight:500; margin-bottom:6px;">📋 需要复习的词汇</div>
+            <div class="error-list" id="errorList"></div>
+            <div class="result-actions">
+                <button class="btn-outline-export" id="exportBtn">📤 导出错词 (TXT)</button>
+                <button class="btn-retry" id="retryBtn">🔄 再来一次</button>
+                <button class="btn-home" id="homeBtn">🏠 回到首页</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="vocabulary.js"></script>
+    <script>
+        // 主题同步
+        (function() {
+            function applyTheme(isLight) {
+                if (isLight) document.body.classList.add('light-mode');
+                else document.body.classList.remove('light-mode');
+            }
+            function getCurrentTheme() {
+                try {
+                    if (window.parent && window.parent !== window) {
+                        return window.parent.document.body.classList.contains('light-mode');
+                    }
+                } catch(e) {}
+                return localStorage.getItem('theme') === 'light';
+            }
+            applyTheme(getCurrentTheme());
+            window.addEventListener('message', function(e) {
+                if (e.data && e.data.type === 'theme') applyTheme(e.data.isLight);
+            });
+            setInterval(function() {
+                var isLight = getCurrentTheme();
+                if (isLight !== document.body.classList.contains('light-mode')) applyTheme(isLight);
+            }, 200);
+        })();
+
+        window.addEventListener('load', function() {
+            if (typeof window.VOCABULARY_DATA === 'undefined') {
+                document.querySelector('.quiz-card').innerHTML = '<div class="loading-text"><p style="font-size:20px;margin-bottom:12px;">⚠️ 词汇数据加载失败</p><p style="font-size:14px;">请确保 vocabulary.js 文件存在于同一目录下</p></div>';
+                return;
+            }
+
+            var urlParams = new URLSearchParams(window.location.search);
+            var unitsParam = urlParams.get('units') || '';
+            var accentParam = urlParams.get('accent') || 'uk';
+            var units = unitsParam.split(',').filter(Boolean);
+
+            if (units.length === 0) {
+                document.querySelector('.quiz-card').innerHTML = '<div class="loading-text"><p style="font-size:20px;margin-bottom:12px;">⚠️ 未选择任何单元</p><p style="font-size:14px;">请从首页选择单元后重新进入</p></div>';
+                return;
+            }
+
+            var rawWords = [];
+            units.forEach(function(id) {
+                var unit = window.VOCABULARY_DATA[id];
+                if (unit && unit.words) rawWords = rawWords.concat(unit.words);
+            });
+
+            if (rawWords.length === 0) {
+                document.querySelector('.quiz-card').innerHTML = '<div class="loading-text"><p style="font-size:20px;margin-bottom:12px;">⚠️ 所选单元暂无词汇</p></div>';
+                return;
+            }
+
+            var shuffled = rawWords.slice();
+            for (var i = shuffled.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = shuffled[i];
+                shuffled[i] = shuffled[j];
+                shuffled[j] = temp;
+            }
+            var quizWords = shuffled.slice(0, 25);
+
+            var currentIndex = 0;
+            var results = [];
+            var timer = null;
+            var timeLeft = 15;
+            var isAnswered = false;
+            var replayCount = 0;
+            var toastTimer = null;
+
+            var toast = document.getElementById('toast');
+            var quizCard = document.getElementById('quizCard');
+            var resultCard = document.getElementById('resultCard');
+            var progressBadge = document.getElementById('progressBadge');
+            var timerFill = document.getElementById('timerFill');
+            var timerText = document.getElementById('timerText');
+            var soundHint = document.getElementById('soundHint');
+            var hintText = document.getElementById('hintText');
+            var answerInput = document.getElementById('answerInput');
+            var replayBtn = document.getElementById('replayBtn');
+            var skipBtn = document.getElementById('skipBtn');
+            var confirmBtn = document.getElementById('confirmBtn');
+            var enterHint = document.getElementById('enterHint');
+            var statsGrid = document.getElementById('statsGrid');
+            var errorList = document.getElementById('errorList');
+            var retryBtn = document.getElementById('retryBtn');
+            var homeBtn = document.getElementById('homeBtn');
+            var exportBtn = document.getElementById('exportBtn');
+            var resultTitle = document.getElementById('resultTitle');
+
+            function showToast(msg, duration) {
+                duration = duration || 2000;
+                if (toastTimer) { clearTimeout(toastTimer); toast.classList.remove('show'); }
+                toast.textContent = msg;
+                toast.classList.add('show');
+                toastTimer = setTimeout(function() { toast.classList.remove('show'); toastTimer = null; }, duration);
+            }
+
+            answerInput.addEventListener('compositionstart', function(e) {
+                if (isAnswered) return;
+                showToast('⚠️ 请切换到英文输入');
+            });
+            answerInput.addEventListener('compositionend', function(e) {
+                if (isAnswered) return;
+                var val = e.target.value;
+                if (/[^a-zA-Z\s\-'\.]/.test(val)) {
+                    e.target.value = val.replace(/[^a-zA-Z\s\-'\.]/g, '');
+                    if (e.target.value !== val) showToast('⚠️ 仅支持英文输入');
+                }
+            });
+            answerInput.addEventListener('input', function(e) {
+                if (isAnswered) return;
+                var val = e.target.value;
+                if (/[^a-zA-Z\s\-'\.]/.test(val)) {
+                    e.target.value = val.replace(/[^a-zA-Z\s\-'\.]/g, '');
+                    if (/[^a-zA-Z\s\-'\.]/.test(e.target.value)) e.target.value = '';
+                    showToast('⚠️ 仅支持英文输入');
+                }
+            });
+            answerInput.addEventListener('paste', function(e) {
+                var pasted = (e.clipboardData || window.clipboardData).getData('text');
+                if (/[^a-zA-Z\s\-'\.]/.test(pasted)) { e.preventDefault(); showToast('⚠️ 仅支持英文输入'); }
+            });
+            answerInput.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                showToast('⚠️ 右键粘贴已禁用，仅支持英文输入', 1500);
+            });
+
+            function playSound() {
+                if (currentIndex >= quizWords.length) return;
+                var wordObj = quizWords[currentIndex];
+                var word = wordObj.word || wordObj;
+                hintText.textContent = '🔊 播放中 ...';
+                hintText.className = 'hint-text playing';
+                soundHint.style.borderColor = 'var(--color-main-green)';
+
+                var inIframe = (window.parent && window.parent !== window);
+                if (inIframe) {
+                    // 只发消息给父页面，由父页面统一播放，避免重复声音
+                    try {
+                        window.parent.postMessage({
+                            type: 'speak',
+                            text: word,
+                            accent: accentParam
+                        }, '*');
+                    } catch(e) {}
+                } else {
+                    // 不在 iframe 里，自己播
+                    if ('speechSynthesis' in window) {
+                        speechSynthesis.cancel();
+                        var utter = new SpeechSynthesisUtterance(word);
+                        utter.lang = accentParam === 'us' ? 'en-US' : 'en-GB';
+                        utter.rate = 0.9;
+                        speechSynthesis.speak(utter);
+                    }
+                }
+
+                setTimeout(function() {
+                    hintText.textContent = '点击「再放一次」再听一次';
+                    hintText.className = 'hint-text';
+                    soundHint.style.borderColor = '#d6d0c0';
+                }, 1200);
+            }
+
+            function initQuiz() {
+                currentIndex = 0;
+                results = [];
+                quizCard.style.display = 'block';
+                resultCard.classList.remove('visible');
+                resultCard.style.display = 'none';
+                answerInput.disabled = false;
+                answerInput.value = '';
+                answerInput.focus();
+                isAnswered = false;
+                replayCount = 0;
+                clearTimer();
+                renderQuestion();
+            }
+
+            function renderQuestion() {
+                if (currentIndex >= quizWords.length) { showResult(); return; }
+                progressBadge.textContent = (currentIndex + 1) + ' / ' + quizWords.length;
+                answerInput.value = '';
+                answerInput.disabled = false;
+                setTimeout(function() { answerInput.focus(); }, 50);
+                isAnswered = false;
+                replayCount = 0;
+                hintText.textContent = '点击「再放一次」听发音';
+                hintText.className = 'hint-text';
+                soundHint.style.borderColor = '#d6d0c0';
+                timeLeft = 15;
+                timerFill.style.width = '100%';
+                timerText.textContent = '15s';
+                clearTimer();
+                startTimer();
+                setTimeout(function() { playSound(); }, 300);
+                enterHint.textContent = '按 Enter 或点击「确认」提交';
+                confirmBtn.disabled = false;
+            }
+
+            function startTimer() {
+                clearTimer();
+                timer = setInterval(function() {
+                    timeLeft -= 0.2;
+                    if (timeLeft <= 0) {
+                        timeLeft = 0;
+                        timerFill.style.width = '0%';
+                        timerText.textContent = '0s';
+                        clearTimer();
+                        if (!isAnswered && currentIndex < quizWords.length) handleTimeout();
+                        return;
+                    }
+                    timerFill.style.width = (timeLeft / 15 * 100) + '%';
+                    timerText.textContent = Math.ceil(timeLeft) + 's';
+                }, 200);
+            }
+
+            function clearTimer() { if (timer) { clearInterval(timer); timer = null; } }
+
+            function handleTimeout() {
+                if (isAnswered) return;
+                var word = quizWords[currentIndex].word || quizWords[currentIndex];
+                results.push({ word: word, userAnswer: '(超时未填)', status: 'skipped' });
+                isAnswered = true;
+                answerInput.disabled = true;
+                confirmBtn.disabled = true;
+                enterHint.textContent = '⏱ 超时，自动跳过';
+                setTimeout(function() { currentIndex++; renderQuestion(); }, 900);
+            }
+
+            function submitAnswer() {
+                if (isAnswered) return;
+                var input = answerInput.value.trim();
+                var word = quizWords[currentIndex].word || quizWords[currentIndex];
+                if (input === '') {
+                    results.push({ word: word, userAnswer: '(未填)', status: 'skipped' });
+                    isAnswered = true;
+                    answerInput.disabled = true;
+                    confirmBtn.disabled = true;
+                    enterHint.textContent = '⏭ 未填，已跳过';
+                    clearTimer();
+                    setTimeout(function() { currentIndex++; renderQuestion(); }, 500);
+                    return;
+                }
+                var correct = word.toLowerCase().trim();
+                var status = input.toLowerCase().trim() === correct ? 'correct' : 'wrong';
+                results.push({ word: word, userAnswer: input, status: status });
+                isAnswered = true;
+                answerInput.disabled = true;
+                confirmBtn.disabled = true;
+                clearTimer();
+                enterHint.textContent = status === 'correct' ? '✅ 正确！' : '❌ 正确: ' + correct;
+                setTimeout(function() { currentIndex++; renderQuestion(); }, 700);
+            }
+
+            function handleSkip() {
+                if (isAnswered) return;
+                var word = quizWords[currentIndex].word || quizWords[currentIndex];
+                results.push({ word: word, userAnswer: '(跳过)', status: 'skipped' });
+                isAnswered = true;
+                answerInput.disabled = true;
+                confirmBtn.disabled = true;
+                clearTimer();
+                enterHint.textContent = '⏭ 已跳过';
+                setTimeout(function() { currentIndex++; renderQuestion(); }, 400);
+            }
+
+            function handleReplay() {
+                if (isAnswered) return;
+                replayCount++;
+                if (replayCount >= 4) {
+                    var word = quizWords[currentIndex].word || quizWords[currentIndex];
+                    results.push({ word: word, userAnswer: '(连续重播超限)', status: 'skipped' });
+                    isAnswered = true;
+                    answerInput.disabled = true;
+                    confirmBtn.disabled = true;
+                    clearTimer();
+                    enterHint.textContent = '🔇 重播超限，自动跳过';
+                    setTimeout(function() { currentIndex++; renderQuestion(); }, 500);
+                    return;
+                }
+                playSound();
+            }
+
+            function showResult() {
+                clearTimer();
+                if ('speechSynthesis' in window) speechSynthesis.cancel();
+                quizCard.style.display = 'none';
+                resultCard.style.display = 'block';
+                requestAnimationFrame(function() { resultCard.classList.add('visible'); });
+
+                var correct = 0, wrong = 0, skipped = 0;
+                results.forEach(function(r) {
+                    if (r.status === 'correct') correct++;
+                    else if (r.status === 'wrong') wrong++;
+                    else skipped++;
+                });
+                var total = results.length;
+                var rate = total > 0 ? (correct / total * 100) : 0;
+
+                var titleText = '', titleClass = '';
+                if (rate >= 80) { titleText = '💡 完美通关！继续加油！'; titleClass = 'green'; }
+                else if (rate >= 70) { titleText = '💡 哎呀，差一丢丢过关哦~'; titleClass = 'orange'; }
+                else { titleText = '💡 错误有点小多哦，再复习一下~'; titleClass = 'red'; }
+                resultTitle.textContent = titleText;
+                resultTitle.className = 'result-title ' + titleClass;
+
+                statsGrid.innerHTML =
+                    '<div class="stat"><span class="num">' + correct + '</span><span class="label">正确</span></div>' +
+                    '<div class="stat"><span class="num red">' + wrong + '</span><span class="label">错误</span></div>' +
+                    '<div class="stat"><span class="num gray">' + skipped + '</span><span class="label">未填</span></div>' +
+                    '<div class="stat"><span class="num" style="font-size:22px;">' + rate.toFixed(2) + '%</span><span class="label">正确率</span></div>';
+
+                var errors = results.filter(function(r) { return r.status === 'wrong' || r.status === 'skipped'; });
+                if (errors.length === 0) {
+                    errorList.innerHTML = '<div style="padding:6px 0; color:var(--color-main-green);">🎉 全部正确，太棒了！</div>';
+                } else {
+                    var html = '';
+                    errors.forEach(function(r) {
+                        var cls = r.status === 'wrong' ? 'wrong' : 'empty';
+                        html += '<div class="row"><span class="' + cls + '"><span class="bulb">💡</span> ' + r.word + '</span> → <span>' + (r.userAnswer || '(未填)') + '</span></div>';
+                    });
+                    errorList.innerHTML = html;
+                }
+            }
+
+            function exportErrors() {
+                var errors = results.filter(function(r) { return r.status === 'wrong' || r.status === 'skipped'; });
+                if (errors.length === 0) { showToast('🎉 没有错词需要导出！', 2000); return; }
+                var lines = [];
+                lines.push('📘 Reborner · 雅思听力核心词汇 · 错词导出');
+                lines.push('导出时间: ' + new Date().toLocaleString());
+                lines.push('─'.repeat(40));
+                errors.forEach(function(r, idx) {
+                    lines.push((idx + 1) + '. ' + r.word + '  →  你的答案: ' + (r.userAnswer || '(未填)'));
+                });
+                lines.push('─'.repeat(40));
+                lines.push('📝 共 ' + errors.length + ' 个需要复习的词汇');
+                var blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = '错词列表_' + new Date().toISOString().slice(0, 10) + '.txt';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast('✅ 错词已导出！', 2000);
+            }
+
+            function retryQuiz() {
+                var s2 = rawWords.slice();
+                for (var i = s2.length - 1; i > 0; i--) {
+                    var j = Math.floor(Math.random() * (i + 1));
+                    var t = s2[i]; s2[i] = s2[j]; s2[j] = t;
+                }
+                quizWords.length = 0;
+                var nw = s2.slice(0, 25);
+                for (var k = 0; k < nw.length; k++) quizWords.push(nw[k]);
+                currentIndex = 0;
+                results = [];
+                resultCard.classList.remove('visible');
+                resultCard.style.display = 'none';
+                quizCard.style.display = 'block';
+                answerInput.disabled = false;
+                answerInput.value = '';
+                isAnswered = false;
+                replayCount = 0;
+                clearTimer();
+                renderQuestion();
+                showToast('🔄 重新开始！', 1000);
+            }
+
+            answerInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (!isAnswered && currentIndex < quizWords.length) submitAnswer();
+                }
+            });
+            confirmBtn.addEventListener('click', function() {
+                if (!isAnswered && currentIndex < quizWords.length) submitAnswer();
+            });
+            replayBtn.addEventListener('click', handleReplay);
+            skipBtn.addEventListener('click', handleSkip);
+            soundHint.addEventListener('click', handleReplay);
+            retryBtn.addEventListener('click', retryQuiz);
+            homeBtn.addEventListener('click', function() {
+                if (!confirm('回到首页，当前进度将丢失。')) return;
+                if (window.parent && window.parent !== window) {
+                    // 在 iframe 里，交给父页面导航，避免套娃
+                    window.parent.postMessage({ type: 'navigate', page: 'home' }, '*');
+                } else {
+                    window.location.href = 'index.html';
+                }
+            });
+            exportBtn.addEventListener('click', exportErrors);
+
+            initQuiz();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>Reborner 雅思听力核心词汇 · Part 1-4 全量版</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; }
+html,body { height:100%; overflow:hidden; }
+body { background:linear-gradient(165deg,#f0f7e9 0%,#deecd2 100%); }
+
+/* ============ 密码页 ============ */
+#lockScreen {
+  position:fixed; inset:0; z-index:5000;
+  background:linear-gradient(165deg,#f0f7e9 0%,#deecd2 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:2rem 1.5rem; transition:opacity .45s ease, transform .45s ease;
+}
+#lockScreen.hide { opacity:0; transform:translateY(-30px); pointer-events:none; }
+.lock-title { font-size:1.9rem; font-weight:380; color:#2d543b; text-align:center; line-height:1.35; margin-bottom:.4rem; }
+.lock-sub { font-size:1rem; color:#618967; font-weight:300; letter-spacing:3px; margin-bottom:2.2rem; }
+.lock-card { background:#fcfff8; border:1px solid #e3f0da; border-radius:36px; padding:2rem 1.5rem; width:100%; max-width:340px; box-shadow:0 12px 28px rgba(130,160,120,.18); }
+.lock-label { text-align:center; font-size:1rem; color:#3d6d4b; margin-bottom:1rem; }
+.lock-input { width:100%; padding:.9rem 1rem; font-size:1rem; background:#f6ffee; border:1px solid #cde0c3; border-radius:14px; color:#1c4a2a; text-align:center; outline:none; letter-spacing:2px; }
+.lock-input:focus { border-color:#8bb282; }
+.lock-btn { margin-top:1.1rem; width:100%; padding:.85rem; background:#cde5c2; color:#1b4125; border:none; border-radius:40px; font-size:1.05rem; font-weight:500; cursor:pointer; box-shadow:0 5px 0 #9abb90; transition:transform .1s; }
+.lock-btn:active { transform:translateY(2px); box-shadow:0 2px 0 #9abb90; }
+.lock-err { color:#c0504d; text-align:center; margin-top:.7rem; height:18px; font-size:.88rem; }
+
+/* ============ 主页 ============ */
+#homePage {
+  position:fixed; inset:0; z-index:10;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:1.5rem 1rem; transition:transform .5s cubic-bezier(.65,0,.35,1);
+}
+#homePage.slide-left { transform:translateX(-30%); }
+.home-header { text-align:center; margin-bottom:2.2rem; }
+.home-header h1 { font-size:2rem; font-weight:380; color:#2d543b; line-height:1.3; margin-bottom:.3rem; }
+.home-header .sub1 { font-size:1.25rem; color:#4f7b5a; font-weight:340; }
+.home-header .sub2 { font-size:1rem; color:#618967; font-weight:300; margin-top:.2rem; }
+.home-buttons { display:flex; flex-direction:column; gap:1.1rem; width:100%; max-width:340px; }
+.home-btn {
+  background:#fcfff8; border:1px solid #d2e2c7; border-radius:44px;
+  padding:1.15rem 1.5rem; font-size:1.25rem; font-weight:460; color:#2b5538;
+  cursor:pointer; box-shadow:0 6px 16px rgba(150,180,140,.16);
+  transition:all .2s ease; text-align:center;
+}
+.home-btn:hover { background:#eef9e6; border-color:#9abb90; transform:translateY(-2px); }
+.home-btn:active { transform:translateY(0); }
+.home-btn .badge { font-size:.75rem; background:#c3ddb6; border-radius:20px; padding:.12rem .55rem; margin-left:.5rem; color:#23522e; font-weight:400; vertical-align:middle; }
+
+/* ============ Part 页面（滑入层） ============ */
+.part-page {
+  position:fixed; inset:0; z-index:100;
+  background:linear-gradient(165deg,#f0f7e9 0%,#deecd2 100%);
+  transform:translateX(100%);
+  transition:transform .5s cubic-bezier(.65,0,.35,1);
+  overflow-y:auto; -webkit-overflow-scrolling:touch;
+  padding:1.5rem 1rem 2rem 1rem;
+}
+.part-page.slide-in { transform:translateX(0); }
+.part-inner { max-width:620px; width:100%; margin:0 auto; }
+
+.back-btn {
+  position:sticky; top:0; z-index:50;
+  display:inline-flex; align-items:center; gap:.35rem;
+  background:rgba(252,255,248,.92); backdrop-filter:blur(8px);
+  border:1px solid #cde0c3; border-radius:40px;
+  padding:.5rem 1.1rem; font-size:.95rem; color:#295e36;
+  cursor:pointer; margin-bottom:.8rem; box-shadow:0 2px 8px rgba(150,180,140,.18);
+}
+.back-btn:active { transform:scale(.96); }
+
+.header { margin-bottom:1.5rem; text-align:center; }
+.header h1 { font-size:2.1rem; font-weight:380; color:#2d543b; line-height:1.3; letter-spacing:-.2px; margin-bottom:.2rem; }
+.header .sub1 { font-size:1.5rem; color:#4f7b5a; font-weight:340; line-height:1.4; }
+.header .sub2 { font-size:1.2rem; color:#618967; font-weight:300; line-height:1.4; }
+.header .sub3 { font-size:.9rem; color:#7a9f7e; font-weight:300; margin-top:.2rem; }
+
+.chapter-scroll { overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch; padding:.2rem 0 .4rem 0; scrollbar-width:none; }
+.chapter-scroll::-webkit-scrollbar { display:none; }
+.chap-flex { display:inline-flex; gap:.7rem; padding:0 .2rem; }
+.chap-btn { background:#f3fcee; border:1px solid #d2e2c7; border-radius:40px; padding:.6rem 1.8rem; font-size:1.2rem; font-weight:430; color:#2b5538; white-space:nowrap; box-shadow:0 2px 6px rgba(150,180,140,.08); cursor:pointer; }
+.chap-btn.active { background:#cde5c2; border-color:#8bb282; color:#1b4125; font-weight:500; }
+
+.subchapter-scroll { overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch; padding:0 0 .4rem 0; scrollbar-width:none; }
+.subchapter-scroll::-webkit-scrollbar { display:none; }
+.sub-flex { display:inline-flex; gap:.6rem; padding:0 .2rem; }
+.sub-btn { background:#ecf7e4; border:1px solid #cde0c0; border-radius:30px; padding:.4rem 1.3rem; font-size:.96rem; font-weight:400; color:#336941; white-space:nowrap; box-shadow:0 1px 4px rgba(120,150,100,.1); cursor:pointer; }
+.sub-btn.active-sub { background:#d4ebc5; border-color:#9abb90; color:#1e4529; font-weight:460; }
+
+.unit-scroll { overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch; padding:0 0 .8rem 0; scrollbar-width:none; }
+.unit-scroll::-webkit-scrollbar { display:none; }
+.unit-flex { display:inline-flex; gap:.5rem; padding:0 .2rem; }
+.unit-btn { background:#f5fcf0; border:1px solid #dae8cf; border-radius:20px; padding:.3rem 1.1rem; font-size:.85rem; font-weight:380; color:#3d734a; white-space:nowrap; box-shadow:0 1px 3px rgba(120,150,100,.06); cursor:pointer; }
+.unit-btn.active-unit { background:#d0e8c2; border-color:#9ec092; color:#1a4024; font-weight:460; }
+.word-count-badge { font-size:.7rem; background:#c3ddb6; border-radius:20px; padding:.1rem .5rem; margin-left:.4rem; color:#23522e; }
+
+.flip-container { perspective:1000px; width:100%; margin:.8rem 0 1.2rem 0; }
+.flipper { position:relative; width:100%; height:auto; transition:transform .4s ease; transform-style:preserve-3d; }
+.flipper.flipped { transform:rotateY(180deg); }
+.front,.back { backface-visibility:hidden; -webkit-backface-visibility:hidden; position:relative; top:0; left:0; width:100%; border-radius:42px; padding:2.8rem 1.2rem; background:#fcfff8; border:1px solid #e3f0da; box-shadow:0 10px 20px rgba(130,160,120,.1); display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:220px; }
+.back { position:absolute; transform:rotateY(180deg); min-height:220px; }
+.en-word { font-size:2.8rem; font-weight:370; color:#1c4a2a; line-height:1.3; word-break:break-word; text-align:center; width:100%; }
+.ch-word { font-size:2rem; font-weight:340; color:#316a42; margin-top:.5rem; text-align:center; width:100%; }
+.pos { font-size:1.2rem; color:#719b79; font-weight:380; text-align:center; width:100%; }
+
+.nav-row { display:flex; align-items:center; justify-content:center; gap:.8rem; margin:1.2rem 0 1.8rem 0; flex-wrap:wrap; }
+.nav-btn { background:#f1fde9; border:1px solid #cde0c3; border-radius:60px; padding:.6rem 1.5rem; font-size:1.1rem; color:#295e36; box-shadow:0 2px 6px rgba(0,0,0,.02); cursor:pointer; }
+.quiz-btn { background:#e2f1d8; border-color:#aacaa0; font-weight:440; }
+
+.thumb-header { display:flex; justify-content:space-between; align-items:center; margin:1rem 0 .8rem; flex-wrap:wrap; gap:.5rem; }
+.thumb-header span { font-size:1.1rem; color:#3d6d4b; font-weight:330; }
+.thumb-header .actions { display:flex; gap:.4rem; align-items:center; flex-wrap:wrap; }
+.thumb-header .actions button { background:#dbeace; border:1px solid #adc9a2; border-radius:40px; padding:.3rem 1.1rem; font-size:.9rem; color:#23562f; cursor:pointer; white-space:nowrap; }
+.thumb-header .actions button.select-all-btn { background:#c8e0b9; border-color:#9abb90; }
+
+.thumb-grid-container { max-height:280px; overflow-y:auto; -webkit-overflow-scrolling:touch; border-radius:20px; padding:.2rem .2rem .5rem .2rem; scrollbar-width:thin; scrollbar-color:#b5d3ae #e8f3e0; }
+.thumb-grid-container::-webkit-scrollbar { width:5px; }
+.thumb-grid-container::-webkit-scrollbar-track { background:#e8f3e0; border-radius:10px; }
+.thumb-grid-container::-webkit-scrollbar-thumb { background:#b5d3ae; border-radius:10px; }
+.thumb-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:.5rem; padding:.2rem; }
+.thumb-item { background:#f9fff3; border:1px solid #dbefd0; border-radius:24px; padding:.6rem .2rem .6rem .5rem; display:flex; align-items:center; gap:.2rem; box-shadow:0 2px 6px rgba(160,180,140,.1); min-width:0; }
+.thumb-item input[type="checkbox"] { width:1.1rem; height:1.1rem; accent-color:#86b07c; border-radius:4px; flex-shrink:0; }
+.thumb-item label { font-size:.85rem; color:#2e623d; font-weight:420; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; cursor:pointer; }
+.tip { color:#799e7a; font-size:.9rem; margin-top:.8rem; text-align:center; }
+
+.quiz-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(200,225,190,.8); backdrop-filter:blur(12px); display:flex; align-items:center; justify-content:center; z-index:3000; visibility:hidden; opacity:0; transition:.2s; padding:1rem; }
+.quiz-overlay.show { visibility:visible; opacity:1; }
+.quiz-panel { background:#f6ffee; width:100%; max-width:450px; border-radius:48px; padding:2rem 1.5rem; border:1px solid #daefce; box-shadow:0 20px 30px rgba(90,120,70,.2); }
+.quiz-panel h3 { font-size:1.8rem; font-weight:320; color:#2f6040; text-align:center; margin-bottom:.3rem; }
+.close-area { display:flex; justify-content:flex-end; }
+.close-quiz { font-size:2.6rem; line-height:.8; color:#6d9b71; background:none; border:none; padding:0 .5rem; cursor:pointer; }
+.quiz-card { background:white; border-radius:42px; padding:2rem 1rem; margin:1.2rem 0; border:1px solid #d1e6c5; text-align:center; }
+.quiz-card .big-en { font-size:2.8rem; color:#1e4d2b; font-weight:340; word-break:break-word; }
+.quiz-footer { display:flex; justify-content:center; gap:2rem; margin:1rem 0; }
+.quiz-footer .nav-btn { font-size:1.3rem; padding:.4rem 1.8rem; }
+.quiz-counter { text-align:center; color:#517d58; font-size:1rem; }
+
+@media (max-width:480px) {
+  .thumb-grid { grid-template-columns:repeat(3,1fr); }
+  .en-word { font-size:2.2rem; }
+  .ch-word { font-size:1.6rem; }
+  .front,.back { padding:1.8rem 1rem; min-height:180px; }
+  .header h1 { font-size:1.6rem; }
+  .home-header h1 { font-size:1.55rem; }
+  .lock-title { font-size:1.5rem; }
+  .chap-btn { font-size:1rem; padding:.4rem 1.2rem; }
+  .sub-btn { font-size:.85rem; padding:.3rem 1rem; }
+  .unit-btn { font-size:.75rem; padding:.2rem .8rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ================= 密码页 ================= -->
+<div id="lockScreen">
+  <div class="lock-title">Reborner 雅思听力核心词汇</div>
+  <div class="lock-sub">VENI · VIDI · VICI</div>
+  <div class="lock-card">
+    <div class="lock-label">请输入访问密码</div>
+    <input type="password" id="lockInput" class="lock-input" placeholder="••••••••" autocomplete="off">
+    <div class="lock-err" id="lockErr"></div>
+    <button class="lock-btn" id="lockBtn">确认进入</button>
+  </div>
+</div>
+
+<!-- ================= 主页 ================= -->
+<div id="homePage">
+  <div class="home-header">
+    <h1>Reborner 雅思听力核心词汇</h1>
+    <div class="sub1">Part 1-4 专项 · 全量版</div>
+    <div class="sub2">天天进步，每日新生</div>
+  </div>
+  <div class="home-buttons" id="homeButtons"></div>
+</div>
+
+<!-- ================= 四个 Part 页面 ================= -->
+<div class="part-page" id="partPage1"><div class="part-inner" id="partInner1"></div></div>
+<div class="part-page" id="partPage2"><div class="part-inner" id="partInner2"></div></div>
+<div class="part-page" id="partPage3"><div class="part-inner" id="partInner3"></div></div>
+<div class="part-page" id="partPage4"><div class="part-inner" id="partInner4"></div></div>
+
+<script>
+/* ================================================================
+   一、词汇数据（P1-P4，原样保留，绝不删减）
+   ================================================================ */
+const VOCAB_DATA = {};
+
+// ---------- PART 1 ----------
+VOCAB_DATA[1] = {
+'餐饮与饮食': { units: {
+'食材食物酒水饮料': [
+{en:'foods',pos:'n.',ch:'食品'},{en:'food intake',pos:'phr.',ch:'进食'},{en:'food chain',pos:'phr.',ch:'食物链'},{en:'food containers',pos:'phr.',ch:'食品容器'},{en:'food supply',pos:'phr.',ch:'食品供应'},{en:'fresh food',pos:'phr.',ch:'新鲜食物'},{en:'frozen food',pos:'phr.',ch:'冷冻食品'},{en:'preparing food',pos:'phr.',ch:'做饭'},{en:'diet',pos:'n.',ch:'日常饮食'},{en:'eat',pos:'v.',ch:'吃'},{en:'meal',pos:'n.',ch:'餐'},{en:'evening meals',pos:'phr.',ch:'晚餐'},{en:'breakfast',pos:'n.',ch:'早餐'},{en:'lunch',pos:'n.',ch:'午餐'},{en:'dinner',pos:'n.',ch:'晚餐'},{en:'hunger',pos:'n.',ch:'饥饿'},{en:'starvation',pos:'n.',ch:'饥饿'},{en:'low nutrition',pos:'phr.',ch:'低营养'},{en:'eating patterns',pos:'phr.',ch:'饮食习惯'},{en:'tastes',pos:'n.',ch:'滋味'},{en:'scent',pos:'n.',ch:'香味'},{en:'smell',pos:'n.',ch:'气味'},{en:'odour',pos:'n.',ch:'气味（多指难闻气味）'},{en:'flavor',pos:'n.',ch:'味道，风味'},{en:'ingredients',pos:'n.',ch:'配料，食材'},{en:'salt',pos:'n.',ch:'盐'},{en:'sugar',pos:'n.',ch:'糖'},{en:'olive oil',pos:'phr.',ch:'橄榄油'},{en:'acid',pos:'adj.',ch:'酸的'},{en:'sweetener',pos:'n.',ch:'甜味剂'},{en:'antiseptic',pos:'n.',ch:'防腐剂；抗菌剂'},{en:'vegetarian',pos:'n.',ch:'素食者'},{en:'rice',pos:'n.',ch:'大米，米饭'},{en:'starch',pos:'n.',ch:'淀粉'},{en:'grind flour',pos:'phr.',ch:'磨面粉'},{en:'powder',pos:'n.',ch:'粉末'},{en:'potatoes',pos:'n.',ch:'土豆'},{en:'carrots',pos:'n.',ch:'胡萝卜'},{en:'corn',pos:'n.',ch:'玉米'},{en:'meat',pos:'n.',ch:'肉'},{en:'fresh meat',pos:'phr.',ch:'鲜肉'},{en:'seafood',pos:'n.',ch:'海鲜'},{en:'chicken',pos:'n.',ch:'鸡肉；鸡'},{en:'egg',pos:'n.',ch:'鸡蛋'},{en:'fruit',pos:'n.',ch:'水果'},{en:'fruit tree',pos:'phr.',ch:'果树'},{en:'fruit cake',pos:'phr.',ch:'水果饼'},{en:'apple',pos:'n.',ch:'苹果'},{en:'coconut',pos:'n.',ch:'椰子'},{en:'banana',pos:'n.',ch:'香蕉'},{en:'lemon',pos:'n.',ch:'柠檬'},{en:'orange',pos:'n.',ch:'橙子；橘子'},{en:'tomatoes',pos:'n.',ch:'西红柿'},{en:'cake',pos:'n.',ch:'蛋糕'},{en:'fish cake',pos:'phr.',ch:'炸鱼饼'},{en:'pizza',pos:'n.',ch:'披萨'},{en:'pizza boxes',pos:'phr.',ch:'披萨盒'},{en:'boxes',pos:'n.',ch:'盒子'},{en:'sandwiches',pos:'n.',ch:'三明治'},{en:'vegetable burger',pos:'phr.',ch:'蔬菜汉堡'},{en:'salads',pos:'n.',ch:'沙拉'},{en:'cheese',pos:'n.',ch:'芝士'},{en:'honey',pos:'n.',ch:'蜂蜜'},{en:'snacks',pos:'n.',ch:'小吃'},{en:'high energy snack',pos:'phr.',ch:'高能量食物'},{en:'refreshments',pos:'n.',ch:'小吃'},{en:'chocolate',pos:'n.',ch:'巧克力'},{en:'gum',pos:'n.',ch:'口香糖'},{en:'nuts',pos:'n.',ch:'坚果'},{en:'organic',pos:'adj.',ch:'有机的'},{en:'nutrition',pos:'n.',ch:'营养'},{en:'protein',pos:'n.',ch:'蛋白质'},{en:'vitamin A',pos:'phr.',ch:'维生素A'},{en:'drink',pos:'n.',ch:'饮料'},{en:'drink milk',pos:'phr.',ch:'喝牛奶'},{en:'drinks and snacks',pos:'phr.',ch:'饮料和小吃'},{en:'free drink',pos:'phr.',ch:'免费饮料'},{en:'drinking',pos:'n.',ch:'喝饮料'},{en:'drinking machines',pos:'phr.',ch:'饮水机'},{en:'bottle water',pos:'phr.',ch:'瓶装水'},{en:'spring water',pos:'phr.',ch:'矿泉水'},{en:'juice',pos:'n.',ch:'果汁'},{en:'fruit juice',pos:'phr.',ch:'果汁'},{en:'juice bottles',pos:'phr.',ch:'果汁瓶'},{en:'apple juice',pos:'phr.',ch:'苹果汁'},{en:'milk',pos:'n.',ch:'牛奶'},{en:'tea',pos:'n.',ch:'茶'},{en:'beer',pos:'n.',ch:'啤酒'},{en:'ice',pos:'n.',ch:'冰'},{en:'ice pack',pos:'phr.',ch:'冰袋'},{en:'soup',pos:'n.',ch:'汤'}
+],
+'厨房厨具烹饪餐饮': [
+{en:'restaurant',pos:'n.',ch:'餐馆'},{en:'catering',pos:'n.',ch:'餐饮服务'},{en:'takeaway',pos:'n.',ch:'外卖'},{en:'picnic',pos:'n.',ch:'野餐'},{en:'dining room',pos:'phr.',ch:'餐厅'},{en:'cafe',pos:'n.',ch:'咖啡馆'},{en:'coffee',pos:'n.',ch:'咖啡'},{en:'coffee table',pos:'phr.',ch:'咖啡桌'},{en:'coffee machine',pos:'phr.',ch:'咖啡机'},{en:'kitchen',pos:'n.',ch:'厨房'},{en:'kitchen area',pos:'phr.',ch:'厨房区域'},{en:'cook',pos:'v.',ch:'烹饪'},{en:'cooking',pos:'n.',ch:'做饭'},{en:'cooker',pos:'n.',ch:'炊具，炉灶'},{en:'cookery',pos:'n.',ch:'烹饪术，烹调法'},{en:'shelf',pos:'n.',ch:'架子，搁板'},{en:'rack',pos:'n.',ch:'支架，置物架'},{en:'lids',pos:'n.',ch:'盖子'},{en:'overfill',pos:'v.',ch:'装得太满，溢出'},{en:'container',pos:'n.',ch:'容器'},{en:'cup',pos:'n.',ch:'杯子'},{en:'tank',pos:'n.',ch:'储罐，大容器'},{en:'bucket',pos:'n.',ch:'水桶，桶'},{en:'boiler',pos:'n.',ch:'锅炉；烧水壶'},{en:'pot',pos:'v.',ch:'把......装罐'},{en:'pottery',pos:'n.',ch:'陶器'},{en:'basket',pos:'n.',ch:'篮子'},{en:'cut',pos:'v.',ch:'切，切割'},{en:'knife',pos:'n.',ch:'刀'},{en:'axe',pos:'n.',ch:'斧头'},{en:'stick',pos:'n.',ch:'棍，棒'},{en:'long stick',pos:'phr.',ch:'长棍'},{en:'brushes',pos:'n.',ch:'刷子'},{en:'plates',pos:'n.',ch:'盘子'},{en:'spoon',pos:'n.',ch:'勺子，汤匙'},{en:'apron',pos:'n.',ch:'围裙'},{en:'oven',pos:'n.',ch:'烤箱，烤炉'},{en:'microwave',pos:'n.',ch:'微波炉'},{en:'doublegrill',pos:'n.',ch:'双层烤架'},{en:'fire',pos:'n.',ch:'火；炉火'},{en:'fireplaces',pos:'n.',ch:'壁炉'},{en:'firewood',pos:'n.',ch:'柴火'},{en:'fireworks',pos:'n.',ch:'烟花'},{en:'fire blanket',pos:'phr.',ch:'灭火毯'},{en:'fire drill',pos:'phr.',ch:'消防演练'},{en:'gas',pos:'n.',ch:'燃气，气体'},{en:'gas tanks',pos:'phr.',ch:'储气罐'},{en:'natural gas',pos:'phr.',ch:'天然气'},{en:'fridge',pos:'n.',ch:'冰箱'},{en:'freezer',pos:'n.',ch:'冰柜，冷冻柜'},{en:'dishwasher',pos:'n.',ch:'洗碗机'},{en:'smash',pos:'v.',ch:'打碎，粉碎'}
+]}},
+
+'旅游与交通': { units: {
+'交通工具': [
+{en:'transport',pos:'n.',ch:'交通'},{en:'public transport',pos:'phr.',ch:'公共交通'},{en:'transport service',pos:'phr.',ch:'交通服务'},{en:'transportation',pos:'n.',ch:'交通工具'},{en:'free transportation',pos:'phr.',ch:'免费交通'},{en:'airline',pos:'n.',ch:'航线'},{en:'airplane',pos:'n.',ch:'飞机'},{en:'airport',pos:'n.',ch:'机场'},{en:'flight',pos:'n.',ch:'航班'},{en:'train',pos:'n.',ch:'火车'},{en:'express train',pos:'phr.',ch:'特快火车'},{en:'railway station',pos:'phr.',ch:'火车站'},{en:'railway line',pos:'phr.',ch:'铁路线'},{en:'railway track',pos:'phr.',ch:'铁轨'},{en:'truck',pos:'n.',ch:'卡车'},{en:'boat',pos:'n.',ch:'船'},{en:'ship',pos:'n.',ch:'船'},{en:'ship bell',pos:'phr.',ch:'船钟'},{en:'ship building',pos:'phr.',ch:'造船'},{en:'shipping',pos:'n.',ch:'航运'},{en:'sailing',pos:'n.',ch:'航行'},{en:'bus',pos:'n.',ch:'公交车'},{en:'bus stop',pos:'phr.',ch:'公交站'},{en:'bus ticket',pos:'phr.',ch:'公交票'},{en:'special buses',pos:'phr.',ch:'专用公车'},{en:'minibus',pos:'n.',ch:'小型巴士'},{en:'bus service',pos:'phr.',ch:'公交服务'},{en:'shuttle',pos:'n.',ch:'班车'},{en:'passenger',pos:'n.',ch:'乘客'},{en:'station',pos:'n.',ch:'车站'},{en:'subway',pos:'n.',ch:'地铁'},{en:'highway',pos:'n.',ch:'高速公路'},{en:'lane',pos:'n.',ch:'车道；小巷'},{en:'taxi',pos:'n.',ch:'出租车'},{en:'cab',pos:'n.',ch:'的士'},{en:'helicopter',pos:'n.',ch:'直升机'},{en:'plane',pos:'n.',ch:'飞机；平面'},{en:'plane science',pos:'phr.',ch:'飞行科学'},{en:'bicycle',pos:'n.',ch:'自行车'},{en:'bike',pos:'n.',ch:'自行车'},{en:'chain',pos:'n.',ch:'链条'},{en:'car',pos:'n.',ch:'汽车'},{en:'car park',pos:'phr.',ch:'车位'},{en:'car tyre',pos:'phr.',ch:'车胎'},{en:'high car taxes',pos:'phr.',ch:'高额车辆税'},{en:'race car',pos:'phr.',ch:'赛车'},{en:'automobile',pos:'n.',ch:'汽车'},{en:'motor',pos:'n.',ch:'汽车'},{en:'caravan',pos:'n.',ch:'房车'},{en:'minivan',pos:'n.',ch:'小型货车'}
+],
+'住宿酒店预订观光': [
+{en:'tickets',pos:'n.',ch:'票'},{en:'access',pos:'n.',ch:'进入'},{en:'check',pos:'v.',ch:'检查'},{en:'lists',pos:'n.',ch:'列表'},{en:'checklist',pos:'n.',ch:'清单'},{en:'photographs',pos:'n.',ch:'照片'},{en:'photographic',pos:'adj.',ch:'摄影的'},{en:'take photos',pos:'phr.',ch:'照相'},{en:'camera',pos:'n.',ch:'相机'},{en:'zoom',pos:'n.',ch:'变焦'},{en:'focus',pos:'n.',ch:'中心点；焦距'},{en:'flash light',pos:'phr.',ch:'闪光灯'},{en:'flashing',pos:'adj.',ch:'闪烁的'},{en:'scenery',pos:'n.',ch:'风景'},{en:'view',pos:'n.',ch:'风景'},{en:'lookout point',pos:'phr.',ch:'观景点'},{en:'rural',pos:'adj.',ch:'乡下的'},{en:'village',pos:'n.',ch:'乡村'},{en:'country',pos:'n.',ch:'乡下；国家'},{en:'countryside living',pos:'phr.',ch:'田园生活'},{en:'different countries',pos:'phr.',ch:'不同的国家'},{en:'carnival',pos:'n.',ch:'狂欢节'},{en:'festival',pos:'n.',ch:'节日'},{en:'balloon',pos:'n.',ch:'热气球'},{en:'cable',pos:'n.',ch:'缆线'},{en:'cable car',pos:'phr.',ch:'缆车'},{en:'climbing',pos:'n.',ch:'攀爬'},{en:'experience',pos:'n.',ch:'体验'},{en:'memories',pos:'n.',ch:'记忆'},{en:'holiday',pos:'n.',ch:'度假'},{en:'national holidays',pos:'phr.',ch:'公共假日'},{en:'vacation',pos:'n.',ch:'度假'},{en:'travelling',pos:'n.',ch:'旅行'},{en:'domestic',pos:'adj.',ch:'国内的'},{en:'overseas',pos:'adj.',ch:'海外的'},{en:'peak season',pos:'phr.',ch:'旺季'},{en:'embassy',pos:'n.',ch:'大使馆'},{en:'visa',pos:'n.',ch:'签证'},{en:'passport',pos:'n.',ch:'护照'},{en:'passport photos',pos:'phr.',ch:'护照照片'},{en:'personal information',pos:'phr.',ch:'个人信息'},{en:'tour',pos:'n.',ch:'观光'},{en:'general tour',pos:'phr.',ch:'一般性旅游'},{en:'tourism',pos:'n.',ch:'旅游'},{en:'tourists',pos:'n.',ch:'游客'},{en:'visits',pos:'n.',ch:'参观'},{en:'visitor',pos:'n.',ch:'游客'},{en:'guest',pos:'n.',ch:'客人'},{en:'group trip',pos:'phr.',ch:'团体旅游'},{en:'guides',pos:'n.',ch:'向导'},{en:'hostel',pos:'n.',ch:'旅社'},{en:'motel',pos:'n.',ch:'汽车旅馆'},{en:'hotel',pos:'n.',ch:'酒店'},{en:'booking',pos:'n.',ch:'预订'},{en:'book in advanced',pos:'phr.',ch:'提前预订'},{en:'booking form',pos:'phr.',ch:'预订表格'},{en:'reservation',pos:'n.',ch:'预订'},{en:'front',pos:'n.',ch:'前面'},{en:'front desk',pos:'phr.',ch:'前台'},{en:'help desk',pos:'phr.',ch:'服务台'},{en:'information desk',pos:'phr.',ch:'问讯处'},{en:'reception',pos:'n.',ch:'接待'},{en:'receptionist',pos:'n.',ch:'接待员'},{en:'hospitality',pos:'n.',ch:'款待'},{en:'home welcome',pos:'phr.',ch:'宾至如归'},{en:'unapproachable',pos:'adj.',ch:'不友好的'},{en:'waiter',pos:'n.',ch:'服务员'},{en:'waitress',pos:'n.',ch:'女服务员'},{en:'services',pos:'n.',ch:'服务'},{en:'service manager',pos:'phr.',ch:'服务部经理'},{en:'room service',pos:'phr.',ch:'客房服务'},{en:'satisfaction',pos:'n.',ch:'满意度'},{en:'satisfactory',pos:'adj.',ch:'令人满意的'},{en:'pleasure',pos:'n.',ch:'愉快'},{en:'feedback',pos:'n.',ch:'反馈'},{en:'comment card',pos:'phr.',ch:'意见表'},{en:'card',pos:'n.',ch:'卡片'},{en:'card index',pos:'phr.',ch:'卡片索引'},{en:'noisy',pos:'adj.',ch:'吵闹的'},{en:'loud noises',pos:'phr.',ch:'大声喧哗'},{en:'complaints',pos:'n.',ch:'投诉'},{en:'apologize',pos:'v.',ch:'道歉'},{en:'apology',pos:'n.',ch:'道歉'}
+],
+'驾驶路况交通规则': [
+{en:'drive',pos:'v.',ch:'驾驶'},{en:'test drive',pos:'phr.',ch:'试驾'},{en:'driver',pos:'n.',ch:'司机'},{en:'driving',pos:'n.',ch:'驾驶'},{en:'license',pos:'n.',ch:'执照'},{en:'driving license',pos:'phr.',ch:'驾照'},{en:'self-drive',pos:'adj.',ch:'自驾的'},{en:'beginner',pos:'n.',ch:'初学者'},{en:'beginning',pos:'n.',ch:'开始'},{en:'basic',pos:'adj.',ch:'基本的'},{en:'navigate',pos:'v.',ch:'驾驶；定位'},{en:'navigational',pos:'adj.',ch:'导航的'},{en:'pilots',pos:'n.',ch:'领航员'},{en:'turn',pos:'v.',ch:'转向'},{en:'orientation',pos:'n.',ch:'方向'},{en:'direction',pos:'n.',ch:'方向'},{en:'downhill',pos:'adj.',ch:'下坡的'},{en:'speed',pos:'n.',ch:'速度'},{en:'uncontrolled',pos:'adj.',ch:'无法控制的'},{en:'rush',pos:'n.',ch:'匆忙'},{en:'hurry up',pos:'phr.',ch:'催促'},{en:'radar',pos:'n.',ch:'雷达'},{en:'limit',pos:'v.',ch:'限制'},{en:'limitation',pos:'n.',ch:'限制；局限'},{en:'slow',pos:'adj.',ch:'缓慢的'},{en:'warning',pos:'n.',ch:'警告'},{en:'signal',pos:'n.',ch:'信号'},{en:'instruction',pos:'n.',ch:'指令'},{en:'dictation',pos:'n.',ch:'命令'},{en:'rule',pos:'n.',ch:'规则'},{en:'antifreeze',pos:'n.',ch:'防冻液'},{en:'petrol',pos:'n.',ch:'汽油'},{en:'petrol station',pos:'phr.',ch:'加油站'},{en:'gas station',pos:'phr.',ch:'加油站'},{en:'oil',pos:'n.',ch:'石油'},{en:'oil filter',pos:'phr.',ch:'油滤器'},{en:'engine',pos:'n.',ch:'发动机'},{en:'automatic',pos:'n.',ch:'自动换挡汽车'},{en:'tyre',pos:'n.',ch:'轮胎'},{en:'wheel',pos:'n.',ch:'轮子'},{en:'back wheel',pos:'phr.',ch:'后轮'},{en:'wheelchair',pos:'n.',ch:'轮椅'},{en:'seat',pos:'n.',ch:'座位'},{en:'child seat',pos:'phr.',ch:'儿童座椅'},{en:'seating',pos:'n.',ch:'座位'},{en:'parking',pos:'n.',ch:'停车位'},{en:'parking space',pos:'phr.',ch:'停车位'},{en:'free parking',pos:'phr.',ch:'免费停车'},{en:'traffic',pos:'n.',ch:'交通'},{en:'traffic flow',pos:'phr.',ch:'车流量'},{en:'traffic noise',pos:'phr.',ch:'交通噪音'},{en:'nitrogen',pos:'n.',ch:'氮气'}
+]}},
+
+'医疗与健康': { units: {
+'人体部位生理机能': [
+{en:'disability',pos:'n.',ch:'残疾'},{en:'disable people',pos:'phr.',ch:'残疾人'},{en:'blind',pos:'adj.',ch:'失明的'},{en:'physical changes',pos:'phr.',ch:'身体变化'},{en:'internal clock',pos:'phr.',ch:'生物钟'},{en:'sleep',pos:'n.',ch:'睡觉'},{en:'sleeping bag',pos:'phr.',ch:'睡袋'},{en:'sleeping sickness',pos:'phr.',ch:'嗜睡症'},{en:'sleeping pills',pos:'phr.',ch:'安眠药'},{en:'health',pos:'n.',ch:'健康'},{en:'health care',pos:'phr.',ch:'健康护理'},{en:'health service',pos:'phr.',ch:'公共医疗服务'},{en:'health check',pos:'phr.',ch:'体检'},{en:'health department',pos:'phr.',ch:'卫生部'},{en:'health benefits',pos:'phr.',ch:'健康上的益处'},{en:'unhealthy',pos:'adj.',ch:'不健康的'},{en:'fitness',pos:'n.',ch:'健康'},{en:'age',pos:'v.',ch:'使变老'},{en:'aging',pos:'n.',ch:'老龄化'},{en:'lifespan',pos:'n.',ch:'寿命'},{en:'life cycle',pos:'phr.',ch:'生命周期'},{en:'lifestyle',pos:'n.',ch:'生活方式'},{en:'life science',pos:'phr.',ch:'生命科学'},{en:'quality of life',pos:'phr.',ch:'生活质量'},{en:'metabolism',pos:'n.',ch:'新陈代谢'},{en:'digest',pos:'v.',ch:'消化'},{en:'digestion',pos:'n.',ch:'消化'},{en:'digestive',pos:'adj.',ch:'消化的'},{en:'body shape',pos:'phr.',ch:'体型'},{en:'body fluid',pos:'phr.',ch:'体液'},{en:'body language',pos:'phr.',ch:'肢体语言'},{en:'back',pos:'n.',ch:'背部'},{en:'back problem',pos:'phr.',ch:'背部问题'},{en:'leg',pos:'n.',ch:'腿'},{en:'leg room',pos:'phr.',ch:'腿部空间'},{en:'feet',pos:'n.',ch:'双脚'},{en:'footprints',pos:'n.',ch:'脚步'},{en:'footpath',pos:'n.',ch:'人行道'},{en:'knee',pos:'n.',ch:'膝盖'},{en:'arm',pos:'n.',ch:'手臂'},{en:'hand',pos:'n.',ch:'手'},{en:'finger',pos:'n.',ch:'手指'},{en:'head',pos:'n.',ch:'头'},{en:'headaches',pos:'n.',ch:'头疼'},{en:'faces',pos:'n.',ch:'脸部'},{en:'face painting',pos:'phr.',ch:'脸部彩绘'},{en:'hair',pos:'n.',ch:'头发'},{en:'skin',pos:'n.',ch:'皮肤'},{en:'jaw',pos:'n.',ch:'下巴'},{en:'neck',pos:'n.',ch:'脖子'},{en:'necklace',pos:'n.',ch:'项链'},{en:'teeth',pos:'n.',ch:'牙齿'},{en:'toothache',pos:'n.',ch:'牙疼'},{en:'tongue',pos:'n.',ch:'舌头'},{en:'brain',pos:'n.',ch:'大脑'},{en:'eye',pos:'n.',ch:'眼睛'},{en:'eyedrops',pos:'n.',ch:'眼药水'},{en:'eye contacts',pos:'phr.',ch:'眼神交流'},{en:'eyesight',pos:'n.',ch:'视力'},{en:'hearing',pos:'n.',ch:'听力'},{en:'listening',pos:'n.',ch:'听力'},{en:'voice',pos:'n.',ch:'嗓音'},{en:'clear',pos:'adj.',ch:'清晰的'},{en:'clear voice',pos:'phr.',ch:'清晰嗓音'},{en:'kidney',pos:'n.',ch:'肾'},{en:'heart',pos:'n.',ch:'心脏'},{en:'heart rate',pos:'phr.',ch:'心率'},{en:'heart disease',pos:'phr.',ch:'心脏病'},{en:'lungs',pos:'n.',ch:'肺'},{en:'breathe',pos:'v.',ch:'呼吸'},{en:'stomach',pos:'n.',ch:'胃'},{en:'blood',pos:'n.',ch:'血'},{en:'red blood cells',pos:'phr.',ch:'血红细胞'},{en:'bone',pos:'n.',ch:'骨头'}
+],
+'情绪心理压力性格': [
+{en:'mental',pos:'adj.',ch:'心理的'},{en:'mental ability',pos:'phr.',ch:'心智能力'},{en:'emotion',pos:'n.',ch:'情感'},{en:'emotional',pos:'adj.',ch:'情感的'},{en:'rationally',pos:'adv.',ch:'理性地'},{en:'moods',pos:'n.',ch:'心情'},{en:'character',pos:'n.',ch:'性格'},{en:'personality',pos:'n.',ch:'个性'},{en:'influence',pos:'n.',ch:'影响'},{en:'negative',pos:'adj.',ch:'消极的'},{en:'negative affect',pos:'phr.',ch:'消极情绪'},{en:'negative thinking',pos:'phr.',ch:'负面思考'},{en:'opposite',pos:'n.',ch:'反面'},{en:'against',pos:'prep.',ch:'反对'},{en:'passive',pos:'adj.',ch:'消极的'},{en:'corrupt',pos:'adj.',ch:'堕落的'},{en:'pressure',pos:'n.',ch:'压力'},{en:'stress',pos:'n.',ch:'压力'},{en:'stressful',pos:'adj.',ch:'有压力的'},{en:'stuck',pos:'adj.',ch:'被......困住的'},{en:'depression',pos:'n.',ch:'沮丧'},{en:'frustration',pos:'n.',ch:'沮丧'},{en:'discourage',pos:'v.',ch:'使泄气'},{en:'encourage',pos:'v.',ch:'鼓励'},{en:'useless',pos:'adj.',ch:'无用的'},{en:'horror',pos:'n.',ch:'恐惧'},{en:'scare',pos:'n.',ch:'恐惧'},{en:'fear',pos:'n.',ch:'害怕'},{en:'tolerance',pos:'n.',ch:'忍耐'},{en:'lonely',pos:'adj.',ch:'寂寞的'},{en:'isolation',pos:'n.',ch:'孤立'},{en:'unsocial',pos:'adj.',ch:'不合群的'},{en:'independence',pos:'n.',ch:'独立'},{en:'escape',pos:'v.',ch:'逃离'},{en:'tears',pos:'n.',ch:'眼泪'},{en:'torn',pos:'v.',ch:'撕裂'},{en:'sensitive',pos:'adj.',ch:'敏感的'},{en:'shame',pos:'n.',ch:'羞愧'},{en:'boring',pos:'adj.',ch:'无聊的'}
+],
+'疾病伤痛医疗诊治': [
+{en:'virus',pos:'n.',ch:'病毒'},{en:'infection',pos:'n.',ch:'感染'},{en:'diseases',pos:'n.',ch:'疾病'},{en:'illness',pos:'n.',ch:'疾病'},{en:'uncomfortable',pos:'adj.',ch:'不舒服的'},{en:'cold',pos:'n.',ch:'感冒'},{en:'flu',pos:'n.',ch:'流感'},{en:'delicate',pos:'adj.',ch:'纤弱的'},{en:'pain',pos:'n.',ch:'疼痛'},{en:'muscle pain',pos:'phr.',ch:'肌肉疼痛'},{en:'injury',pos:'n.',ch:'损伤'},{en:'sports injury',pos:'phr.',ch:'运动损伤'},{en:'emergency',pos:'n.',ch:'紧急情况'},{en:'accident',pos:'n.',ch:'事故，意外'},{en:'ambulance',pos:'n.',ch:'救护车'},{en:'first-aid kit',pos:'phr.',ch:'急救包'},{en:'hospital',pos:'n.',ch:'医院'},{en:'doctor',pos:'n.',ch:'医生'},{en:'nurse',pos:'n.',ch:'护士'},{en:'nursing',pos:'n.',ch:'护理'},{en:'dentist',pos:'n.',ch:'牙医'},{en:'psychologist',pos:'n.',ch:'心理学家'},{en:'description',pos:'n.',ch:'描述'},{en:'detail',pos:'n.',ch:'详细'},{en:'detail information',pos:'phr.',ch:'详细信息'},{en:'medication',pos:'n.',ch:'药物'},{en:'medicine',pos:'n.',ch:'药'},{en:'natural medicine',pos:'phr.',ch:'中草药'},{en:'medical',pos:'adj.',ch:'医学的'},{en:'medical centre',pos:'phr.',ch:'医疗中心'},{en:'drug',pos:'n.',ch:'药物'},{en:'pill',pos:'n.',ch:'药片'},{en:'tablet',pos:'n.',ch:'片剂，药片'},{en:'capsule',pos:'n.',ch:'胶囊'},{en:'ointment',pos:'n.',ch:'药膏，软膏'},{en:'syrup',pos:'n.',ch:'糖浆'},{en:'dose',pos:'n.',ch:'剂量，一剂'},{en:'dosage',pos:'n.',ch:'用药剂量'},{en:'prescription',pos:'n.',ch:'处方，药方'},{en:'prescribe',pos:'v.',ch:'开处方，开药'},{en:'pharmacy',pos:'n.',ch:'药店，药房'},{en:'pharmacist',pos:'n.',ch:'药剂师'},{en:'treatment',pos:'n.',ch:'治疗，疗法'},{en:'treat',pos:'v.',ch:'治疗，医治'},{en:'cure',pos:'v./n.',ch:'治愈；疗法'},{en:'heal',pos:'v.',ch:'愈合，康复'},{en:'recovery',pos:'n.',ch:'康复，恢复'},{en:'recover',pos:'v.',ch:'恢复健康，康复'},{en:'check-up',pos:'n.',ch:'体检，检查'},{en:'medical check-up',pos:'phr.',ch:'医学体检'},{en:'examine',pos:'v.',ch:'检查，诊疗'},{en:'examination',pos:'n.',ch:'检查，体检'},{en:'scan',pos:'n./v.',ch:'扫描；扫描检查'},{en:'x-ray',pos:'n.',ch:'X光检查，X光片'},{en:'blood test',pos:'phr.',ch:'验血'},{en:'allergic',pos:'adj.',ch:'过敏的'},{en:'allergy',pos:'n.',ch:'过敏症'},{en:'side effect',pos:'phr.',ch:'副作用'},{en:'addiction',pos:'n.',ch:'成瘾，嗜好'},{en:'symptom',pos:'n.',ch:'症状'},{en:'sign',pos:'n.',ch:'征兆，体征'},{en:'chronic',pos:'adj.',ch:'慢性的，长期的'},{en:'acute',pos:'adj.',ch:'急性的'},{en:'disabled',pos:'adj.',ch:'残疾的，伤残的'},{en:'therapy',pos:'n.',ch:'疗法，理疗'},{en:'physiotherapy',pos:'n.',ch:'物理治疗，理疗'},{en:'surgery',pos:'n.',ch:'外科手术'},{en:'surgeon',pos:'n.',ch:'外科医生'},{en:'operation',pos:'n.',ch:'手术'},{en:'operate',pos:'v.',ch:'做手术，运转'},{en:'bandage',pos:'n.',ch:'绷带'},{en:'plaster',pos:'n.',ch:'石膏；创可贴'},{en:'inpatient',pos:'n.',ch:'住院病人'},{en:'outpatient',pos:'n.',ch:'门诊病人'},{en:'ward',pos:'n.',ch:'病房'},{en:'health insurance',pos:'phr.',ch:'医疗保险'},{en:'well-being',pos:'n.',ch:'身心健康，幸福状态'}
+],
+'运动健身休闲锻炼': [
+{en:'exercise',pos:'n./v.',ch:'锻炼，运动'},{en:'regular exercise',pos:'phr.',ch:'规律运动'},{en:'work out',pos:'phr.v.',ch:'健身，锻炼'},{en:'workout',pos:'n.',ch:'健身训练'},{en:'fitness training',pos:'phr.',ch:'体能训练'},{en:'physical exercise',pos:'phr.',ch:'体育锻炼'},{en:'physical activity',pos:'phr.',ch:'体力活动'},{en:'aerobic exercise',pos:'phr.',ch:'有氧运动'},{en:'strength training',pos:'phr.',ch:'力量训练'},{en:'endurance',pos:'n.',ch:'耐力，持久力'},{en:'flexibility',pos:'n.',ch:'柔韧性，灵活性'},{en:'agility',pos:'n.',ch:'敏捷性'},{en:'balance',pos:'n.',ch:'平衡'},{en:'stretch',pos:'v./n.',ch:'拉伸，伸展'},{en:'warm up',pos:'phr.v.',ch:'热身'},{en:'warm-up',pos:'n.',ch:'热身运动'},{en:'cool down',pos:'phr.v.',ch:'放松拉伸，降温'},{en:'jog',pos:'v.',ch:'慢跑'},{en:'jogging',pos:'n.',ch:'慢跑运动'},{en:'run',pos:'v./n.',ch:'跑步'},{en:'running',pos:'n.',ch:'跑步运动'},{en:'sprint',pos:'v./n.',ch:'冲刺，短跑'},{en:'walk',pos:'v./n.',ch:'步行，散步'},{en:'walking',pos:'n.',ch:'步行锻炼'},{en:'hike',pos:'v./n.',ch:'徒步，远足'},{en:'hiking',pos:'n.',ch:'徒步旅行，远足运动'},{en:'cycling',pos:'n.',ch:'骑行，骑自行车运动'},{en:'swim',pos:'v.',ch:'游泳'},{en:'swimming',pos:'n.',ch:'游泳运动'},{en:'yoga',pos:'n.',ch:'瑜伽'},{en:'pilates',pos:'n.',ch:'普拉提'},{en:'gym',pos:'n.',ch:'健身房，体育馆'},{en:'gymnasium',pos:'n.',ch:'体育馆，健身中心'},{en:'fitness centre',pos:'phr.',ch:'健身中心'},{en:'sports equipment',pos:'phr.',ch:'运动器材'},{en:'dumbbell',pos:'n.',ch:'哑铃'},{en:'barbell',pos:'n.',ch:'杠铃'},{en:'treadmill',pos:'n.',ch:'跑步机'},{en:'calorie',pos:'n.',ch:'卡路里，热量'},{en:'burn calories',pos:'phr.',ch:'消耗热量'},{en:'active',pos:'adj.',ch:'活跃的，积极的'},{en:'sedentary',pos:'adj.',ch:'久坐的，缺乏运动的'},{en:'sedentary lifestyle',pos:'phr.',ch:'久坐的生活方式'},{en:'healthy lifestyle',pos:'phr.',ch:'健康的生活方式'},{en:'living habit',pos:'phr.',ch:'生活习惯'},{en:'sleep quality',pos:'phr.',ch:'睡眠质量'},{en:'insomnia',pos:'n.',ch:'失眠症'},{en:'sleep disorder',pos:'phr.',ch:'睡眠障碍'},{en:'early sleep',pos:'phr.',ch:'早睡'},{en:'regular schedule',pos:'phr.',ch:'规律作息'},{en:'motivation',pos:'n.',ch:'动机'},{en:'aspiration',pos:'n.',ch:'强烈的愿望'},{en:'stimulation',pos:'n.',ch:'激励'},{en:'relaxation',pos:'n.',ch:'放松'},{en:'smile',pos:'n.',ch:'微笑'},{en:'rest',pos:'v.',ch:'休息'},{en:'rest area',pos:'phr.',ch:'休息区'},{en:'restroom',pos:'n.',ch:'休息室'},{en:'lose weight',pos:'phr.',ch:'减肥'}
+]}},
+
+'租房': { units: {
+'房屋户型房间门窗阳台': [
+{en:'address',pos:'n.',ch:'地址'},{en:'apartment',pos:'n.',ch:'公寓'},{en:'flat',pos:'n.',ch:'公寓'},{en:'housing',pos:'n.',ch:'住宅'},{en:'house key',pos:'phr.',ch:'房门钥匙'},{en:'entrance',pos:'n.',ch:'入口'},{en:'door',pos:'n.',ch:'门'},{en:'door to door',pos:'phr.',ch:'门到门服务'},{en:'back door',pos:'phr.',ch:'后门'},{en:'gate',pos:'n.',ch:'大门'},{en:'side gate',pos:'phr.',ch:'侧门'},{en:'handle',pos:'n.',ch:'门把手'},{en:'lock',pos:'n.',ch:'锁'},{en:'locker',pos:'n.',ch:'锁柜'},{en:'lockup garage',pos:'phr.',ch:'带锁车库'},{en:'selflocking',pos:'adj.',ch:'自动上锁'},{en:'code',pos:'n.',ch:'密码'},{en:'password',pos:'n.',ch:'密码'},{en:'elevator',pos:'n.',ch:'电梯'},{en:'stairs',pos:'n.',ch:'楼梯'},{en:'staircases',pos:'n.',ch:'楼梯'},{en:'upstairs',pos:'n.',ch:'楼上'},{en:'stair lift',pos:'phr.',ch:'楼梯升降机'},{en:'roof',pos:'n.',ch:'屋顶'},{en:'dome',pos:'n.',ch:'圆屋顶'},{en:'corner',pos:'n.',ch:'角落'},{en:'layout',pos:'n.',ch:'布局'},{en:'ground plan',pos:'phr.',ch:'草图'},{en:'structure',pos:'n.',ch:'结构'},{en:'structured',pos:'adj.',ch:'有结构的'},{en:'living room',pos:'phr.',ch:'客厅'},{en:'double room',pos:'phr.',ch:'双人房'},{en:'changing room',pos:'phr.',ch:'更衣室'},{en:'green room',pos:'phr.',ch:'绿色房间'},{en:'spare room',pos:'phr.',ch:'客房'},{en:'spare',pos:'adj.',ch:'备用的'},{en:'lounge',pos:'n.',ch:'客厅'},{en:'cabin',pos:'n.',ch:'小屋'},{en:'cabin key',pos:'phr.',ch:'客舱钥匙'},{en:'studio',pos:'n.',ch:'工作室'},{en:'balcony',pos:'n.',ch:'阳台'},{en:'terrace',pos:'n.',ch:'阳台'},{en:'bedroom',pos:'n.',ch:'卧室'},{en:'basement',pos:'n.',ch:'地下室'},{en:'garage',pos:'n.',ch:'车库'},{en:'warehouse',pos:'n.',ch:'仓库'},{en:'storage space',pos:'phr.',ch:'储藏室'},{en:'fence',pos:'n.',ch:'围墙'},{en:'barrier',pos:'n.',ch:'屏障；障碍'},{en:'floor',pos:'n.',ch:'地板'},{en:'ground',pos:'n.',ch:'地面'}
+],
+'家具家电厨卫设备': [
+{en:'living expense',pos:'phr.',ch:'生活开销'},{en:'clean',pos:'adj.',ch:'干净的'},{en:'cleanest',pos:'adj.',ch:'最清洁的'},{en:'clean product',pos:'phr.',ch:'清洁用品'},{en:'clean material',pos:'phr.',ch:'清洁材料'},{en:'clean machine',pos:'phr.',ch:'清洁机器'},{en:'waste',pos:'n.',ch:'浪费'},{en:'waste disposal',pos:'phr.',ch:'废弃处置'},{en:'green waste',pos:'phr.',ch:'可回收垃圾'},{en:'rubbish',pos:'n.',ch:'垃圾'},{en:'trash',pos:'n.',ch:'垃圾'},{en:'garbage',pos:'n.',ch:'垃圾'},{en:'dust bag',pos:'phr.',ch:'集尘袋'},{en:'reusable',pos:'adj.',ch:'可重复使用的'},{en:'reusable bag',pos:'phr.',ch:'环保袋'},{en:'water pipe',pos:'phr.',ch:'水管'},{en:'pipe',pos:'n.',ch:'管道'},{en:'drain',pos:'v.',ch:'排水'},{en:'pump',pos:'n.',ch:'泵'},{en:'pump water',pos:'phr.',ch:'用水泵抽水'},{en:'explode',pos:'v.',ch:'爆炸'},{en:'explosion',pos:'n.',ch:'爆炸'},{en:'leak',pos:'n.',ch:'漏洞'},{en:'gap',pos:'n.',ch:'间隙'},{en:'fan',pos:'n.',ch:'风扇'},{en:'aircondition',pos:'n.',ch:'空调'},{en:'central heating',pos:'phr.',ch:'中央暖气'},{en:'cool',pos:'adj.',ch:'凉爽的'},{en:'heater',pos:'n.',ch:'取暖器'},{en:'water heater',pos:'phr.',ch:'热水器'},{en:'shower',pos:'n.',ch:'洗澡'},{en:'warm bath',pos:'phr.',ch:'热水澡'},{en:'bath',pos:'v.',ch:'洗澡'},{en:'bathroom',pos:'n.',ch:'浴室'},{en:'toilet',pos:'n.',ch:'厕所'},{en:'towel',pos:'n.',ch:'毛巾'},{en:'soap',pos:'n.',ch:'肥皂'},{en:'washbasin',pos:'n.',ch:'面盆'},{en:'light',pos:'n.',ch:'光；灯'},{en:'lighting',pos:'n.',ch:'照明'},{en:'lamp',pos:'n.',ch:'灯'},{en:'desk lamp',pos:'phr.',ch:'台灯'},{en:'candle',pos:'n.',ch:'蜡烛'},{en:'bright',pos:'adj.',ch:'明亮的'},{en:'washing',pos:'n.',ch:'洗'},{en:'washing machine',pos:'phr.',ch:'洗衣机'},{en:'laptop',pos:'n.',ch:'笔记本电脑'},{en:'batteries',pos:'n.',ch:'电池'},{en:'furniture',pos:'n.',ch:'家具'},{en:'unfurnished',pos:'adj.',ch:'无家具的'},{en:'table',pos:'n.',ch:'桌子'},{en:'long table',pos:'phr.',ch:'长桌'},{en:'round table',pos:'phr.',ch:'圆桌'},{en:'chair',pos:'n.',ch:'椅子'},{en:'armchair',pos:'n.',ch:'扶手椅'},{en:'mirror',pos:'n.',ch:'镜子'},{en:'window',pos:'n.',ch:'窗户'},{en:'window glass',pos:'phr.',ch:'窗户玻璃'},{en:'window view',pos:'phr.',ch:'窗景'},{en:'curtain',pos:'n.',ch:'窗帘'},{en:'glass',pos:'n.',ch:'玻璃'},{en:'glass roof',pos:'phr.',ch:'玻璃顶'},{en:'blanket',pos:'n.',ch:'毯子'},{en:'carpet',pos:'n.',ch:'地毯'},{en:'mat',pos:'n.',ch:'垫子'},{en:'bed sheet',pos:'phr.',ch:'床单'},{en:'queen size',pos:'phr.',ch:'双人床'}
+],
+'维修合同中介规定': [
+{en:'request',pos:'n.',ch:'请求'},{en:'require',pos:'v.',ch:'要求'},{en:'demand',pos:'n.',ch:'需求'},{en:'contact',pos:'v.',ch:'联系'},{en:'contact number',pos:'phr.',ch:'联系电话'},{en:'maintenance',pos:'n.',ch:'维护'},{en:'replacement',pos:'n.',ch:'替换'},{en:'change',pos:'v.',ch:'改变'},{en:'repair',pos:'v.',ch:'修理'},{en:'free repair',pos:'phr.',ch:'免费修理'},{en:'repaired cost',pos:'phr.',ch:'修理成本'},{en:'carpenter',pos:'n.',ch:'木匠'},{en:'seasoned',pos:'adj.',ch:'风干的'},{en:'polish',pos:'v.',ch:'抛光'},{en:'board',pos:'n.',ch:'板子'},{en:'decoration',pos:'n.',ch:'装潢'},{en:'equipment',pos:'n.',ch:'工具'},{en:'tools',pos:'n.',ch:'工具'},{en:'traditional tool',pos:'phr.',ch:'传统工具'},{en:'scaffold',pos:'n.',ch:'脚手架'},{en:'ladder',pos:'n.',ch:'梯子'},{en:'glue',pos:'n.',ch:'胶水'},{en:'grease',pos:'n.',ch:'油膏'},{en:'wires',pos:'n.',ch:'电线'},{en:'indoor',pos:'adj.',ch:'在室内的'},{en:'facilities',pos:'n.',ch:'设备'},{en:'ventilation system',pos:'phr.',ch:'通风系统'},{en:'application',pos:'n.',ch:'申请表'},{en:'form',pos:'n.',ch:'表格'},{en:'application form',pos:'phr.',ch:'申请表'},{en:'fill',pos:'v.',ch:'填写'},{en:'signature',pos:'n.',ch:'签名'},{en:'sign',pos:'v.',ch:'标记'},{en:'deadline',pos:'n.',ch:'最后期限'},{en:'name',pos:'n.',ch:'名字'},{en:'expectation',pos:'n.',ch:'期望'},{en:'expect',pos:'v.',ch:'预期'},{en:'decision',pos:'n.',ch:'决定'},{en:'accept',pos:'v.',ch:'接受'},{en:'acceptable',pos:'adj.',ch:'可接受的'},{en:'choice',pos:'n.',ch:'选择'},{en:'choose',pos:'v.',ch:'选择'},{en:'choosing',pos:'v.',ch:'选择'},{en:'select',pos:'v.',ch:'选择'},{en:'selection',pos:'n.',ch:'选择'},{en:'agencies',pos:'n.',ch:'中介'},{en:'agent',pos:'n.',ch:'代理人；中介'},{en:'Long-term',pos:'adj.',ch:'长期的'},{en:'contract',pos:'n.',ch:'合同'},{en:'agreement',pos:'n.',ch:'协定；协议'},{en:'lawyer',pos:'n.',ch:'律师'},{en:'law department',pos:'phr.',ch:'法律部门'},{en:'law firm',pos:'phr.',ch:'律所'},{en:'legal',pos:'adj.',ch:'法律的；合法的'},{en:'standard',pos:'n.',ch:'标准'},{en:'standard grade',pos:'phr.',ch:'标准等级'},{en:'arrangement',pos:'n.',ch:'安排；约定'},{en:'regulation',pos:'n.',ch:'规定'},{en:'strict',pos:'adj.',ch:'严格的'},{en:'smoking',pos:'n.',ch:'抽烟'},{en:'nonsmoking',pos:'adj.',ch:'禁止吸烟'},{en:'smoke alarm',pos:'phr.',ch:'烟雾报警器'},{en:'cigar',pos:'n.',ch:'雪茄'},{en:'advance',pos:'v.',ch:'预付'},{en:'neighbours',pos:'n.',ch:'邻居'},{en:'landlady',pos:'n.',ch:'女房东'}
+]}},
+
+'购物与消费': { units: {
+'购物与消费': [
+{en:'consume',pos:'v.',ch:'消费'},{en:'consumer',pos:'n.',ch:'消费者'},{en:'consumption',pos:'n.',ch:'消费'},{en:'customer',pos:'n.',ch:'顾客'},{en:'client',pos:'n.',ch:'顾客'},{en:'shopper',pos:'n.',ch:'顾客'},{en:'wallet',pos:'n.',ch:'钱包'},{en:'retail',pos:'n.',ch:'零售'},{en:'store',pos:'n./v.',ch:'商店；存储'},{en:'shop',pos:'n.',ch:'商店'},{en:'local shop',pos:'phr.',ch:'本地商店'},{en:'shopping',pos:'n.',ch:'购物'},{en:'shopping mall',pos:'phr.',ch:'购物中心'},{en:'department store',pos:'phr.',ch:'百货商店'},{en:'booth',pos:'n.',ch:'摊位'},{en:'canteen',pos:'n.',ch:'小卖部'},{en:'grocery',pos:'n.',ch:'杂货店'},{en:'fast food shop',pos:'phr.',ch:'快餐店'},{en:'supermarket',pos:'n.',ch:'超市'},{en:'super',pos:'adj.',ch:'超级的'},{en:'bakery',pos:'n.',ch:'面包房'},{en:'barber shop',pos:'phr.',ch:'理发店'},{en:'laundry',pos:'n.',ch:'洗衣物的活'},{en:'salesman',pos:'n.',ch:'销售员'},{en:'sales',pos:'n.',ch:'销售额'},{en:'leaflet',pos:'n.',ch:'传单'},{en:'delivery',pos:'n.',ch:'快递'},{en:'commerce',pos:'n.',ch:'商务；商业'},{en:'commercial',pos:'adj.',ch:'商业的'},{en:'price',pos:'n.',ch:'价格'},{en:'estimate',pos:'v.',ch:'估价'},{en:'evaluation',pos:'n.',ch:'评价'},{en:'fees',pos:'n.',ch:'费用'},{en:'cost',pos:'v.',ch:'花费'},{en:'cost-effective',pos:'adj.',ch:'精打细算的'},{en:'costly',pos:'adj.',ch:'昂贵的'},{en:'pay',pos:'v.',ch:'付款'},{en:'payment',pos:'n.',ch:'付款'},{en:'goods',pos:'n.',ch:'商品'},{en:'products',pos:'n.',ch:'产品'},{en:'production',pos:'n.',ch:'产品；产量'},{en:'bar code',pos:'phr.',ch:'条形码'},{en:'label',pos:'n.',ch:'标签'},{en:'sticker',pos:'n.',ch:'贴纸'},{en:'discount',pos:'n.',ch:'折扣'},{en:'bargain',pos:'n.',ch:'便宜货'},{en:'save',pos:'v.',ch:'节省'},{en:'savings',pos:'n.',ch:'储蓄'},{en:'special offer',pos:'phr.',ch:'特价'},{en:'cheap',pos:'adj.',ch:'廉价的'},{en:'expensive',pos:'adj.',ch:'昂贵的'},{en:'fair',pos:'adj.',ch:'合理的'},{en:'refund',pos:'n.',ch:'退款'}
+]}},
+
+'人际关系': { units: {
+'人际关系': [
+{en:'families',pos:'n.',ch:'家庭'},{en:'families life',pos:'phr.',ch:'家庭生活'},{en:'family photo',pos:'phr.',ch:'全家福'},{en:'family ticket',pos:'phr.',ch:'家庭票'},{en:'family relationship',pos:'phr.',ch:'家庭关系'},{en:'family member',pos:'phr.',ch:'家庭成员'},{en:'home',pos:'n.',ch:'家'},{en:'marriage',pos:'n.',ch:'婚姻'},{en:'wedding',pos:'n.',ch:'婚礼'},{en:'couple',pos:'n.',ch:'夫妇；一对'},{en:'pair',pos:'n.',ch:'夫妻；一对'},{en:'babies',pos:'n.',ch:'婴儿'},{en:'birth',pos:'n.',ch:'出生'},{en:'relationships',pos:'n.',ch:'关系'},{en:'link',pos:'n.',ch:'关联'},{en:'connected',pos:'adj.',ch:'有关系的'},{en:'relevant',pos:'adj.',ch:'紧密相关的'},{en:'generation',pos:'n.',ch:'一代人'},{en:'brother-in-law',pos:'n.',ch:'连襟'},{en:'mother',pos:'n.',ch:'母亲'},{en:'uncle',pos:'n.',ch:'叔叔'},{en:'parent',pos:'n.',ch:'父母'},{en:'partner',pos:'n.',ch:'搭档；配偶'},{en:'grandfather',pos:'n.',ch:'爷爷'},{en:'grandmother',pos:'n.',ch:'奶奶'},{en:'gender',pos:'n.',ch:'性别'},{en:'boy',pos:'n.',ch:'男孩'},{en:'male',pos:'n.',ch:'男性'},{en:'female',pos:'n.',ch:'女性；雌性'},{en:'women',pos:'n.',ch:'妇女'},{en:'children',pos:'n.',ch:'儿童'},{en:'children background',pos:'phr.',ch:'儿童成长背景'},{en:'children mind',pos:'phr.',ch:'儿童心理'},{en:'friend',pos:'n.',ch:'朋友'},{en:'friendly',pos:'adj.',ch:'友好的'},{en:'friendship',pos:'n.',ch:'友谊'},{en:'social',pos:'adj.',ch:'社会的'},{en:'society',pos:'n.',ch:'社会'},{en:'sociable',pos:'adj.',ch:'善于交际的'},{en:'social event',pos:'phr.',ch:'社交活动'},{en:'social interaction',pos:'phr.',ch:'社交沟通'},{en:'social worker',pos:'phr.',ch:'社工'},{en:'social skills',pos:'phr.',ch:'社交技巧'},{en:'social information',pos:'phr.',ch:'社交信息'},{en:'social activities',pos:'phr.',ch:'社交活动'},{en:'socialize',pos:'v.',ch:'交际'},{en:'people',pos:'n.',ch:'人'},{en:'individual',pos:'n.',ch:'个人；个体'},{en:'person',pos:'n.',ch:'人'},{en:'personal',pos:'n.',ch:'个人'},{en:'personal officer',pos:'phr.',ch:'人事管理员'},{en:'wealthy',pos:'adj.',ch:'富有的'},{en:'wealthy people',pos:'phr.',ch:'富人'},{en:'rich',pos:'adj.',ch:'富有的'},{en:'luxury',pos:'n.',ch:'奢侈'},{en:'poverty',pos:'n.',ch:'贫困'},{en:'identity',pos:'n.',ch:'身份'},{en:'heroes',pos:'n.',ch:'英雄'},{en:'celebrities',pos:'n.',ch:'名人'},{en:'privacy',pos:'n.',ch:'隐私'},{en:'private',pos:'adj.',ch:'私有的'},{en:'private property',pos:'phr.',ch:'私人财产'},{en:'junior',pos:'n.',ch:'青少年'},{en:'teenager',pos:'n.',ch:'青少年'},{en:'young',pos:'adj.',ch:'年轻的'},{en:'young people',pos:'phr.',ch:'年轻人'},{en:'young children',pos:'phr.',ch:'幼儿'},{en:'young teenager',pos:'phr.',ch:'（十几岁的）年轻人'},{en:'young graduate',pos:'phr.',ch:'年轻毕业生'},{en:'youth',pos:'n.',ch:'青春'},{en:'maturity',pos:'n.',ch:'成熟'},{en:'adult',pos:'n.',ch:'成年人'},{en:'oldest',pos:'adj.',ch:'最老的'},{en:'old people',pos:'phr.',ch:'老人'},{en:'senior',pos:'adj.',ch:'年长的'},{en:'peers',pos:'n.',ch:'同辈；同伴'},{en:'peer group',pos:'phr.',ch:'同龄群体'}
+]}},
+
+'颜色与日用品': { units: {
+'颜色与日用品': [
+{en:'color',pos:'n.',ch:'颜色'},{en:'colour',pos:'n.',ch:'彩色'},{en:'coloured',pos:'adj.',ch:'彩色的'},{en:'colour photos',pos:'phr.',ch:'彩色照片'},{en:'dark',pos:'adj.',ch:'黑暗的'},{en:'dark blue',pos:'phr.',ch:'深蓝色'},{en:'dark and light',pos:'phr.',ch:'黑暗与光明'},{en:'darkroom',pos:'n.',ch:'暗房'},{en:'blue',pos:'n.',ch:'蓝色'},{en:'yellow',pos:'n.',ch:'黄色'},{en:'grey',pos:'adj.',ch:'灰色的'},{en:'purple',pos:'n.',ch:'紫色'},{en:'red',pos:'n.',ch:'红色'},{en:'silver',pos:'n.',ch:'银色'},{en:'silver cloth',pos:'phr.',ch:'银色布料'},{en:'silver coin',pos:'phr.',ch:'银币'},{en:'metallic grey',pos:'phr.',ch:'金属灰'},{en:'white',pos:'n.',ch:'白色'},{en:'white board',pos:'phr.',ch:'白板'},{en:'green',pos:'n.',ch:'绿色'},{en:'hazel',pos:'n.',ch:'淡褐色'},{en:'appearance',pos:'n.',ch:'外貌，外观'},{en:'fashion',pos:'n.',ch:'时尚'},{en:'popular',pos:'adj.',ch:'受欢迎的'},{en:'prevalent',pos:'adj.',ch:'流行的'},{en:'trend',pos:'n.',ch:'趋势'},{en:'traditional style',pos:'phr.',ch:'传统风格'},{en:'traditional',pos:'n.',ch:'传统'},{en:'cosmetics',pos:'n.',ch:'化妆品'},{en:'cream',pos:'n.',ch:'乳霜'},{en:'perfume',pos:'n.',ch:'香水'},{en:'wear',pos:'v.',ch:'穿'},{en:'clothes',pos:'n.',ch:'衣服'},{en:'clothing',pos:'n.',ch:'衣服'},{en:'clothing section',pos:'phr.',ch:'服装节'},{en:'formal clothing',pos:'phr.',ch:'正装'},{en:'outfits',pos:'n.',ch:'套装'},{en:'dress code',pos:'phr.',ch:'着装规定'},{en:'fancy dress',pos:'phr.',ch:'化装舞会服装'},{en:'uniform',pos:'n.',ch:'制服'},{en:'bag',pos:'n.',ch:'包'},{en:'shoes',pos:'n.',ch:'鞋子'},{en:'washable shoes',pos:'phr.',ch:'可水洗的鞋'},{en:'boots',pos:'n.',ch:'靴子'},{en:'socks',pos:'n.',ch:'袜子'},{en:'gloves',pos:'n.',ch:'手套'},{en:'hat',pos:'n.',ch:'帽子'},{en:'party hat',pos:'phr.',ch:'聚会帽子'},{en:'helmet',pos:'n.',ch:'头盔'},{en:'pocket',pos:'n.',ch:'口袋'},{en:'shirt',pos:'n.',ch:'衬衣'},{en:'sweater',pos:'n.',ch:'针织衫'},{en:'jacket',pos:'n.',ch:'夹克'},{en:'trousers',pos:'n.',ch:'裤子'},{en:'jeans',pos:'n.',ch:'牛仔裤'},{en:'strap',pos:'n.',ch:'皮带'},{en:'line',pos:'n.',ch:'线'},{en:'string',pos:'n.',ch:'细绳'},{en:'rope',pos:'n.',ch:'绳子'},{en:'elastic',pos:'n.',ch:'松紧带'},{en:'stretching',pos:'n.',ch:'弹性'}
+]}},
+
+'金融': { units: {
+'金融': [
+{en:'financial',pos:'adj.',ch:'金融的'},{en:'finance market',pos:'phr.',ch:'金融市场'},{en:'finance',pos:'n.',ch:'金融'},{en:'bank',pos:'n.',ch:'银行'},{en:'bank statement',pos:'phr.',ch:'银行对账单'},{en:'bank transfer',pos:'phr.',ch:'银行转账'},{en:'bill',pos:'n.',ch:'账单'},{en:'bookkeeping',pos:'n.',ch:'记账'},{en:'account',pos:'n.',ch:'账目'},{en:'accountant',pos:'n.',ch:'会计师'},{en:'accountable',pos:'adj.',ch:'负责任的'},{en:'cash',pos:'n.',ch:'现金'},{en:'cashier',pos:'n.',ch:'收银员'},{en:'cash machine',pos:'phr.',ch:'自动取款机'},{en:'money',pos:'n.',ch:'钱'},{en:'money lender',pos:'phr.',ch:'放贷人'},{en:'coin',pos:'n.',ch:'硬币'},{en:'pound',pos:'n.',ch:'英镑'},{en:'cheque',pos:'n.',ch:'支票'},{en:'draft',pos:'n.',ch:'汇票'},{en:'credit',pos:'n.',ch:'信用'},{en:'credit card',pos:'phr.',ch:'信用卡'},{en:'credit check',pos:'phr.',ch:'信贷审查'},{en:'loan',pos:'n.',ch:'贷款'},{en:'cooperation loan',pos:'phr.',ch:'合作贷款'},{en:'deposit',pos:'n.',ch:'押金'},{en:'economy',pos:'n.',ch:'经济'},{en:'economic',pos:'adj.',ch:'经济学的'},{en:'economic depression',pos:'phr.',ch:'经济衰退'},{en:'economics history',pos:'phr.',ch:'经济学史'},{en:'economical',pos:'adj.',ch:'经济的'},{en:'insurance',pos:'n.',ch:'保险'},{en:'insurance company',pos:'phr.',ch:'保险公司'},{en:'house insurance',pos:'phr.',ch:'住房保险'},{en:'assurance',pos:'n.',ch:'人寿保险'},{en:'life assurance',pos:'phr.',ch:'人寿保险'},{en:'investment',pos:'n.',ch:'投资'},{en:'reinvest',pos:'v.',ch:'再投资'},{en:'funding',pos:'n.',ch:'资金'}
+]}}
+};
+
+// ---------- PART 2 ----------
+VOCAB_DATA[2] = {
+'就业与工作': { units: {
+'岗位求职面试人员': [
+{en:'work',pos:'n.',ch:'工作'},{en:'working',pos:'n.',ch:'工作'},{en:'workforce',pos:'n.',ch:'劳动力'},{en:'workplace',pos:'n.',ch:'工作场所'},{en:'workshop',pos:'n.',ch:'工作室'},{en:'workload',pos:'n.',ch:'工作量'},{en:'worksheet',pos:'n.',ch:'工作表'},{en:'practical work',pos:'phr.',ch:'实践工作'},{en:'worker',pos:'n.',ch:'工人'},{en:'former worker',pos:'phr.',ch:'离职员工；前任员工'},{en:'labor',pos:'n.',ch:'劳动力'},{en:'staff',pos:'n.',ch:'员工'},{en:'comer',pos:'n.',ch:'来者'},{en:'employee',pos:'n.',ch:'雇员'},{en:'employer',pos:'n.',ch:'雇主'},{en:'unemployed',pos:'adj.',ch:'失业的'},{en:'job',pos:'n.',ch:'工作'},{en:'full time',pos:'phr.',ch:'全职'},{en:'part time',pos:'phr.',ch:'兼职'},{en:'interview',pos:'n.',ch:'面试'},{en:'interview question',pos:'phr.',ch:'面试问题'},{en:'phone interview',pos:'phr.',ch:'电话面试'},{en:'job interview',pos:'phr.',ch:'求职面试'},{en:'interview skills',pos:'phr.',ch:'面试技巧'},{en:'job application',pos:'phr.',ch:'求职申请'},{en:'issue',pos:'v.',ch:'发布'},{en:'invitation',pos:'n.',ch:'邀请'},{en:'placement',pos:'n.',ch:'安排'},{en:'placement test',pos:'phr.',ch:'定职测验'},{en:'hire',pos:'v.',ch:'雇佣；租用'},{en:'recruit',pos:'v./n.',ch:'招募；新成员'},{en:'retired',pos:'adj.',ch:'退休的'},{en:'dismiss',pos:'v.',ch:'解散'},{en:'resign',pos:'v.',ch:'辞职'},{en:'redundant',pos:'adj.',ch:'被裁员的'},{en:'candidate',pos:'n.',ch:'候选人，求职者'},{en:'applicant',pos:'n.',ch:'申请者'},{en:'volunteer',pos:'n.',ch:'志愿者'},{en:'trainee',pos:'n.',ch:'实习生，受训者'},{en:'apprentice',pos:'n.',ch:'学徒'},{en:'office',pos:'n.',ch:'办公室'},{en:'career office',pos:'phr.',ch:'(大学)就业指导办公室'},{en:'large office',pos:'phr.',ch:'大办公室'},{en:'career',pos:'n.',ch:'职业生涯'},{en:'future career',pos:'phr.',ch:'前程'},{en:'future',pos:'n.',ch:'未来'},{en:'training',pos:'n.',ch:'培训'},{en:'retrain',pos:'n.',ch:'再培训'}
+],
+'薪资福利办公培训': [
+{en:'reward',pos:'n.',ch:'报酬；奖励'},{en:'earn',pos:'v.',ch:'收入'},{en:'salary',pos:'n.',ch:'工资'},{en:'wages',pos:'n.',ch:'工资'},{en:'income',pos:'n.',ch:'收入'},{en:'low income',pos:'phr.',ch:'低收入'},{en:'bonus',pos:'n.',ch:'奖金'},{en:'welfare',pos:'n.',ch:'福利'},{en:'allowance',pos:'n.',ch:'补贴'},{en:'compensation',pos:'n.',ch:'补偿'},{en:'sick pay',pos:'phr.',ch:'病假津贴'},{en:'overtime',pos:'n.',ch:'加班'},{en:'office equipment',pos:'phr.',ch:'办公设备'},{en:'file',pos:'n.',ch:'档案'},{en:'document',pos:'n.',ch:'文件'},{en:'memo',pos:'n.',ch:'备忘录'},{en:'schedule',pos:'n.',ch:'工作日程'},{en:'deadline',pos:'n.',ch:'截止期限'},{en:'meeting',pos:'n.',ch:'会议'},{en:'group organizer',pos:'phr.',ch:'小组组织者'},{en:'further training',pos:'phr.',ch:'进阶培训'},{en:'course',pos:'n.',ch:'培训课程'},{en:'promotion',pos:'n.',ch:'晋升'},{en:'prospect',pos:'n.',ch:'职业前景'},{en:'ambition',pos:'n.',ch:'抱负'},{en:'motivation',pos:'n.',ch:'工作动力'},{en:'pressure',pos:'n.',ch:'工作压力'},{en:'stress',pos:'n.',ch:'压力'},{en:'efficiency',pos:'n.',ch:'效率'},{en:'productive',pos:'adj.',ch:'产出高的'},{en:'inefficient',pos:'adj.',ch:'效率低下的'},{en:'evaluate',pos:'v.',ch:'评估'},{en:'assessment',pos:'n.',ch:'考评'},{en:'feedback',pos:'n.',ch:'反馈'},{en:'reference',pos:'n.',ch:'推荐信'}
+]}},
+
+'公共设施与服务': { units: {
+'城市地理与区域': [
+{en:'city',pos:'n.',ch:'城市'},{en:'city centre',pos:'phr.',ch:'市中心'},{en:'urban',pos:'n.',ch:'城市'},{en:'urban area',pos:'phr.',ch:'城区'},{en:'regional',pos:'adj.',ch:'区域性的'},{en:'area',pos:'n.',ch:'地区；区域'},{en:'smaller area',pos:'phr.',ch:'更小的地方'},{en:'district',pos:'n.',ch:'地区'},{en:'territory',pos:'n.',ch:'领土'},{en:'population',pos:'n.',ch:'人口'},{en:'resident',pos:'n.',ch:'居民'},{en:'citizen',pos:'n.',ch:'市民'},{en:'crowded',pos:'adj.',ch:'拥挤的'},{en:'large',pos:'adj.',ch:'大的'},{en:'large scale',pos:'phr.',ch:'大规模的'},{en:'centre',pos:'n.',ch:'中心'},{en:'central',pos:'adj.',ch:'中心的'},{en:'central location',pos:'phr.',ch:'核心区'},{en:'town',pos:'n.',ch:'镇'},{en:'town hall',pos:'phr.',ch:'市政厅'},{en:'landmark',pos:'n.',ch:'地标'},{en:'public',pos:'adj.',ch:'公众的；公开的'},{en:'public square',pos:'phr.',ch:'公共广场'},{en:'common',pos:'adj.',ch:'常见的'},{en:'common room',pos:'phr.',ch:'公共休息室'},{en:'native',pos:'adj.',ch:'本地的'},{en:'nonnative',pos:'adj.',ch:'引进的'},{en:'none',pos:'adj.',ch:'没有'},{en:'local',pos:'adj.',ch:'当地的'},{en:'local community',pos:'phr.',ch:'地方社区'},{en:'location',pos:'n.',ch:'位置'},{en:'position',pos:'n.',ch:'位置'}
+],
+'建筑设施与场所': [
+{en:'facility',pos:'n.',ch:'公共设施'},{en:'infrastructure',pos:'n.',ch:'基础设施'},{en:'community',pos:'n.',ch:'社区'},{en:'neighborhood',pos:'n.',ch:'街区'},{en:'public area',pos:'phr.',ch:'公共区域'},{en:'park',pos:'n.',ch:'公园'},{en:'garden',pos:'n.',ch:'花园'},{en:'builder',pos:'n.',ch:'建造师；创建者'},{en:'building',pos:'n.',ch:'建筑物'},{en:'planner',pos:'n.',ch:'规划师'},{en:'construction',pos:'n.',ch:'建造；构造'},{en:'castle',pos:'n.',ch:'城堡'},{en:'churches',pos:'n.',ch:'教堂'},{en:'palace',pos:'n.',ch:'宫殿'},{en:'tower',pos:'n.',ch:'塔；塔楼'},{en:'hall',pos:'n.',ch:'大厅'},{en:'block',pos:'n.',ch:'街区'},{en:'square',pos:'n.',ch:'广场'},{en:'utility',pos:'n.',ch:'公共事业'},{en:'road',pos:'n.',ch:'道路'},{en:'road map',pos:'phr.',ch:'路线图'},{en:'smooth road',pos:'phr.',ch:'平稳的道路'},{en:'smooth',pos:'adj.',ch:'平坦的'},{en:'street',pos:'n.',ch:'街道'},{en:'bridges',pos:'n.',ch:'桥'},{en:'tunnel',pos:'n.',ch:'隧道'},{en:'dam',pos:'n.',ch:'水坝'},{en:'harbour',pos:'n.',ch:'港口'},{en:'port',pos:'n.',ch:'港口'},{en:'garden tool',pos:'phr.',ch:'园林工具'},{en:'gardening',pos:'n.',ch:'园艺'}
+],
+'治安法律与公共制度': [
+{en:'sign',pos:'n.',ch:'标识，指示牌'},{en:'traffic sign',pos:'phr.',ch:'交通标志'},{en:'advertisement',pos:'n.',ch:'广告'},{en:'public service',pos:'phr.',ch:'公共服务'},{en:'security',pos:'n.',ch:'安保，安全'},{en:'safety',pos:'n.',ch:'安全'},{en:'police',pos:'n.',ch:'警察'},{en:'police station',pos:'phr.',ch:'警察局'},{en:'fire station',pos:'phr.',ch:'消防站'},{en:'post office',pos:'phr.',ch:'邮局'},{en:'bank',pos:'n.',ch:'银行'},{en:'hospital',pos:'n.',ch:'医院'},{en:'school',pos:'n.',ch:'学校'},{en:'law',pos:'n.',ch:'法律'},{en:'legal',pos:'adj.',ch:'合法的'},{en:'illegal',pos:'adj.',ch:'非法的'},{en:'crime',pos:'n.',ch:'犯罪'},{en:'criminal',pos:'n.',ch:'罪犯'},{en:'fine',pos:'n.',ch:'罚金'},{en:'punish',pos:'v.',ch:'惩罚'},{en:'regulation',pos:'n.',ch:'规章制度'},{en:'rule',pos:'n.',ch:'规则'},{en:'policy',pos:'n.',ch:'政策'},{en:'guideline',pos:'n.',ch:'指导方针'},{en:'restriction',pos:'n.',ch:'限制规定'},{en:'prohibit',pos:'v.',ch:'禁止'},{en:'permit',pos:'n.',ch:'许可证'},{en:'license',pos:'n.',ch:'执照'},{en:'application',pos:'n.',ch:'申请'},{en:'resident',pos:'n.',ch:'居民'},{en:'citizen',pos:'n.',ch:'公民'}
+]}},
+
+'文体活动': { units: {
+'艺术音乐媒体文学': [
+{en:'art',pos:'n.',ch:'艺术'},{en:'painting',pos:'n.',ch:'绘画'},{en:'drawing',pos:'n.',ch:'素描'},{en:'sculpture',pos:'n.',ch:'雕塑'},{en:'exhibition',pos:'n.',ch:'展览'},{en:'display',pos:'n.',ch:'展品，陈列'},{en:'craft',pos:'n.',ch:'手工艺'},{en:'music',pos:'n.',ch:'音乐'},{en:'musical',pos:'adj.',ch:'音乐的'},{en:'instrument',pos:'n.',ch:'乐器'},{en:'concert',pos:'n.',ch:'音乐会'},{en:'band',pos:'n.',ch:'乐队'},{en:'song',pos:'n.',ch:'歌曲'},{en:'melody',pos:'n.',ch:'旋律'},{en:'rhythm',pos:'n.',ch:'节奏'},{en:'performance',pos:'n.',ch:'表演'},{en:'show',pos:'n.',ch:'演出'},{en:'movie',pos:'n.',ch:'电影'},{en:'film',pos:'n.',ch:'影片'},{en:'video',pos:'n.',ch:'视频'},{en:'documentary',pos:'n.',ch:'纪录片'},{en:'media',pos:'n.',ch:'媒体'},{en:'journalism',pos:'n.',ch:'新闻业'},{en:'press',pos:'n.',ch:'新闻报刊'},{en:'literature',pos:'n.',ch:'文学'},{en:'book',pos:'n.',ch:'书籍'},{en:'novel',pos:'n.',ch:'小说'},{en:'poem',pos:'n.',ch:'诗歌'},{en:'magazine',pos:'n.',ch:'杂志'},{en:'newspaper',pos:'n.',ch:'报纸'},{en:'article',pos:'n.',ch:'文章'}
+],
+'体育休闲节日活动': [
+{en:'sport',pos:'n.',ch:'体育运动'},{en:'exercise',pos:'n.',ch:'锻炼'},{en:'running',pos:'n.',ch:'跑步'},{en:'swimming',pos:'n.',ch:'游泳'},{en:'cycling',pos:'n.',ch:'骑行'},{en:'hiking',pos:'n.',ch:'徒步'},{en:'climbing',pos:'n.',ch:'攀岩'},{en:'match',pos:'n.',ch:'比赛'},{en:'competition',pos:'n.',ch:'竞赛'},{en:'race',pos:'n.',ch:'赛跑，竞赛'},{en:'champion',pos:'n.',ch:'冠军'},{en:'tournament',pos:'n.',ch:'锦标赛'},{en:'amateur',pos:'n.',ch:'业余爱好者'},{en:'professional',pos:'n.',ch:'专业选手'},{en:'player',pos:'n.',ch:'运动员，选手'},{en:'coach',pos:'n.',ch:'教练'},{en:'leisure',pos:'n.',ch:'休闲'},{en:'entertainment',pos:'n.',ch:'娱乐'},{en:'recreation',pos:'n.',ch:'消遣活动'},{en:'hobby',pos:'n.',ch:'爱好'},{en:'pastime',pos:'n.',ch:'消遣'},{en:'festival',pos:'n.',ch:'节日活动'},{en:'celebration',pos:'n.',ch:'庆典'},{en:'parade',pos:'n.',ch:'游行'},{en:'carnival',pos:'n.',ch:'狂欢节'},{en:'gathering',pos:'n.',ch:'聚会'},{en:'picnic',pos:'n.',ch:'野餐'},{en:'outing',pos:'n.',ch:'短途出游'}
+]}}
+};
+
+// ---------- PART 3 ----------
+VOCAB_DATA[3] = {
+'讲座科研论文': { units: {
+'讲座研讨实验调研': [
+{en:'lecture',pos:'n.',ch:'讲座'},{en:'lecturer',pos:'n.',ch:'演讲者'},{en:'short',pos:'adj.',ch:'短的'},{en:'short lecture',pos:'phr.',ch:'简短演讲'},{en:'speaker',pos:'n.',ch:'演讲者；话筒'},{en:'present',pos:'v.',ch:'呈现；展示'},{en:'presentation',pos:'n.',ch:'演讲'},{en:'slide',pos:'n.',ch:'幻灯片'},{en:'slide presentation',pos:'phr.',ch:'幻灯片展示'},{en:'presentation skill',pos:'phr.',ch:'演讲技巧'},{en:'presenting result',pos:'phr.',ch:'展示结论'},{en:'seminar',pos:'n.',ch:'讲座'},{en:'seminar group',pos:'phr.',ch:'讨论组'},{en:'seminar room',pos:'phr.',ch:'研讨室'},{en:'representation',pos:'n.',ch:'表现'},{en:'performance',pos:'n.',ch:'表现'},{en:'effect',pos:'n.',ch:'效果'},{en:'effectiveness',pos:'n.',ch:'有效性'},{en:'efficiency',pos:'n.',ch:'效果'},{en:'efficient',pos:'adj.',ch:'有效率的'},{en:'project',pos:'n.',ch:'项目，计划'},{en:'project background',pos:'phr.',ch:'课题背景'},{en:'project outline',pos:'phr.',ch:'设计方案，项目大纲'},{en:'report',pos:'n.',ch:'报告'},{en:'report finding',pos:'phr.',ch:'报告'},{en:'experiment',pos:'n.',ch:'实验'},{en:'microscope',pos:'n.',ch:'显微镜'},{en:'microradiogram',pos:'n.',ch:'X光片'},{en:'sample',pos:'n.',ch:'样品；例子'},{en:'mould',pos:'n.',ch:'模具'},{en:'model',pos:'n.',ch:'模型'},{en:'solid',pos:'n.',ch:'固体'},{en:'liquid',pos:'n.',ch:'液体'},{en:'fluid',pos:'n.',ch:'液体'},{en:'research',pos:'n.',ch:'研究'},{en:'research approach',pos:'phr.',ch:'研究方法'},{en:'research finding',pos:'phr.',ch:'研究成果'},{en:'researcher',pos:'n.',ch:'研究员'},{en:'field',pos:'n.',ch:'领地；领域'},{en:'fieldwork',pos:'n.',ch:'实地调查'}
+],
+'论文写作格式论据': [
+{en:'essay writing',pos:'phr.',ch:'写论文'},{en:'wrong',pos:'adj.',ch:'错误的'},{en:'incorrect',pos:'adj.',ch:'错误的'},{en:'error message',pos:'phr.',ch:'错误信息'},{en:'mistake',pos:'n.',ch:'错误'},{en:'correction',pos:'n.',ch:'修改'},{en:'version',pos:'n.',ch:'版本'},{en:'format',pos:'n.',ch:'格式'},{en:'heading',pos:'n.',ch:'标题'},{en:'title',pos:'n.',ch:'标题'},{en:'topic',pos:'n.',ch:'话题'},{en:'subtopic',pos:'n.',ch:'副标题'},{en:'theory chapter',pos:'phr.',ch:'理论章节'},{en:'theoretical',pos:'adj.',ch:'理论上的'},{en:'font',pos:'n.',ch:'字型，字体'},{en:'paragraphs',pos:'n.',ch:'段落'},{en:'section',pos:'n.',ch:'部分'},{en:'stages',pos:'n.',ch:'阶段；步骤'},{en:'order',pos:'n.',ch:'顺序'},{en:'analysis',pos:'n.',ch:'分析；分解'},{en:'attitude',pos:'n.',ch:'态度'},{en:'opinion',pos:'n.',ch:'观点'},{en:'statement position',pos:'phr.',ch:'立场声明'},{en:'mission statement',pos:'phr.',ch:'宣言'},{en:'explain',pos:'v.',ch:'解释'},{en:'explanation',pos:'n.',ch:'解释'},{en:'argument',pos:'n.',ch:'论据；争论'},{en:'fact',pos:'n.',ch:'现实；证据'},{en:'priority',pos:'n.',ch:'优先'},{en:'second',pos:'adj.',ch:'第二的；次要的'}
+]}},
+
+'图书馆': { units: {
+'图书馆借阅复印数据库': [
+{en:'summarize',pos:'v.',ch:'总结'},{en:'summary',pos:'adj.',ch:'概括的；概要的'},{en:'summary report',pos:'phr.',ch:'总结报告'},{en:'conclusion',pos:'n.',ch:'结论'},{en:'outcome',pos:'n.',ch:'结果'},{en:'library',pos:'n.',ch:'图书馆'},{en:'reading',pos:'n.',ch:'阅读'},{en:'read aloud',pos:'phr.',ch:'阅读'},{en:'read difficulty',pos:'phr.',ch:'阅读障碍'},{en:'book',pos:'n.',ch:'书本'},{en:'bookshelf',pos:'n.',ch:'书架'},{en:'bookshop',pos:'n.',ch:'书店'},{en:'booklet',pos:'n.',ch:'小册子'},{en:'free booklet',pos:'phr.',ch:'赠阅册子'},{en:'manual',pos:'n.',ch:'手册'},{en:'references',pos:'n.',ch:'参考'},{en:'reference number',pos:'phr.',ch:'参考编号'},{en:'index',pos:'n.',ch:'索引'},{en:'categories',pos:'n.',ch:'类别'},{en:'classifying',pos:'v.',ch:'归类'},{en:'classification',pos:'n.',ch:'分类'},{en:'attachment',pos:'n.',ch:'附件'},{en:'article',pos:'n.',ch:'文章'},{en:'document',pos:'n.',ch:'文档'},{en:'documentation',pos:'n.',ch:'文件'},{en:'documentary',pos:'n.',ch:'文件'},{en:'file',pos:'n.',ch:'文件'},{en:'archive',pos:'n.',ch:'存档；档案；档案室'},{en:'handouts',pos:'n.',ch:'讲义'},{en:'handbook',pos:'n.',ch:'手册'},{en:'copy',pos:'v.',ch:'复制'},{en:'photocopy shop',pos:'phr.',ch:'复印店'},{en:'photocopies',pos:'n.',ch:'复印'},{en:'printer',pos:'n.',ch:'打印机'},{en:'printing',pos:'n.',ch:'打印'},{en:'printing press',pos:'phr.',ch:'印刷厂'},{en:'printing technology',pos:'phr.',ch:'印刷工艺'},{en:'type',pos:'v.',ch:'打字'},{en:'typing',pos:'n.',ch:'打字'},{en:'paper',pos:'n.',ch:'纸'},{en:'paper jam',pos:'phr.',ch:'卡纸'},{en:'pen',pos:'n.',ch:'笔'},{en:'pencil',pos:'n.',ch:'铅笔'},{en:'ink',pos:'n.',ch:'墨水'},{en:'chalk',pos:'n.',ch:'粉笔'},{en:'textbook',pos:'n.',ch:'教材'},{en:'textbooks allowance',pos:'phr.',ch:'教材补助'},{en:'textbook lesson',pos:'phr.',ch:'教材课'},{en:'text structure',pos:'phr.',ch:'文章结构'},{en:'knowledge sharing',pos:'phr.',ch:'知识共享'},{en:'knowledge',pos:'n.',ch:'知识'}
+]}},
+
+'学习与考试': { units: {
+'学习方法笔记小组': [
+{en:'learn',pos:'v.',ch:'学习'},{en:'learner',pos:'n.',ch:'学习者'},{en:'learning',pos:'n.',ch:'学习'},{en:'learning difficulty',pos:'phr.',ch:'学习障碍'},{en:'learning style',pos:'phr.',ch:'学习风格'},{en:'learning zone',pos:'phr.',ch:'学习专区'},{en:'distance learning',pos:'phr.',ch:'远程教育'},{en:'professional',pos:'adj.',ch:'专业的'},{en:'professional learning',pos:'phr.',ch:'专业学习'},{en:'study',pos:'n.',ch:'学习'},{en:'study skill',pos:'phr.',ch:'学习技巧'},{en:'comprehension',pos:'n.',ch:'理解'},{en:'aware',pos:'adj.',ch:'意识到的'},{en:'acknowledgment',pos:'n.',ch:'公认；承认'},{en:'understand',pos:'v.',ch:'理解'},{en:'share',pos:'v.',ch:'分享'},{en:'sharing',pos:'n.',ch:'分享'},{en:'idea',pos:'n.',ch:'想法'},{en:'share ideas',pos:'phr.',ch:'分享观点'},{en:'approach',pos:'v.',ch:'接近'},{en:'method',pos:'n.',ch:'方法'},{en:'methodology',pos:'n.',ch:'方法论'},{en:'plan',pos:'v.',ch:'规划'},{en:'planning',pos:'n.',ch:'计划制订'},{en:'plan time',pos:'phr.',ch:'规划时间'},{en:'case studies',pos:'phr.',ch:'案例研究'},{en:'example',pos:'n.',ch:'例子'},{en:'general discussion',pos:'phr.',ch:'综合讨论'},{en:'general',pos:'adj.',ch:'普遍的；一般的'},{en:'homework',pos:'n.',ch:'家庭作业'},{en:'note',pos:'n.',ch:'笔记'},{en:'notetaking',pos:'n.',ch:'笔记'},{en:'make notes',pos:'phr.',ch:'做笔记'},{en:'notebook',pos:'n.',ch:'笔记本'},{en:'note system',pos:'phr.',ch:'笔记系统'},{en:'outline',pos:'n.',ch:'概述'},{en:'guideline',pos:'n.',ch:'指导方针'},{en:'object',pos:'n.',ch:'目标'},{en:'objective',pos:'n.',ch:'目标'},{en:'objective matter',pos:'phr.',ch:'目标物'},{en:'purpose',pos:'n.',ch:'目的'},{en:'prepared',pos:'adj.',ch:'准备好的'},{en:'preparation',pos:'n.',ch:'准备'}
+],
+'考试测验评估备考': [
+{en:'exam',pos:'n.',ch:'考试'},{en:'exam preparation',pos:'phr.',ch:'备考'},{en:'quizzes',pos:'n.',ch:'测验'},{en:'test',pos:'n.',ch:'测试'},{en:'result',pos:'n.',ch:'结果'},{en:'test result',pos:'phr.',ch:'测试结果'},{en:'academic record',pos:'phr.',ch:'学习成绩'},{en:'achievement',pos:'n.',ch:'完成，达到；成就，成绩'}
+]}},
+
+'学校': { units: {
+'院校院系专业学位': [
+{en:'local school',pos:'phr.',ch:'本地学校'},{en:'primary school',pos:'phr.',ch:'小学'},{en:'primary',pos:'adj.',ch:'主要的；最初的'},{en:'secondary school',pos:'phr.',ch:'中学'},{en:'secondary',pos:'adj.',ch:'中等的'},{en:'summer school',pos:'phr.',ch:'暑期学校'},{en:'nursery',pos:'n.',ch:'幼儿园'},{en:'education',pos:'n.',ch:'教育'},{en:'education officer',pos:'phr.',ch:'教育官员'},{en:'education plan',pos:'phr.',ch:'教育规划'},{en:'educational',pos:'adj.',ch:'教育的'},{en:'student',pos:'n.',ch:'学生'},{en:'student card',pos:'phr.',ch:'学生卡'},{en:'student loan',pos:'phr.',ch:'学生贷款'},{en:'student union',pos:'phr.',ch:'学生会'},{en:'student service',pos:'phr.',ch:'学生服务'},{en:'first-year student',pos:'phr.',ch:'一年级学生'},{en:'first',pos:'n.',ch:'第一'},{en:'teacher',pos:'n.',ch:'老师'},{en:'teaching staff',pos:'phr.',ch:'教员'},{en:'professor',pos:'n.',ch:'教员；教授'},{en:'tuition',pos:'n.',ch:'学费'},{en:'admission',pos:'n.',ch:'承认，准许进入'},{en:'tutor',pos:'n.',ch:'导师'},{en:'personal tutor',pos:'phr.',ch:'个人导师'},{en:'tutorial',pos:'n.',ch:'辅导课'},{en:'university',pos:'n.',ch:'大学'},{en:'college',pos:'n.',ch:'学院'},{en:'department',pos:'n.',ch:'院系'},{en:'department head',pos:'phr.',ch:'系主任'},{en:'academic',pos:'adj.',ch:'学院的'},{en:'undergraduate',pos:'n.',ch:'本科'},{en:'semester',pos:'n.',ch:'学期'},{en:'term',pos:'n.',ch:'学期'},{en:'degree',pos:'n.',ch:'学位'},{en:'grade',pos:'n.',ch:'等级'},{en:'diploma',pos:'n.',ch:'文凭'},{en:'certificate',pos:'n.',ch:'认证'},{en:'qualification',pos:'n.',ch:'合格'},{en:'quality',pos:'n.',ch:'质量'},{en:'course',pos:'n.',ch:'课程'},{en:'course code',pos:'phr.',ch:'课程代码'},{en:'coursework',pos:'n.',ch:'授课'},{en:'programme',pos:'n.',ch:'课程'},{en:'subject',pos:'n.',ch:'学科'},{en:'discipline',pos:'n.',ch:'纪律；学科'},{en:'compulsory',pos:'adj.',ch:'必修的'}
+],
+'师生教室实验室学期': [
+{en:'classroom',pos:'n.',ch:'教室'},{en:'classroom tour',pos:'phr.',ch:'教室参观'},{en:'lab',pos:'n.',ch:'实验室'},{en:'self-access lab',pos:'phr.',ch:'24小时实验室'},{en:'laboratory',pos:'n.',ch:'实验室'},{en:'laboratories report',pos:'phr.',ch:'实验室报告'},{en:'calendar',pos:'n.',ch:'日历'},{en:'timetable',pos:'n.',ch:'时间表'},{en:'time',pos:'n.',ch:'时间'},{en:'minute',pos:'n.',ch:'分钟'},{en:'hour',pos:'n.',ch:'小时'},{en:'daily',pos:'adj.',ch:'每日的；日常的'},{en:'daily routine',pos:'phr.',ch:'日常事务'}
+]}}
+};
+
+// ---------- PART 4 ----------
+VOCAB_DATA[4] = {
+'地理学': { units: {
+'地理学': [
+{en:'geography',pos:'n.',ch:'地理学'},{en:'geographic',pos:'adj.',ch:'地理的'},{en:'altitude',pos:'n.',ch:'高度；海拔高度'},{en:'height',pos:'n.',ch:'高度'},{en:'map',pos:'n.',ch:'地图'},{en:'atlas',pos:'n.',ch:'地图册'},{en:'direction',pos:'n.',ch:'方位'},{en:'orientation',pos:'n.',ch:'方向'},{en:'season',pos:'n.',ch:'季节'},{en:'spring',pos:'n.',ch:'春天'},{en:'summer',pos:'n.',ch:'夏天'},{en:'autumn',pos:'n.',ch:'秋天'},{en:'winter',pos:'n.',ch:'冬天'},{en:'sun',pos:'n.',ch:'太阳'},{en:'sunlight',pos:'n.',ch:'阳光'},{en:'solar',pos:'adj.',ch:'太阳的'},{en:'solar energy',pos:'phr.',ch:'太阳能'},{en:'moon',pos:'n.',ch:'月亮'},{en:'star',pos:'n.',ch:'星星'},{en:'planet',pos:'n.',ch:'行星'},{en:'river',pos:'n.',ch:'河流'},{en:'stream',pos:'n.',ch:'小溪'},{en:'water source',pos:'phr.',ch:'水源'},{en:'water system',pos:'phr.',ch:'水系'},{en:'lake',pos:'n.',ch:'湖泊'},{en:'basin',pos:'n.',ch:'流域，盆地'},{en:'valley',pos:'n.',ch:'山谷'},{en:'plain',pos:'n.',ch:'平原'},{en:'land',pos:'n.',ch:'陆地'},{en:'terrain',pos:'n.',ch:'地形'},{en:'region',pos:'n.',ch:'区域'},{en:'area',pos:'n.',ch:'地域'},{en:'zone',pos:'n.',ch:'地带'},{en:'sea level',pos:'phr.',ch:'海平面'},{en:'mapping',pos:'v./n.',ch:'绘制地图；地图'},{en:'circulation',pos:'n.',ch:'循环'},{en:'oxygen',pos:'n.',ch:'氧气'},{en:'ozone layer',pos:'phr.',ch:'臭氧层'},{en:'layer',pos:'n.',ch:'层；层次'},{en:'seasonal',pos:'adj.',ch:'季节性的'},{en:'earth',pos:'n.',ch:'地球'},{en:'planet science',pos:'phr.',ch:'行星科学'},{en:'day',pos:'n.',ch:'白天'},{en:'daylight',pos:'n.',ch:'日光'},{en:'morning',pos:'n.',ch:'早上'},{en:'evening',pos:'n.',ch:'晚上'},{en:'evening news',pos:'phr.',ch:'晚间新闻'},{en:'night',pos:'n.',ch:'夜晚'},{en:'night tour',pos:'phr.',ch:'夜游'},{en:'night shift',pos:'phr.',ch:'夜班'},{en:'moonlight',pos:'n.',ch:'月光'},{en:'solar power',pos:'phr.',ch:'太阳能'},{en:'sun flower',pos:'phr.',ch:'向日葵'},{en:'sunset',pos:'n.',ch:'日落'},{en:'suncream',pos:'n.',ch:'防晒霜'},{en:'sunscreen',pos:'n.',ch:'防晒霜'},{en:'sun hat',pos:'phr.',ch:'遮阳帽'},{en:'sun position',pos:'phr.',ch:'太阳位置'},{en:'water',pos:'n.',ch:'水'},{en:'watering',pos:'n.',ch:'浇水'},{en:'watering plants',pos:'phr.',ch:'浇水'},{en:'waterproof',pos:'v.',ch:'防水'},{en:'water level',pos:'phr.',ch:'水位'},{en:'water collection tank',pos:'phr.',ch:'集水箱'}
+]}},
+
+'地质构造': { units: {
+'地质构造山川岩石': [
+{en:'geology',pos:'n.',ch:'地质学'},{en:'geological',pos:'adj.',ch:'地质的'},{en:'continent',pos:'n.',ch:'大陆'},{en:'mainland',pos:'n.',ch:'大陆'},{en:'mountain',pos:'n.',ch:'山脉，山'},{en:'hill',pos:'n.',ch:'小山丘'},{en:'rock',pos:'n.',ch:'岩石'},{en:'stone',pos:'n.',ch:'石块'},{en:'soil',pos:'n.',ch:'土壤'},{en:'earth',pos:'n.',ch:'土地，大地'},{en:'sand',pos:'n.',ch:'沙子'},{en:'mud',pos:'n.',ch:'泥土'},{en:'clay',pos:'n.',ch:'黏土'},{en:'mineral',pos:'n.',ch:'矿物质'},{en:'resource',pos:'n.',ch:'资源'},{en:'natural resource',pos:'phr.',ch:'自然资源'},{en:'mine',pos:'n.',ch:'矿产，矿山'},{en:'mining',pos:'n.',ch:'采矿'},{en:'volcanic ash',pos:'phr.',ch:'火山灰'},{en:'volcano',pos:'n.',ch:'火山'},{en:'earthquake',pos:'n.',ch:'地震'},{en:'landslide',pos:'n.',ch:'山体滑坡'},{en:'erosion',pos:'n.',ch:'侵蚀'},{en:'formation',pos:'n.',ch:'地质形成'},{en:'soft sediment',pos:'phr.',ch:'软沉积物'},{en:'sandglasses',pos:'n.',ch:'沙漏'},{en:'desert',pos:'n.',ch:'沙漠'},{en:'desert location',pos:'phr.',ch:'沙漠地区'},{en:'mountain bike',pos:'phr.',ch:'山地自行车'},{en:'land bridge',pos:'phr.',ch:'陆桥'},{en:'cave',pos:'n.',ch:'洞'},{en:'hole',pos:'n.',ch:'孔；漏洞'},{en:'cliff',pos:'n.',ch:'悬崖'},{en:'edges',pos:'n.',ch:'边缘'},{en:'limestone',pos:'n.',ch:'石灰岩'},{en:'magnet',pos:'n.',ch:'磁体；磁石'},{en:'sandy',pos:'adj.',ch:'含沙的'},{en:'soft',pos:'adj.',ch:'软的'},{en:'ash',pos:'n.',ch:'灰'},{en:'dirt',pos:'n.',ch:'污垢'},{en:'mineral soil',pos:'phr.',ch:'矿质土壤'},{en:'coal',pos:'n.',ch:'煤炭'},{en:'metal',pos:'n.',ch:'金属'},{en:'gold',pos:'n.',ch:'黄金'},{en:'carbon',pos:'n.',ch:'碳'},{en:'fountain',pos:'n.',ch:'泉'}
+],
+'海岸海洋河湖地貌': [
+{en:'ocean',pos:'n.',ch:'海洋'},{en:'sea',pos:'n.',ch:'大海'},{en:'coast',pos:'n.',ch:'海岸'},{en:'beach',pos:'n.',ch:'海滩'},{en:'shore',pos:'n.',ch:'岸边'},{en:'island',pos:'n.',ch:'岛屿'},{en:'bay',pos:'n.',ch:'海湾'},{en:'gulf',pos:'n.',ch:'海湾'},{en:'tide',pos:'n.',ch:'潮汐'},{en:'wave',pos:'n.',ch:'海浪'},{en:'cliff',pos:'n.',ch:'悬崖峭壁'},{en:'cave',pos:'n.',ch:'洞穴'},{en:'pond',pos:'n.',ch:'池塘'},{en:'waterfall',pos:'n.',ch:'瀑布'},{en:'delta',pos:'n.',ch:'三角洲'},{en:'coastal',pos:'adj.',ch:'沿海的'},{en:'coastline',pos:'n.',ch:'海岸线'},{en:'coastal cities',pos:'phr.',ch:'沿海城市'},{en:'tides',pos:'n.',ch:'浪'},{en:'sill',pos:'n.',ch:'海底山脊；岩床'},{en:'ocean condition',pos:'phr.',ch:'海洋条件'},{en:'current',pos:'n.',ch:'洋流'},{en:'seagrass',pos:'n.',ch:'海草'},{en:'sea view',pos:'phr.',ch:'海景'},{en:'lake',pos:'n.',ch:'湖'},{en:'lakeside',pos:'n.',ch:'湖边'},{en:'pool',pos:'n.',ch:'水池'},{en:'padding pool',pos:'phr.',ch:'浅水池塘'},{en:'shallow',pos:'adj.',ch:'浅的'},{en:'river',pos:'n.',ch:'河流'},{en:'riverside',pos:'n.',ch:'河边'},{en:'river trip',pos:'phr.',ch:'泛舟游览'},{en:'river view',pos:'phr.',ch:'江景'}
+]}},
+
+'环境保护': { units: {
+'环境保护': [
+{en:'environment',pos:'n.',ch:'环境'},{en:'environmental',pos:'adj.',ch:'环境的'},{en:'ecology',pos:'n.',ch:'生态学'},{en:'ecosystem',pos:'n.',ch:'生态系统'},{en:'habitat',pos:'n.',ch:'栖息地'},{en:'wildlife',pos:'n.',ch:'野生动物'},{en:'nature',pos:'n.',ch:'自然'},{en:'natural',pos:'adj.',ch:'自然的'},{en:'pollution',pos:'n.',ch:'污染'},{en:'air pollution',pos:'phr.',ch:'空气污染'},{en:'water pollution',pos:'phr.',ch:'水污染'},{en:'noise pollution',pos:'phr.',ch:'噪音污染'},{en:'waste',pos:'n.',ch:'废弃物'},{en:'rubbish',pos:'n.',ch:'垃圾'},{en:'garbage',pos:'n.',ch:'生活垃圾'},{en:'sewage',pos:'n.',ch:'污水'},{en:'emission',pos:'n.',ch:'废气排放'},{en:'carbon',pos:'n.',ch:'碳'},{en:'carbon dioxide',pos:'phr.',ch:'二氧化碳'},{en:'greenhouse effect',pos:'phr.',ch:'温室效应'},{en:'global warming',pos:'phr.',ch:'全球变暖'},{en:'green tax',pos:'phr.',ch:'绿色税收'},{en:'conservation',pos:'n.',ch:'保护'},{en:'protection',pos:'n.',ch:'防护，保护'},{en:'preservation',pos:'n.',ch:'保存'},{en:'recycle',pos:'v.',ch:'回收利用'},{en:'reusable',pos:'adj.',ch:'可再利用的'},{en:'renewable energy',pos:'phr.',ch:'可再生能源'},{en:'recycled material',pos:'phr.',ch:'回收材料'},{en:'solar power',pos:'phr.',ch:'太阳能'},{en:'wind power',pos:'phr.',ch:'风能'},{en:'hydropower',pos:'phr.',ch:'水能'},{en:'sustainable',pos:'adj.',ch:'可持续的'},{en:'balance',pos:'n.',ch:'生态平衡'},{en:'damage',pos:'n.',ch:'破坏'},{en:'destroy',pos:'v.',ch:'毁坏'},{en:'restore',pos:'v.',ch:'修复'},{en:'unnatural',pos:'adj.',ch:'不自然的'},{en:'undeveloped',pos:'adj.',ch:'未开发的'},{en:'environment agency',pos:'phr.',ch:'环保署'},{en:'environment damage',pos:'phr.',ch:'环境损害'},{en:'environment issues',pos:'phr.',ch:'环境问题'},{en:'system',pos:'n.',ch:'系统'},{en:'hot house',pos:'phr.',ch:'温室'},{en:'pollutant',pos:'n.',ch:'污染物'},{en:'contaminated',pos:'adj.',ch:'被污染的'},{en:'chemical contaminant',pos:'phr.',ch:'化学污染物'},{en:'water quality',pos:'phr.',ch:'水质'},{en:'water treatment',pos:'phr.',ch:'水处理'},{en:'filter',pos:'n.',ch:'过滤'},{en:'pure',pos:'adj.',ch:'纯净的'},{en:'transparency',pos:'n.',ch:'透明度'},{en:'fell',pos:'v.',ch:'砍伐'},{en:'alternative energy',pos:'phr.',ch:'替代能源'},{en:'recycling',pos:'n.',ch:'循环'}
+]}},
+
+'气候': { units: {
+'气候气象': [
+{en:'climate',pos:'n.',ch:'气候'},{en:'weather',pos:'n.',ch:'天气'},{en:'temperature',pos:'n.',ch:'温度'},{en:'humidity',pos:'n.',ch:'湿度'},{en:'sunny',pos:'adj.',ch:'晴朗的'},{en:'cloudy',pos:'adj.',ch:'多云的'},{en:'rainy',pos:'adj.',ch:'下雨的'},{en:'windy',pos:'adj.',ch:'刮风的'},{en:'snowy',pos:'adj.',ch:'下雪的'},{en:'foggy',pos:'adj.',ch:'有雾的'},{en:'storm',pos:'n.',ch:'暴风雨'},{en:'hurricane',pos:'n.',ch:'飓风'},{en:'typhoon',pos:'n.',ch:'台风'},{en:'thunder',pos:'n.',ch:'雷声'},{en:'lightning',pos:'n.',ch:'闪电'},{en:'rain',pos:'n.',ch:'降雨'},{en:'downpour',pos:'n.',ch:'暴雨'},{en:'flood',pos:'n.',ch:'洪水'},{en:'drought',pos:'n.',ch:'干旱'},{en:'freeze',pos:'v.',ch:'结冰'},{en:'frost',pos:'n.',ch:'霜冻'},{en:'ice',pos:'n.',ch:'冰'},{en:'heat',pos:'n.',ch:'高温'},{en:'cold',pos:'n.',ch:'低温'},{en:'seasonal',pos:'adj.',ch:'季节性的'},{en:'forecast',pos:'n.',ch:'预报'},{en:'meteorology',pos:'n.',ch:'气象学'},{en:'weather observing',pos:'phr.',ch:'天气观测'},{en:'hot weather',pos:'phr.',ch:'热天气'},{en:'tropical',pos:'adj.',ch:'热带的'},{en:'high',pos:'adj.',ch:'高的'},{en:'high temperature',pos:'phr.',ch:'高温'},{en:'higher',pos:'adj.',ch:'更高的'},{en:'warm',pos:'adj.',ch:'温暖的'},{en:'warm climate',pos:'phr.',ch:'温暖气候'},{en:'warm up',pos:'phr.',ch:'变热；热身'},{en:'damp',pos:'n.',ch:'潮湿'},{en:'moisture',pos:'n.',ch:'水分'},{en:'evaporation',pos:'n.',ch:'蒸发'},{en:'steam',pos:'n.',ch:'蒸汽'},{en:'dried',pos:'adj.',ch:'干燥的'},{en:'dry',pos:'adj.',ch:'干燥的'},{en:'drying',pos:'n.',ch:'干燥'},{en:'dry season',pos:'phr.',ch:'旱季'},{en:'cloud',pos:'n.',ch:'云'},{en:'rainfall',pos:'n.',ch:'降雨量'},{en:'rain water',pos:'phr.',ch:'雨水'},{en:'rainbow',pos:'n.',ch:'彩虹'},{en:'air',pos:'n.',ch:'空气；天空'},{en:'air quality',pos:'phr.',ch:'空气质量'},{en:'air pump',pos:'phr.',ch:'空气泵'},{en:'flooding',pos:'n.',ch:'泛滥'},{en:'floodwater',pos:'n.',ch:'洪水'},{en:'wind',pos:'n.',ch:'风'},{en:'thunderstorm',pos:'n.',ch:'暴风雨'}
+]}},
+
+'商业': { units: {
+'个人品质能力性格': [
+{en:'skill',pos:'n.',ch:'技能'},{en:'skills focus',pos:'phr.',ch:'技能侧重点'},{en:'ability',pos:'n.',ch:'能力'},{en:'capability',pos:'n.',ch:'才干'},{en:'talent',pos:'n.',ch:'天赋'},{en:'quality',pos:'n.',ch:'品质'},{en:'character',pos:'n.',ch:'性格'},{en:'personality',pos:'n.',ch:'个性'},{en:'creativity',pos:'n.',ch:'创造力'},{en:'imagination',pos:'n.',ch:'想象力'},{en:'logic',pos:'n.',ch:'逻辑'},{en:'rational',pos:'adj.',ch:'理性的'},{en:'think quickly',pos:'phr.',ch:'快速思考'},{en:'analytical',pos:'adj.',ch:'善于分析的'},{en:'judgement',pos:'n.',ch:'判断力'},{en:'initiative',pos:'n.',ch:'主动性'},{en:'confident',pos:'adj.',ch:'自信的'},{en:'co-operative',pos:'adj.',ch:'善于合作的'},{en:'self-evaluation',pos:'n.',ch:'自我评价'},{en:'assessment',pos:'v.',ch:'评估，估价'},{en:'improvement',pos:'n.',ch:'改进'},{en:'reinforce',pos:'v.',ch:'增强'},{en:'effort',pos:'n.',ch:'努力'},{en:'confidence',pos:'n.',ch:'信心'},{en:'clever',pos:'adj.',ch:'聪明的'},{en:'brilliant',pos:'adj.',ch:'才华横溢的'},{en:'intelligence',pos:'n.',ch:'智力'},{en:'intelligent',pos:'adj.',ch:'有才智的'},{en:'savvy',pos:'adj.',ch:'机智的'},{en:'gift',pos:'n.',ch:'天赋'},{en:'invent',pos:'v.',ch:'编造；发明'},{en:'innovation',pos:'n.',ch:'创新'},{en:'originality',pos:'n.',ch:'创造性'},{en:'origin',pos:'n.',ch:'起源'},{en:'creation',pos:'n.',ch:'创造'},{en:'outstanding',pos:'adj.',ch:'杰出的'},{en:'excellent',pos:'adj.',ch:'优秀的'},{en:'negotiation skill',pos:'phr.',ch:'谈判技巧'},{en:'communication skill',pos:'phr.',ch:'交流技能'},{en:'problem solving',pos:'phr.',ch:'解决问题'},{en:'problem',pos:'n.',ch:'问题'},{en:'strategies',pos:'n.',ch:'策略'},{en:'vision',pos:'n.',ch:'视野'},{en:'morality',pos:'n.',ch:'道德'},{en:'kindness',pos:'n.',ch:'仁慈'},{en:'loyal',pos:'adj.',ch:'忠诚的'},{en:'loyalty',pos:'n.',ch:'忠诚'},{en:'honest',pos:'adj.',ch:'诚实的'},{en:'reliable',pos:'n.',ch:'信赖'},{en:'trust',pos:'n.',ch:'相信'},{en:'responsible',pos:'adj.',ch:'有责任的'},{en:'responsibility',pos:'n.',ch:'责任，职责'},{en:'obligation',pos:'n.',ch:'义务'},{en:'patience',pos:'n.',ch:'耐心'},{en:'Self-centered',pos:'adj.',ch:'自私的'},{en:'success',pos:'n.',ch:'成功'}
+],
+'公司组织会议营销': [
+{en:'business',pos:'n.',ch:'商业，生意'},{en:'commerce',pos:'n.',ch:'商贸'},{en:'trade',pos:'n.',ch:'贸易'},{en:'global trade',pos:'phr.',ch:'全球贸易'},{en:'economy',pos:'n.',ch:'经济'},{en:'economic',pos:'adj.',ch:'经济的'},{en:'company',pos:'n.',ch:'公司'},{en:'corporation',pos:'n.',ch:'大企业'},{en:'enterprise',pos:'n.',ch:'企业'},{en:'organization',pos:'n.',ch:'组织'},{en:'management',pos:'n.',ch:'管理'},{en:'manager',pos:'n.',ch:'管理者'},{en:'meeting',pos:'n.',ch:'会议'},{en:'negotiation',pos:'n.',ch:'谈判'},{en:'cooperation',pos:'n.',ch:'合作'},{en:'marketing',pos:'n.',ch:'市场营销'},{en:'market',pos:'n.',ch:'市场'},{en:'customer',pos:'n.',ch:'客户'},{en:'consumer',pos:'n.',ch:'消费者'},{en:'product',pos:'n.',ch:'产品'},{en:'service',pos:'n.',ch:'服务'},{en:'profit',pos:'n.',ch:'利润'},{en:'budget',pos:'n.',ch:'预算'},{en:'cost',pos:'n.',ch:'成本'},{en:'income',pos:'n.',ch:'收入'},{en:'investment',pos:'n.',ch:'投资'},{en:'finance',pos:'n.',ch:'金融'},{en:'fund',pos:'n.',ch:'资金'},{en:'strategy',pos:'n.',ch:'商业策略'},{en:'development',pos:'n.',ch:'发展'},{en:'expand',pos:'v.',ch:'扩张'},{en:'compete',pos:'v.',ch:'竞争'},{en:'competitor',pos:'n.',ch:'竞争对手'},{en:'advantage',pos:'n.',ch:'优势'},{en:'disadvantage',pos:'n.',ch:'劣势'},{en:'private company',pos:'phr.',ch:'私人公司'},{en:'Self-employed',pos:'adj.',ch:'个体经营'},{en:'head office',pos:'phr.',ch:'总部'},{en:'finance office',pos:'phr.',ch:'财务室'},{en:'organize',pos:'v.',ch:'组织'},{en:'team',pos:'n.',ch:'队伍'},{en:'group',pos:'n.',ch:'团体'},{en:'group size',pos:'phr.',ch:'团体大小'},{en:'group organizer',pos:'phr.',ch:'团体主办单位'},{en:'formal meeting',pos:'phr.',ch:'正式会议'},{en:'group meeting',pos:'phr.',ch:'团体会议'},{en:'conference',pos:'n.',ch:'会议'},{en:'conference centre',pos:'phr.',ch:'会议中心'},{en:'session',pos:'n.',ch:'会议'},{en:'conversation',pos:'n.',ch:'谈话'},{en:'discussion',pos:'n.',ch:'讨论'},{en:'discussion group',pos:'phr.',ch:'讨论组'},{en:'group discussion',pos:'phr.',ch:'小组讨论'},{en:'interaction',pos:'n.',ch:'互动'},{en:'translator',pos:'n.',ch:'翻译员'},{en:'translation',pos:'n.',ch:'翻译'},{en:'rival',pos:'n.',ch:'竞争对手'},{en:'cooperative',pos:'adj.',ch:'合作的'},{en:'collaborative',pos:'adj.',ch:'协作的'},{en:'combination',pos:'n.',ch:'结合，联合'},{en:'joint',pos:'adj.',ch:'联合的'},{en:'teamwork',pos:'n.',ch:'团队合作'},{en:'administration',pos:'n.',ch:'管理，实行'},{en:'business management',pos:'phr.',ch:'工商管理'},{en:'business plan',pos:'phr.',ch:'商业计划'},{en:'business area',pos:'phr.',ch:'商务区'},{en:'business visit',pos:'phr.',ch:'商务考察'},{en:'business study',pos:'phr.',ch:'商业研究'},{en:'annual report',pos:'phr.',ch:'年报'},{en:'advertise',pos:'v.',ch:'广告'},{en:'advertising',pos:'n.',ch:'广告'},{en:'advertisement',pos:'n.',ch:'广告'},{en:'revenue',pos:'n.',ch:'收益'},{en:'financial result',pos:'phr.',ch:'财务业绩'},{en:'benefit',pos:'n.',ch:'好处'},{en:'risk',pos:'n.',ch:'风险'},{en:'take risks',pos:'phr.',ch:'冒险'},{en:'closed',pos:'adj.',ch:'关闭的'},{en:'closed down',pos:'phr.',ch:'倒闭了'},{en:'chief executive',pos:'phr.',ch:'总裁；首席执行官'},{en:'chairman',pos:'n.',ch:'主席'},{en:'administration officer',pos:'phr.',ch:'行政官'},{en:'lead',pos:'n.',ch:'领导'},{en:'leader',pos:'n.',ch:'领导者'},{en:'leadership style',pos:'phr.',ch:'领导风格'},{en:'council',pos:'n.',ch:'委员会'},{en:'consultant',pos:'n.',ch:'顾问'},{en:'advisor',pos:'n.',ch:'顾问'},{en:'senior advisor',pos:'phr.',ch:'高级顾问'},{en:'offer advice',pos:'phr.',ch:'出谋划策'},{en:'expert',pos:'n.',ch:'专家'},{en:'specialist',pos:'n.',ch:'专家；专业'},{en:'secretary',pos:'n.',ch:'秘书'},{en:'department manager',pos:'phr.',ch:'部门经理'},{en:'senior management',pos:'phr.',ch:'高管'}
+]}},
+
+'生物': { units: {
+'各类动物': [
+{en:'biology',pos:'n.',ch:'生物学'},{en:'biological',pos:'adj.',ch:'生物的'},{en:'organism',pos:'n.',ch:'有机体'},{en:'animal',pos:'n.',ch:'动物'},{en:'wild animal',pos:'phr.',ch:'野生动物'},{en:'mammal',pos:'n.',ch:'哺乳动物'},{en:'bird',pos:'n.',ch:'鸟类'},{en:'fish',pos:'n.',ch:'鱼类'},{en:'insect',pos:'n.',ch:'昆虫'},{en:'reptile',pos:'n.',ch:'爬行动物'},{en:'amphibian',pos:'n.',ch:'两栖动物'},{en:'creature',pos:'n.',ch:'生物'},{en:'safari park',pos:'phr.',ch:'野生动物园'},{en:'wildlife',pos:'n.',ch:'野生动物'},{en:'wild',pos:'n.',ch:'荒野'},{en:'vet',pos:'n.',ch:'兽医'},{en:'bird park',pos:'phr.',ch:'鸟类公园'},{en:'birdwatching',pos:'n.',ch:'观鸟'},{en:'nest',pos:'n.',ch:'巢'},{en:'nesting',pos:'v.',ch:'筑巢'},{en:'feather',pos:'n.',ch:'羽毛'},{en:'wing',pos:'n.',ch:'翅膀'},{en:'fishing',pos:'n.',ch:'钓鱼'},{en:'fishing lesson',pos:'phr.',ch:'钓鱼课'},{en:'fishing boat',pos:'phr.',ch:'渔船'},{en:'biological fishing',pos:'phr.',ch:'生物捕捞'},{en:'fishing net',pos:'phr.',ch:'渔网'},{en:'frog',pos:'n.',ch:'青蛙'},{en:'crocodile',pos:'n.',ch:'鳄鱼'},{en:'dolphin',pos:'n.',ch:'海豚'},{en:'seal',pos:'n./v.',ch:'海豹；印章；封印'},{en:'shark',pos:'n.',ch:'鲨鱼'},{en:'whale',pos:'n.',ch:'鲸鱼'},{en:'shell',pos:'n.',ch:'壳'},{en:'shellfish',pos:'n.',ch:'贝类动物'},{en:'shrimp',pos:'n.',ch:'小虾'},{en:'tuna',pos:'n.',ch:'金枪鱼'},{en:'rat',pos:'n.',ch:'老鼠'},{en:'snake',pos:'n.',ch:'蛇'},{en:'camel',pos:'n.',ch:'骆驼'},{en:'kangaroo',pos:'n.',ch:'袋鼠'},{en:'monkey',pos:'n.',ch:'猴子'},{en:'lion',pos:'n.',ch:'狮子'},{en:'worm',pos:'n.',ch:'虫子'},{en:'butterflies',pos:'n.',ch:'蝴蝶'},{en:'spider',pos:'n.',ch:'蜘蛛'},{en:'fly',pos:'n.',ch:'苍蝇'},{en:'herbivore',pos:'n.',ch:'食草动物'},{en:'herd',pos:'n.',ch:'（牛）群'},{en:'cattle',pos:'n.',ch:'牛'},{en:'dog',pos:'n.',ch:'狗'},{en:'donkey',pos:'n.',ch:'驴'},{en:'sheep',pos:'n.',ch:'绵羊'},{en:'wool',pos:'n.',ch:'羊毛'},{en:'duck',pos:'n.',ch:'鸭子'},{en:'geese',pos:'n.',ch:'鹅'},{en:'swan',pos:'n.',ch:'天鹅'},{en:'rabbit',pos:'n.',ch:'兔子'},{en:'horse riding',pos:'phr.',ch:'骑马'},{en:'horse hair',pos:'phr.',ch:'马毛'},{en:'sable',pos:'n.',ch:'貂皮'},{en:'pet',pos:'n.',ch:'宠物'}
+],
+'动物行为繁殖保护': [
+{en:'behaviour',pos:'n.',ch:'行为'},{en:'animals behavior',pos:'phr.',ch:'动物行为'},{en:'habit',pos:'n.',ch:'习性'},{en:'activity',pos:'n.',ch:'活动'},{en:'migration',pos:'n.',ch:'迁徙'},{en:'migration pattern',pos:'phr.',ch:'迁徙模式'},{en:'reproduction',pos:'n.',ch:'繁殖'},{en:'breed',pos:'v.',ch:'繁育'},{en:'survive',pos:'v.',ch:'生存'},{en:'threat',pos:'n.',ch:'威胁'},{en:'endangered',pos:'adj.',ch:'濒危的'},{en:'extinct',pos:'adj.',ch:'灭绝的'},{en:'protection',pos:'n.',ch:'保护'},{en:'conservation',pos:'n.',ch:'动物保护'},{en:'adopt',pos:'v.',ch:'收养；采用'},{en:'behavior',pos:'n.',ch:'行为'},{en:'animal life',pos:'phr.',ch:'动物生活'},{en:'evolution',pos:'n.',ch:'进化；演变'},{en:'defense',pos:'n.',ch:'防卫'},{en:'self-defense',pos:'n.',ch:'自卫'},{en:'resistant',pos:'adj.',ch:'抵抗的'},{en:'fight',pos:'n.',ch:'战斗'},{en:'fighting',pos:'n.',ch:'战斗'},{en:'attack',pos:'v.',ch:'攻击'},{en:'strike',pos:'n.',ch:'打击'},{en:'instinctive',pos:'adj.',ch:'直觉的'},{en:'react',pos:'v.',ch:'做出反应'},{en:'reaction',pos:'n.',ch:'反应'},{en:'reflective',pos:'adj.',ch:'反射的'},{en:'feeding',pos:'n.',ch:'喂食'},{en:'feeding time',pos:'phr.',ch:'喂食时间'},{en:'feed animals',pos:'phr.',ch:'喂动物'},{en:'migrant',pos:'n.',ch:'移民；候鸟'},{en:'route',pos:'n.',ch:'路线'},{en:'hunting',pos:'n.',ch:'打猎'},{en:'trace',pos:'v.',ch:'追踪'},{en:'human',pos:'n.',ch:'人类'},{en:'human activities',pos:'phr.',ch:'人类活动'},{en:'impact',pos:'v.',ch:'冲击'},{en:'danger',pos:'n.',ch:'危险'},{en:'be in danger',pos:'phr.',ch:'处在危险当中'},{en:'harm',pos:'n.',ch:'伤害'},{en:'harmful',pos:'adj.',ch:'有害的'},{en:'hurt',pos:'v.',ch:'受伤'},{en:'damage',pos:'n.',ch:'损害'},{en:'existing',pos:'adj.',ch:'现存的'},{en:'survival',pos:'n.',ch:'幸存'},{en:'decline',pos:'n.',ch:'下降'},{en:'decrease',pos:'n.',ch:'减少'},{en:'reduction',pos:'n.',ch:'减少'},{en:'rare',pos:'adj.',ch:'极少的'},{en:'disappear',pos:'v.',ch:'消失'},{en:'destroy',pos:'v.',ch:'毁灭'},{en:'donation',pos:'n.',ch:'捐款'},{en:'voluntary',pos:'adj.',ch:'自愿的'},{en:'state park',pos:'phr.',ch:'州立公园'},{en:'national park',pos:'phr.',ch:'国家公园'},{en:'zoo',pos:'n.',ch:'动物园'},{en:'protect',pos:'v.',ch:'保护'},{en:'protection policy',pos:'phr.',ch:'保护政策'},{en:'balance',pos:'n.',ch:'平衡'},{en:'diversity',pos:'n.',ch:'多样性；多样化'}
+],
+'植物植被细胞基因': [
+{en:'plant',pos:'n.',ch:'植物'},{en:'vegetation',pos:'n.',ch:'植被'},{en:'species',pos:'n.',ch:'物种'},{en:'cell',pos:'n.',ch:'细胞'},{en:'gene',pos:'n.',ch:'基因'},{en:'genetic',pos:'adj.',ch:'基因的'},{en:'microbe',pos:'n.',ch:'微生物'},{en:'bacteria',pos:'n.',ch:'细菌'},{en:'virus',pos:'n.',ch:'病毒'},{en:'vary',pos:'v.',ch:'变化'},{en:'variety',pos:'n.',ch:'多样化'},{en:'variable',pos:'adj.',ch:'多变的'},{en:'various',pos:'adj.',ch:'各种各样的'},{en:'variation',pos:'n.',ch:'变化；变量'},{en:'control',pos:'v.',ch:'控制'},{en:'plantation',pos:'n.',ch:'种植园'},{en:'marine plants',pos:'phr.',ch:'海洋植物'},{en:'bushes',pos:'n.',ch:'灌木丛'},{en:'shade',pos:'n.',ch:'树荫'},{en:'sheet',pos:'n.',ch:'一大片覆盖物'},{en:'cover',pos:'v.',ch:'遮盖'},{en:'grasses',pos:'n.',ch:'草'},{en:'grassland',pos:'n.',ch:'草地'},{en:'grass ground',pos:'phr.',ch:'草地'},{en:'grass leaves',pos:'phr.',ch:'草叶'},{en:'weed',pos:'n./v.',ch:'杂草；除草'},{en:'weeding',pos:'v.',ch:'除草'},{en:'growing',pos:'adj.',ch:'生长的'},{en:'seeds',pos:'n.',ch:'种子'},{en:'root',pos:'n.',ch:'根'},{en:'stem',pos:'n.',ch:'茎'},{en:'sting',pos:'n.',ch:'刺'},{en:'spine',pos:'n.',ch:'植物上的刺'},{en:'trunk',pos:'n.',ch:'树干'},{en:'branches',pos:'n.',ch:'分支；树枝'},{en:'bunch',pos:'n.',ch:'束；串；扎'},{en:'leaf',pos:'n.',ch:'叶子'},{en:'leaves',pos:'n.',ch:'叶子'},{en:'flower',pos:'n.',ch:'花'},{en:'rose',pos:'n.',ch:'玫瑰'},{en:'tree',pos:'n.',ch:'树'},{en:'rare tree',pos:'phr.',ch:'珍稀树种'},{en:'forest',pos:'n.',ch:'森林'},{en:'forestry',pos:'n.',ch:'林业'},{en:'campsite',pos:'n.',ch:'营地'},{en:'forest campsite',pos:'phr.',ch:'森林营地'},{en:'camp',pos:'n.',ch:'营地'},{en:'tent',pos:'n.',ch:'帐篷'},{en:'wood',pos:'n.',ch:'木材'},{en:'woodland',pos:'n.',ch:'林地'},{en:'timber',pos:'n.',ch:'木材'},{en:'microbiology',pos:'n.',ch:'微生物学'},{en:'tissue',pos:'n.',ch:'生物组织'},{en:'germ',pos:'n.',ch:'细菌'}
+]}},
+
+'其他课程': { units: {
+'工程电子航天化学': [
+{en:'engineer',pos:'n.',ch:'工程师'},{en:'engineering',pos:'n.',ch:'工程学'},{en:'engineering faculty',pos:'phr.',ch:'工程院'},{en:'electronic',pos:'adj.',ch:'电子的'},{en:'electrical',pos:'adj.',ch:'电气的'},{en:'space',pos:'n.',ch:'太空'},{en:'astronomy',pos:'n.',ch:'天文学'},{en:'chemistry',pos:'n.',ch:'化学'},{en:'chemical',pos:'adj.',ch:'化学的'},{en:'industry',pos:'n.',ch:'工业'},{en:'manufacture',pos:'v.',ch:'制造'},{en:'factory',pos:'n.',ch:'工厂'},{en:'electric car',pos:'phr.',ch:'电动车'},{en:'electric field',pos:'phr.',ch:'电场'},{en:'electronic directory',pos:'phr.',ch:'电子目录'},{en:'electronic card',pos:'phr.',ch:'电子卡'},{en:'electricity',pos:'n.',ch:'电力'},{en:'electricity supply',pos:'phr.',ch:'电力供应'},{en:'power',pos:'n.',ch:'功率'},{en:'water power',pos:'phr.',ch:'水力'},{en:'capacity',pos:'n.',ch:'容量'},{en:'space museum',pos:'phr.',ch:'太空博物馆'},{en:'space station',pos:'phr.',ch:'空间站'},{en:'satellite',pos:'n.',ch:'卫星'},{en:'rocket',pos:'n.',ch:'火箭'},{en:'science',pos:'n.',ch:'科学'},{en:'scientist',pos:'n.',ch:'科学家'},{en:'scientific',pos:'adj.',ch:'科学的'},{en:'exploration',pos:'n.',ch:'探索'},{en:'scientific exploration',pos:'phr.',ch:'科学探索'},{en:'scientific research',pos:'phr.',ch:'科学研究'},{en:'advanced',pos:'adj.',ch:'先进的；高等的'},{en:'advance level',pos:'phr.',ch:'先进水平；高级水平'},{en:'chemist',pos:'n.',ch:'药房；化学家'},{en:'chemistry lab',pos:'phr.',ch:'化学实验室'},{en:'compound',pos:'n.',ch:'复合物'},{en:'complex',pos:'adj.',ch:'复杂的'},{en:'mixed',pos:'adj.',ch:'混合的'},{en:'mixture',pos:'n.',ch:'混合；混杂'},{en:'confusion',pos:'n.',ch:'混淆'},{en:'burning time',pos:'phr.',ch:'燃烧时间'},{en:'protective clothing',pos:'phr.',ch:'防毒服'}
+],
+'农业粮食全球贸易': [
+{en:'agriculture',pos:'n.',ch:'农业'},{en:'farming',pos:'n.',ch:'农耕'},{en:'crop',pos:'n.',ch:'农作物'},{en:'harvest',pos:'n.',ch:'收成'},{en:'irrigation',pos:'n.',ch:'灌溉'},{en:'fertilizer',pos:'n.',ch:'肥料'},{en:'globalisation',pos:'n.',ch:'全球化'},{en:'import',pos:'n.',ch:'进口'},{en:'export',pos:'n.',ch:'出口'},{en:'agricultural',pos:'adj.',ch:'农业的'},{en:'grain',pos:'n.',ch:'粮食'},{en:'cotton',pos:'n.',ch:'棉花'},{en:'fertilize',pos:'v.',ch:'施肥'},{en:'pest',pos:'n.',ch:'害虫'},{en:'pesticide',pos:'n.',ch:'农药'},{en:'irrigating',pos:'v.',ch:'灌溉'},{en:'farmer',pos:'n.',ch:'农民'},{en:'farming product',pos:'phr.',ch:'农产品'},{en:'world',pos:'n.',ch:'世界'},{en:'global',pos:'adj.',ch:'全球的'},{en:'global market',pos:'phr.',ch:'全球市场'},{en:'expansion',pos:'n.',ch:'扩张'},{en:'international',pos:'adj.',ch:'国际的'},{en:'international express',pos:'phr.',ch:'国际快递'},{en:'international study',pos:'phr.',ch:'国际研究'},{en:'traders',pos:'n.',ch:'交易员'},{en:'trade journal',pos:'phr.',ch:'行业杂志'},{en:'distribution',pos:'n.',ch:'供应；分配'},{en:'distribute',pos:'v.',ch:'分配；散布'},{en:'silk',pos:'n.',ch:'丝绸'},{en:'textile',pos:'n.',ch:'纺织品'},{en:'developing countries',pos:'phr.',ch:'发展中国家'},{en:'development',pos:'n.',ch:'发展'},{en:'develop',pos:'v.',ch:'发展'}
+],
+'历史考古文物哲学': [
+{en:'history',pos:'n.',ch:'历史'},{en:'historical',pos:'adj.',ch:'历史的'},{en:'archaeology',pos:'n.',ch:'考古学'},{en:'archaeologist',pos:'n.',ch:'考古学家'},{en:'ancient',pos:'adj.',ch:'古代的'},{en:'relic',pos:'n.',ch:'文物遗迹'},{en:'society',pos:'n.',ch:'社会'},{en:'religion',pos:'n.',ch:'宗教'},{en:'philosophy',pos:'n.',ch:'哲学'},{en:'wooden sculpture',pos:'phr.',ch:'木雕'},{en:'historical map',pos:'phr.',ch:'历史地图'},{en:'historical photograph',pos:'phr.',ch:'历史照片'},{en:'classical history',pos:'phr.',ch:'古典历史'},{en:'classical',pos:'adj.',ch:'古典的'},{en:'museum',pos:'n.',ch:'博物馆'},{en:'local museum',pos:'phr.',ch:'本地博物馆'},{en:'museum centre',pos:'phr.',ch:'博物馆中心'},{en:'previous',pos:'adj.',ch:'以前的；先前的'},{en:'complete',pos:'adj.',ch:'完整的'},{en:'integrate',pos:'adj.',ch:'完整的'},{en:'segments',pos:'n.',ch:'碎片'},{en:'confirm',pos:'v.',ch:'证实'},{en:'demonstration',pos:'n.',ch:'证明'},{en:'proof',pos:'n.',ch:'证据'},{en:'evidence',pos:'n.',ch:'证据'},{en:'identify',pos:'v.',ch:'鉴别；确认；发现'},{en:'identification',pos:'n.',ch:'鉴定'},{en:'value',pos:'n.',ch:'价值'},{en:'collection',pos:'n.',ch:'收集'},{en:'collecting',pos:'n.',ch:'收集'},{en:'collector',pos:'n.',ch:'采集者'},{en:'monuments',pos:'n.',ch:'纪念碑'},{en:'myth',pos:'n.',ch:'神话'},{en:'ceremony',pos:'n.',ch:'仪式'},{en:'puzzle',pos:'n.',ch:'迷；疑问'},{en:'unanswered',pos:'adj.',ch:'未解答的'},{en:'answer',pos:'v.',ch:'回答'},{en:'background',pos:'n.',ch:'背景'},{en:'wall',pos:'n.',ch:'墙壁'},{en:'temple wall',pos:'phr.',ch:'寺庙墙壁'},{en:'preserved',pos:'v.',ch:'保存；保留'},{en:'preservation',pos:'n.',ch:'保存，保护'},{en:'items',pos:'n.',ch:'物品'},{en:'craft',pos:'v.',ch:'(尤指手工)精心制做'},{en:'souvenir',pos:'n.',ch:'纪念品'},{en:'artificial',pos:'adj.',ch:'人工的；人造的'},{en:'man-made',pos:'adj.',ch:'人造的'},{en:'sculpture',pos:'n.',ch:'雕塑；雕像'},{en:'jewelry',pos:'n.',ch:'珠宝'},{en:'crown',pos:'n.',ch:'皇冠'},{en:'arrow',pos:'n.',ch:'箭'},{en:'spear',pos:'n.',ch:'矛'},{en:'peg',pos:'v.',ch:'固定在；钉在'},{en:'buried',pos:'v.',ch:'被埋葬'},{en:'depth',pos:'n.',ch:'深度'},{en:'underground',pos:'n.',ch:'地下'},{en:'emperor',pos:'n.',ch:'皇帝'},{en:'king',pos:'n.',ch:'国王'},{en:'queen',pos:'n.',ch:'女王'},{en:'slave',pos:'n.',ch:'奴隶'},{en:'tribe',pos:'n.',ch:'部落，部族'},{en:'local tribe',pos:'phr.',ch:'当地部族'},{en:'colony',pos:'n.',ch:'殖民；殖民地'},{en:'pirates',pos:'n.',ch:'海盗'},{en:'settle',pos:'n.',ch:'定居'},{en:'philosopher',pos:'n.',ch:'哲学家'}
+],
+'媒体数学计量IT': [
+{en:'media',pos:'n.',ch:'媒体'},{en:'mathematics',pos:'n.',ch:'数学'},{en:'measure',pos:'v.',ch:'测量'},{en:'calculation',pos:'n.',ch:'计算'},{en:'computer',pos:'n.',ch:'计算机'},{en:'software',pos:'n.',ch:'软件'},{en:'hardware',pos:'n.',ch:'硬件'},{en:'internet',pos:'n.',ch:'互联网'},{en:'communication',pos:'n.',ch:'通信'},{en:'call diversion',pos:'phr.',ch:'呼叫转接'},{en:'incoming call',pos:'phr.',ch:'来电'},{en:'publishing',pos:'n.',ch:'出版'},{en:'publication',pos:'n.',ch:'出版物；出版'},{en:'magazine',pos:'n.',ch:'杂志'},{en:'journalism',pos:'n.',ch:'新闻'},{en:'photo journalism',pos:'phr.',ch:'新闻摄影'},{en:'journalist',pos:'n.',ch:'记者'},{en:'reporter',pos:'n.',ch:'记者'},{en:'newspapers',pos:'n.',ch:'报纸'},{en:'national newspaper',pos:'phr.',ch:'国家级报纸'},{en:'radio',pos:'n.',ch:'收音机'},{en:'radio program',pos:'phr.',ch:'收音机节目'},{en:'radio signal',pos:'phr.',ch:'无线信号'},{en:'media plan',pos:'phr.',ch:'媒体计划'},{en:'media studies',pos:'phr.',ch:'大众传播学'},{en:'multimedia resources',pos:'phr.',ch:'多媒体资源'},{en:'screen',pos:'n.',ch:'屏幕'},{en:'video',pos:'n.',ch:'视频'},{en:'video recording',pos:'phr.',ch:'录像'},{en:'video camera',pos:'phr.',ch:'摄像机'},{en:'videotape editor',pos:'phr.',ch:'录影编辑'},{en:'video subtitle',pos:'phr.',ch:'视频字幕'},{en:'subtitle',pos:'n.',ch:'字幕'},{en:'television program',pos:'phr.',ch:'电视节目'},{en:'television drama',pos:'phr.',ch:'电视剧'},{en:'math',pos:'n.',ch:'数学'},{en:'number',pos:'n.',ch:'数字'},{en:'calculator',pos:'n.',ch:'计算器'},{en:'tape measurer',pos:'phr.',ch:'卷尺'},{en:'distance',pos:'n.',ch:'距离'},{en:'centimeter',pos:'n.',ch:'厘米'},{en:'kilometre',pos:'n.',ch:'千米'},{en:'measurement',pos:'n.',ch:'测量'},{en:'size',pos:'n.',ch:'尺寸'},{en:'length',pos:'n.',ch:'长度'},{en:'accuracy',pos:'n.',ch:'精确性'},{en:'accurate',pos:'adj.',ch:'精确的，准确的'},{en:'random',pos:'n.',ch:'随机'},{en:'freedom',pos:'n.',ch:'自由'},{en:'fluctuate',pos:'v.',ch:'波动'},{en:'different',pos:'adj.',ch:'不同的'},{en:'unsure',pos:'adj.',ch:'不确定的'},{en:'statistics',pos:'n.',ch:'统计'},{en:'average',pos:'adj.',ch:'平均的，平常的'},{en:'small scale',pos:'phr.',ch:'小范围'},{en:'range',pos:'n.',ch:'区间'},{en:'matching',pos:'adj.',ch:'相称的'},{en:'equal',pos:'adj.',ch:'相同的'},{en:'similar',pos:'adj.',ch:'相似的'},{en:'comparison',pos:'n.',ch:'比较'},{en:'maximum',pos:'n.',ch:'最大值'},{en:'small',pos:'adj.',ch:'小的'},{en:'amount',pos:'n.',ch:'数量；总额'},{en:'entire',pos:'n.',ch:'全部'},{en:'total',pos:'adj.',ch:'总的'},{en:'whole',pos:'n.',ch:'整个'},{en:'half',pos:'n.',ch:'一半'},{en:'double',pos:'n.',ch:'两倍'},{en:'twice',pos:'n.',ch:'两次；两倍'},{en:'increase',pos:'n.',ch:'增长'},{en:'extra',pos:'adj.',ch:'额外的'},{en:'two',pos:'n.',ch:'两个'},{en:'vertical',pos:'adj.',ch:'垂直的'},{en:'straight',pos:'adj.',ch:'直的'},{en:'angle',pos:'n.',ch:'角；角度'},{en:'side',pos:'n.',ch:'边'},{en:'height',pos:'n.',ch:'高度'},{en:'top',pos:'n.',ch:'顶部'},{en:'top level',pos:'phr.',ch:'顶级'},{en:'middle',pos:'n.',ch:'中间'},{en:'intermediate',pos:'adj.',ch:'中间的'},{en:'moderate',pos:'adj.',ch:'中等的'},{en:'bottom',pos:'n.',ch:'底部'},{en:'lower',pos:'adj.',ch:'更低的'},{en:'shape',pos:'n.',ch:'形状'},{en:'surface',pos:'n.',ch:'表面'},{en:'round',pos:'prep.',ch:'围绕'},{en:'circle',pos:'n.',ch:'圆圈'},{en:'triangle',pos:'n.',ch:'三角'},{en:'triangle-shaped',pos:'n.',ch:'三角形'},{en:'computer centre',pos:'phr.',ch:'计算机中心'},{en:'computer programmer',pos:'phr.',ch:'程序员'},{en:'computer office',pos:'phr.',ch:'电脑办公室'},{en:'computer science',pos:'phr.',ch:'计算机科学'},{en:'computer aid',pos:'phr.',ch:'计算机辅助'},{en:'keyboard',pos:'v.',ch:'用键盘输入'},{en:'monitor',pos:'n./v.',ch:'显示器；监控'},{en:'headphones',pos:'n.',ch:'耳机'},{en:'Internet cafe',pos:'phr.',ch:'网络咖啡厅'},{en:'Internet line',pos:'phr.',ch:'网线'},{en:'Internet connection',pos:'phr.',ch:'网络连接'},{en:'network',pos:'n.',ch:'网络'},{en:'net',pos:'n.',ch:'网'},{en:'website',pos:'n.',ch:'网站'},{en:'online',pos:'n.',ch:'线上'},{en:'online service',pos:'phr.',ch:'线上服务'},{en:'online shopping',pos:'phr.',ch:'网购'},{en:'online game',pos:'phr.',ch:'网游'},{en:'data',pos:'n.',ch:'数据'},{en:'data analysis',pos:'phr.',ch:'数据分析'},{en:'digital system',pos:'phr.',ch:'数字系统'},{en:'digital store',pos:'phr.',ch:'数字商店'},{en:'technical',pos:'adj.',ch:'技术的'},{en:'technician',pos:'n.',ch:'技术员'},{en:'technology',pos:'n.',ch:'技术'},{en:'information',pos:'n.',ch:'信息'},{en:'information sector',pos:'phr.',ch:'信息部门'},{en:'communication system',pos:'phr.',ch:'通信系统'},{en:'email',pos:'n.',ch:'邮件'},{en:'email address',pos:'phr.',ch:'邮件地址'},{en:'mail',pos:'n.',ch:'邮件'},{en:'mailing list',pos:'phr.',ch:'邮寄名单'},{en:'fax',pos:'n.',ch:'传真'},{en:'message',pos:'n.',ch:'消息'},{en:'post',pos:'n.',ch:'邮递；邮局'},{en:'postcard',pos:'n.',ch:'明信片'},{en:'post office',pos:'phr.',ch:'邮局'},{en:'post postage',pos:'phr.',ch:'邮费'},{en:'post survey',pos:'phr.',ch:'邮寄调查'},{en:'letter',pos:'n.',ch:'信'},{en:'phone',pos:'n.',ch:'电话'},{en:'mobile phone',pos:'phr.',ch:'手机'},{en:'phone book',pos:'phr.',ch:'电话本'},{en:'phone number',pos:'phr.',ch:'电话号码'},{en:'phone statistics',pos:'phr.',ch:'电话统计'},{en:'phone card',pos:'phr.',ch:'电话卡'},{en:'telephone',pos:'n.',ch:'电话'},{en:'telephone survey',pos:'phr.',ch:'电话调查'},{en:'call',pos:'n.',ch:'来电'}
+]}}
+};
+
+/* ================================================================
+   二、密码验证
+   ================================================================ */
+const lockScreen = document.getElementById('lockScreen');
+if (lockScreen) {
+    lockScreen.classList.add('hide');
+    setTimeout(() => { lockScreen.style.display = 'none'; }, 500);
+}
+/* ================================================================
+   三、主页按钮
+   ================================================================ */
+const homeButtons = document.getElementById('homeButtons');
+const PART_META = {
+  1: { themes: 8, units: 16 },
+  2: { themes: 3, units: 7 },
+  3: { themes: 4, units: 7 },
+  4: { themes: 7, units: 14 }
+};
+
+// 计算每个 Part 词汇总量
+function countWords(part){
+  let n = 0;
+  const data = VOCAB_DATA[part];
+  Object.values(data).forEach(theme => {
+    Object.values(theme.units).forEach(arr => { n += arr.length; });
+  });
+  return n;
+}
+
+[1,2,3,4].forEach(part => {
+  const btn = document.createElement('button');
+  btn.className = 'home-btn';
+  btn.innerHTML = `Part ${part} <span class="badge">${countWords(part)} 词</span>`;
+  btn.addEventListener('click', () => openPart(part));
+  homeButtons.appendChild(btn);
+});
+
+/* ================================================================
+   四、Part 页面构建
+   ================================================================ */
+const PART_STATE = {}; // 每个 Part 独立状态
+
+function buildPartPage(part){
+  const data = VOCAB_DATA[part];
+  const themeList = Object.keys(data);
+  const unitMap = {};
+  const allVocab = [];
+
+  themeList.forEach(theme => {
+    const unitNames = Object.keys(data[theme].units);
+    unitMap[theme] = unitNames;
+    unitNames.forEach(unitName => {
+      data[theme].units[unitName].forEach(w => {
+        allVocab.push({ en:w.en, ch:w.ch, pos:w.pos, theme, unit:unitName });
+      });
+    });
+  });
+
+  const state = {
+    part, themeList, unitMap, allVocab,
+    currentTheme: themeList[0],
+    currentUnit: unitMap[themeList[0]][0],
+    currentIndex: 0,
+    difficultSet: new Set(),
+    currentWords: []
+  };
+  state.currentWords = allVocab.filter(w => w.theme === state.currentTheme && w.unit === state.currentUnit);
+  PART_STATE[part] = state;
+
+  const inner = document.getElementById('partInner' + part);
+  inner.innerHTML = `
+    <button class="back-btn" data-back="${part}">← 返回主页</button>
+    <div class="header">
+      <h1>Reborner 雅思听力核心词汇</h1>
+      <div class="sub1">Part ${part} 专项 · 全量版</div>
+      <div class="sub2">天天进步，每日新生</div>
+      <div class="sub3">📂 ${themeList.length} 大主题 · ${Object.values(unitMap).reduce((a,b)=>a+b.length,0)} 个单元 · 共 ${allVocab.length} 个词汇</div>
+    </div>
+    <div class="chapter-scroll"><div class="chap-flex"><button class="chap-btn active">Part ${part}</button></div></div>
+    <div class="subchapter-scroll"><div class="sub-flex" id="subFlex${part}"></div></div>
+    <div class="unit-scroll"><div class="unit-flex" id="unitFlex${part}"></div></div>
+    <div class="flip-container">
+      <div class="flipper" id="flipper${part}">
+        <div class="front"><div class="en-word" id="mainEn${part}">—</div></div>
+        <div class="back">
+          <div class="en-word" id="backEn${part}">—</div>
+          <div class="pos" id="posInfo${part}"></div>
+          <div class="ch-word" id="mainCh${part}"></div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="nav-btn" data-act="prev" data-p="${part}">← 前</button>
+      <button class="nav-btn" data-act="next" data-p="${part}">后 →</button>
+      <button class="nav-btn" data-act="speak" data-p="${part}">🔊 发音</button>
+      <button class="nav-btn quiz-btn" data-act="quiz" data-p="${part}">🎯 quiz</button>
+    </div>
+    <div class="thumb-header">
+      <span>📌 当前单元词汇 · 勾选难词</span>
+      <div class="actions">
+        <button class="select-all-btn" data-act="all" data-p="${part}">✅ 全选</button>
+        <button class="select-all-btn" data-act="none" data-p="${part}">⬜ 取消</button>
+        <button data-act="export" data-p="${part}">📎 导出难词</button>
+      </div>
+    </div>
+    <div class="thumb-grid-container"><div class="thumb-grid" id="thumbGrid${part}"></div></div>
+    <div class="tip">✓ 点击卡片翻转 · 勾选方格标记难词 · 三级分类层层筛选</div>
+  `;
+
+  // 绑定按钮
+  inner.querySelector('[data-back]').addEventListener('click', () => closePart(part));
+  inner.querySelectorAll('[data-act]').forEach(b => {
+    b.addEventListener('click', () => handleAction(b.dataset.act, part));
+  });
+  document.getElementById('flipper' + part).addEventListener('click', function(){
+    this.classList.toggle('flipped');
+  });
+
+  renderThemes(part);
+  renderUnits(part);
+  renderCard(part);
+  renderThumbs(part);
+}
+
+/* ---------- 渲染：主题 ---------- */
+function renderThemes(part){
+  const s = PART_STATE[part];
+  const box = document.getElementById('subFlex' + part);
+  box.innerHTML = '';
+  s.themeList.forEach(theme => {
+    const btn = document.createElement('button');
+    btn.className = 'sub-btn' + (theme === s.currentTheme ? ' active-sub' : '');
+    const cnt = s.allVocab.filter(w => w.theme === theme).length;
+    btn.innerHTML = `${theme}<span class="word-count-badge">${cnt}</span>`;
+    btn.addEventListener('click', () => {
+      s.currentTheme = theme;
+      s.currentUnit = s.unitMap[theme][0];
+      renderThemes(part); renderUnits(part);
+      s.currentWords = s.allVocab.filter(w => w.theme === s.currentTheme && w.unit === s.currentUnit);
+      s.currentIndex = 0;
+      renderCard(part); renderThumbs(part);
+    });
+    box.appendChild(btn);
+  });
+}
+
+/* ---------- 渲染：单元 ---------- */
+function renderUnits(part){
+  const s = PART_STATE[part];
+  const box = document.getElementById('unitFlex' + part);
+  box.innerHTML = '';
+  s.unitMap[s.currentTheme].forEach(unitName => {
+    const btn = document.createElement('button');
+    btn.className = 'unit-btn' + (unitName === s.currentUnit ? ' active-unit' : '');
+    const cnt = s.allVocab.filter(w => w.theme === s.currentTheme && w.unit === unitName).length;
+    btn.innerHTML = `${unitName}<span class="word-count-badge">${cnt}</span>`;
+    btn.addEventListener('click', () => {
+      s.currentUnit = unitName;
+      s.currentWords = s.allVocab.filter(w => w.theme === s.currentTheme && w.unit === unitName);
+      s.currentIndex = 0;
+      renderUnits(part); renderCard(part); renderThumbs(part);
+    });
+    box.appendChild(btn);
+  });
+}
+
+/* ---------- 渲染：主卡片 ---------- */
+function renderCard(part){
+  const s = PART_STATE[part];
+  const mainEn = document.getElementById('mainEn' + part);
+  const backEn = document.getElementById('backEn' + part);
+  const posInfo = document.getElementById('posInfo' + part);
+  const mainCh = document.getElementById('mainCh' + part);
+  const flipper = document.getElementById('flipper' + part);
+  flipper.classList.remove('flipped');
+
+  if (!s.currentWords.length) {
+    mainEn.textContent = '无'; backEn.textContent = '';
+    posInfo.textContent = ''; mainCh.textContent = '';
+    return;
+  }
+  const w = s.currentWords[s.currentIndex];
+  mainEn.textContent = w.en; backEn.textContent = w.en;
+  posInfo.textContent = w.pos || ''; mainCh.textContent = w.ch;
+  speak(w.en);
+}
+
+/* ---------- 渲染：缩略词格 ---------- */
+function renderThumbs(part){
+  const s = PART_STATE[part];
+  const box = document.getElementById('thumbGrid' + part);
+  box.innerHTML = '';
+  s.currentWords.forEach((w, idx) => {
+    const key = w.en + '|' + w.ch;
+    const card = document.createElement('div');
+    card.className = 'thumb-item';
+    card.innerHTML = `<input type="checkbox" class="diff-check" data-key="${key.replace(/"/g,'&quot;')}" ${s.difficultSet.has(key)?'checked':''}><label>${w.en}</label>`;
+    card.addEventListener('click', e => {
+      if (e.target.tagName !== 'INPUT') { s.currentIndex = idx; renderCard(part); }
+    });
+    const chk = card.querySelector('.diff-check');
+    chk.addEventListener('change', e => {
+      e.stopPropagation();
+      const k = e.target.dataset.key;
+      if (e.target.checked) s.difficultSet.add(k); else s.difficultSet.delete(k);
+    });
+    box.appendChild(card);
+  });
+}
+
+
+/* ---------- 动作分发 ---------- */
+function handleAction(act, part){
+  const s = PART_STATE[part];
+  if (act === 'prev') {
+    if (!s.currentWords.length) return;
+    s.currentIndex = (s.currentIndex - 1 + s.currentWords.length) % s.currentWords.length;
+    renderCard(part);
+  } else if (act === 'next') {
+    if (!s.currentWords.length) return;
+    s.currentIndex = (s.currentIndex + 1) % s.currentWords.length;
+    renderCard(part);
+  } else if (act === 'speak') {
+    if (s.currentWords[s.currentIndex]) speak(s.currentWords[s.currentIndex].en);
+  } else if (act === 'quiz') {
+    openQuiz(part);
+  } else if (act === 'all') {
+    document.querySelectorAll('#thumbGrid' + part + ' .diff-check').forEach(c => {
+      c.checked = true; s.difficultSet.add(c.dataset.key);
+    });
+  } else if (act === 'none') {
+    document.querySelectorAll('#thumbGrid' + part + ' .diff-check').forEach(c => {
+      c.checked = false; s.difficultSet.delete(c.dataset.key);
+    });
+  } else if (act === 'export') {
+    exportCsv(part);
+  }
+}
+
+/* ---------- 导出 CSV ---------- */
+function exportCsv(part){
+  const s = PART_STATE[part];
+  const selected = s.allVocab.filter(v => s.difficultSet.has(v.en + '|' + v.ch));
+  if (!selected.length) { alert('没有勾选难词'); return; }
+  let csv = '英文,词性,中文含义,主题,单元\n';
+  selected.forEach(w => csv += `"${w.en}","${w.pos||''}","${w.ch}","${w.theme}","${w.unit}"\n`);
+  const blob = new Blob(['\uFEFF' + csv], {type:'text/csv;charset=utf-8;'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `ielts_listening_difficult_words_part${part}.csv`;
+  link.click();
+}
+
+/* ---------- Quiz ---------- */
+let QUIZ = { part:null, list:[], idx:0 };
+function openQuiz(part){
+  const s = PART_STATE[part];
+  if (!s.currentWords.length) return;
+  const shuffled = [...s.currentWords].sort(() => Math.random() - 0.5);
+  QUIZ.part = part;
+  QUIZ.list = shuffled.slice(0, Math.min(20, s.currentWords.length));
+  QUIZ.idx = 0;
+  updateQuiz();
+  document.getElementById('quizOverlay').classList.add('show');
+}
+function updateQuiz(){
+  const el = document.getElementById('quizWord');
+  const c = document.getElementById('quizCounter');
+  if (QUIZ.list.length) {
+    el.textContent = QUIZ.list[QUIZ.idx].en;
+    c.textContent = `${QUIZ.idx + 1} / ${QUIZ.list.length}`;
+  }
+}
+document.getElementById('closeQuizBtn').addEventListener('click', () => {
+  document.getElementById('quizOverlay').classList.remove('show');
+});
+document.getElementById('quizOverlay').addEventListener('click', e => {
+  if (e.target.id === 'quizOverlay') document.getElementById('quizOverlay').classList.remove('show');
+});
+document.getElementById('quizPrevBtn').addEventListener('click', () => {
+  if (!QUIZ.list.length) return;
+  QUIZ.idx = (QUIZ.idx - 1 + QUIZ.list.length) % QUIZ.list.length;
+  updateQuiz();
+});
+document.getElementById('quizNextBtn').addEventListener('click', () => {
+  if (!QUIZ.list.length) return;
+  QUIZ.idx = (QUIZ.idx + 1) % QUIZ.list.length;
+  updateQuiz();
+});
+
+/* ================================================================
+     五、滑动切换
+   ================================================================ */
+function openPart(part){
+  if (!PART_STATE[part]) buildPartPage(part);
+  const home = document.getElementById('homePage');
+  const page = document.getElementById('partPage' + part);
+  home.classList.add('slide-left');
+  // 强制重排后再触发滑入
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      page.classList.add('slide-in');
+      page.scrollTop = 0;
+    });
+  });
+}
+function closePart(part){
+  const home = document.getElementById('homePage');
+  const page = document.getElementById('partPage' + part);
+  page.classList.remove('slide-in');
+  home.classList.remove('slide-left');
+}
+
+/* ---------- 发音（iframe 代理版） ---------- */
+function speak(text){
+  if (window.parent && window.parent !== window) {
+    try {
+      window.parent.postMessage({ type: 'speak', text: text }, '*');
+      return;
+    } catch(e) {}
+  }
+  // 不在 iframe 里，或 postMessage 失败 → 自己播
+  if ('speechSynthesis' in window) {
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(u);
+  }
+}
+</script>
+
+<!-- Quiz 弹窗（全局共用） -->
+<div class="quiz-overlay" id="quizOverlay">
+  <div class="quiz-panel">
+    <div class="close-area"><button class="close-quiz" id="closeQuizBtn">⨯</button></div>
+    <h3>🔍 随机小测</h3>
+    <div class="quiz-card"><div class="big-en" id="quizWord">—</div></div>
+    <div class="quiz-footer">
+      <button class="nav-btn" id="quizPrevBtn">←</button>
+      <button class="nav-btn" id="quizNextBtn">→</button>
+    </div>
+    <div class="quiz-counter" id="quizCounter">1 / 5</div>
+  </div>
+</div>
+
+</body>
+</html>

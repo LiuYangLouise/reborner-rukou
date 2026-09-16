@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reborn雅思提优 · 白皮书</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Roboto', 'Noto Sans SC', sans-serif;
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        body.light-mode { background-color: #FFFFFF; color: #1A1A1A; }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            min-height: 600px;
+            background-color: #1A1A1A;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 40px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        body.light-mode .container { background-color: #FFFFFF; box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+        }
+        .hexagon-icon {
+            position: relative;
+            width: 60px;
+            height: 70px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .hexagon {
+            position: absolute;
+            width: 60px;
+            height: 70px;
+            background-color: transparent;
+            border: 2px solid #FFFFFF;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            animation: hexagonGroupAppear 3.5s ease-in-out infinite;
+            opacity: 0;
+        }
+        body.light-mode .hexagon { border-color: #1A1A1A; }
+        .hexagon:nth-child(1) { top: 0; left: 0; animation-delay: 0s; }
+        .hexagon:nth-child(2) { top: 10px; left: 35px; transform: scale(0.85); opacity: 0.8; animation-delay: 0s; }
+        .hexagon:nth-child(3) { top: 10px; left: -35px; transform: scale(0.85); opacity: 0.8; animation-delay: 0s; }
+        .hexagon:nth-child(4) { top: 40px; left: 18px; transform: scale(0.7); opacity: 0.6; animation-delay: 0s; }
+        .hexagon:nth-child(5) { top: 40px; left: -18px; transform: scale(0.7); opacity: 0.6; animation-delay: 0s; }
+        @keyframes hexagonGroupAppear {
+            0% { opacity: 0; transform: scale(0.8) rotate(10deg); }
+            20% { opacity: 1; transform: scale(1) rotate(0); }
+            80% { opacity: 1; transform: scale(1) rotate(0); }
+            100% { opacity: 0; transform: scale(0.8) rotate(-10deg); }
+        }
+        .logo-text {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        body.light-mode .logo-text { color: #1A1A1A; }
+        .subtitle {
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: #CCCCCC;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 6px;
+            transition: all 0.3s ease;
+        }
+        body.light-mode .subtitle { color: #666666; }
+        .main-content { width: 100%; max-width: 500px; text-align: center; }
+        .description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #CCCCCC;
+            margin-bottom: 40px;
+            font-weight: 300;
+            transition: all 0.3s ease;
+        }
+        body.light-mode .description { color: #666666; }
+        .button-section {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            margin: 0 auto 40px;
+        }
+        .button {
+            width: 100%;
+            background-color: #262626;
+            border: none;
+            border-radius: 8px;
+            padding: 18px 24px;
+            color: #FFFFFF;
+            font-size: 1.1rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 1px;
+            text-decoration: none;
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+        body.light-mode .button { background-color: #F0F0F0; color: #1A1A1A; }
+        .button:hover { background-color: #2E2E2E; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-weight: 600; }
+        body.light-mode .button:hover { background-color: #E5E5E5; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .footer {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 30px;
+            border-top: 1px solid #262626;
+            font-size: 0.9rem;
+            color: #999999;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        body.light-mode .footer { border-top-color: #E0E0E0; color: #666666; }
+        .copyright { font-weight: 300; font-size: 1rem; transition: all 0.3s ease; margin-bottom: 30px; }
+        body.light-mode .copyright { color: #666666; }
+        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-section">
+            <div class="logo-container">
+                <div class="hexagon-icon">
+                    <div class="hexagon"></div>
+                    <div class="hexagon"></div>
+                    <div class="hexagon"></div>
+                    <div class="hexagon"></div>
+                    <div class="hexagon"></div>
+                </div>
+                <div class="logo-text" id="logoText">Reborn雅思提优 黑皮书</div>
+            </div>
+            <div class="subtitle">Veni · Vidi · Vici</div>
+        </div>
+
+        <div class="main-content">
+            <p class="description">
+                这是一个专注于提升你语言能力的工具平台。我们通过简洁的界面和直观的交互，帮助你熟记词汇表达、提升外语理解能力等。
+            </p>
+            <div class="button-section">
+                <button class="button" data-nav="listening">听力词汇</button>
+                <button class="button" data-nav="reading">阅读词汇</button>
+                <button class="button" data-nav="speaking-entry">口语题库</button>
+                <button class="button" data-nav="writing">写作素材</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="copyright">天天进步，每日新生</div>
+        </div>
+    </div>
+
+    <script>
+        function applyTheme(isLight) {
+            if (isLight) document.body.classList.add('light-mode');
+            else document.body.classList.remove('light-mode');
+            var logo = document.getElementById('logoText');
+            if (logo) logo.textContent = isLight ? 'Reborn雅思提优 白皮书' : 'Reborn雅思提优 黑皮书';
+        }
+
+        function getCurrentTheme() {
+            try {
+                if (window.parent && window.parent !== window) {
+                    return window.parent.document.body.classList.contains('light-mode');
+                }
+            } catch(e) {}
+            return localStorage.getItem('theme') === 'light';
+        }
+
+        applyTheme(getCurrentTheme());
+
+        window.addEventListener('message', function(e) {
+            if (e.data && e.data.type === 'theme') {
+                applyTheme(e.data.isLight);
+            }
+        });
+
+        setInterval(function() {
+            var isLight = getCurrentTheme();
+            if (isLight !== document.body.classList.contains('light-mode')) {
+                applyTheme(isLight);
+            }
+        }, 200);
+
+        document.querySelectorAll('.button').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var target = btn.dataset.nav;
+                if (target && window.parent !== window) {
+                    window.parent.postMessage({ type: 'navigate', page: target }, '*');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
