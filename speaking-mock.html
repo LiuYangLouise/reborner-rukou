@@ -1,0 +1,1683 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reborn · 雅思口语模拟考</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        /* ========== 密码验证层 ========== */
+        .lock-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #f5f7fa;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        .lock-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .lock-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1b5e3a;
+            text-align: center;
+            margin-bottom: 0.4rem;
+            line-height: 1.35;
+        }
+        .lock-sub {
+            font-size: 1rem;
+            color: #3f6b53;
+            font-weight: 400;
+            margin-bottom: 2rem;
+        }
+        .lock-card {
+            background: white;
+            border: 2px solid #1b5e3a;
+            border-radius: 36px;
+            padding: 2rem 1.5rem;
+            width: 100%;
+            max-width: 340px;
+            box-shadow: 0 12px 28px rgba(27, 94, 58, 0.15);
+        }
+        .lock-input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            font-size: 1rem;
+            background: #f4faf7;
+            border: 1px solid #bdd3c6;
+            border-radius: 14px;
+            color: #1b5e3a;
+            text-align: center;
+            outline: none;
+            letter-spacing: 2px;
+        }
+        .lock-input:focus {
+            border-color: #1b5e3a;
+        }
+        .lock-err {
+            color: #b13e3e;
+            text-align: center;
+            margin-top: 0.7rem;
+            height: 18px;
+            font-size: 0.88rem;
+        }
+        .lock-btn {
+            margin-top: 1rem;
+            width: 100%;
+            padding: 0.85rem;
+            background: #1b5e3a;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #0f3d26;
+            transition: transform 0.1s;
+        }
+        .lock-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #0f3d26;
+        }
+
+        body {
+            background: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .app-container {
+            max-width: 820px;
+            width: 100%;
+            background: white;
+            border-radius: 48px;
+            box-shadow: 0 20px 60px rgba(0, 20, 30, 0.12);
+            overflow: hidden;
+            padding: 28px 24px 40px;
+        }
+        .header-title {
+            text-align: center;
+            padding: 18px 12px 12px;
+            border-radius: 60px;
+            margin-bottom: 6px;
+            background: #1b5e3a;
+            box-shadow: 0 4px 0 #0f3d26;
+        }
+        .main-title {
+            font-size: 2.1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: white;
+            text-shadow: 0 2px 0 #0f3d26;
+        }
+        .sub-title {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: #e6f0ea;
+            letter-spacing: 2px;
+            background: rgba(255,255,255,0.1);
+            display: inline-block;
+            padding: 0 20px;
+            border-radius: 40px;
+            margin-top: 2px;
+        }
+        .page {
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .page.active {
+            display: flex;
+        }
+
+        .entry-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            padding: 20px 0 10px;
+        }
+        .entry-page .greeting {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1b5e3a;
+        }
+        .entry-page .sub-greeting {
+            font-size: 1rem;
+            color: #3f6b53;
+        }
+
+        .entry-btn {
+            background: white;
+            border: 3px solid #1b5e3a;
+            border-radius: 60px;
+            padding: 20px 22px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1b5e3a;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #cbd5d0;
+            transition: all 0.12s;
+            letter-spacing: 1px;
+            width: 100%;
+            max-width: 380px;
+        }
+        .entry-btn:hover {
+            background: #edf5f0;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0 #b0c4b8;
+        }
+        .entry-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #b0c4b8;
+        }
+        .entry-btn .badge-count {
+            background: #1b5e3a;
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 12px;
+            border-radius: 30px;
+            margin-left: 8px;
+            font-weight: 400;
+        }
+        .footer-message {
+            text-align: center;
+            margin-top: 18px;
+            line-height: 1.8;
+            color: #2d4d3a;
+        }
+        .footer-message .slogan {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1b5e3a;
+        }
+
+        .exam-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            padding: 10px 0;
+            width: 100%;
+        }
+        .duo-boxes {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        .duo-box {
+            flex: 1;
+            min-width: 200px;
+            max-width: 320px;
+            background: #f8fafc;
+            border-radius: 28px;
+            padding: 30px 20px 20px;
+            text-align: center;
+            border: 2px solid #dce5e0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            position: relative;
+        }
+        .duo-box .avatar {
+            font-size: 4rem;
+            margin-bottom: 8px;
+        }
+        .duo-box .label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1b5e3a;
+            margin-bottom: 6px;
+        }
+        .duo-box .sub-label {
+            font-size: 0.9rem;
+            color: #5a7a6a;
+        }
+        .duo-box.examiner {
+            border-color: #b13e3e;
+            background: #fdf6f6;
+        }
+        .duo-box.examiner .label {
+            color: #b13e3e;
+        }
+        .duo-box.candidate {
+            border-color: #1b5e3a;
+            background: #f4faf7;
+        }
+        .duo-box.candidate .label {
+            color: #1b5e3a;
+        }
+
+        .pardon-btn {
+            display: none;
+            margin-top: 12px;
+            background: white;
+            border: 2px solid #b13e3e;
+            color: #b13e3e;
+            padding: 8px 22px;
+            border-radius: 40px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #d6b8b8;
+            transition: 0.1s;
+        }
+        .pardon-btn:hover {
+            background: #fce8e8;
+        }
+        .pardon-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #d6b8b8;
+        }
+        .pardon-btn:disabled {
+            opacity: 0.35;
+            pointer-events: none;
+        }
+        .pardon-btn.show {
+            display: inline-block;
+        }
+
+        .timer-badge {
+            background: #1b5e3a;
+            color: white;
+            padding: 12px 36px;
+            border-radius: 60px;
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: monospace;
+            min-width: 160px;
+            text-align: center;
+            box-shadow: 0 4px 0 #0f3d26;
+        }
+        .timer-badge.beep {
+            background: #c0392b;
+            animation: beepFlash 0.4s ease 2;
+        }
+        .timer-badge.prep {
+            background: #d4a373;
+            box-shadow: 0 4px 0 #a67c5a;
+        }
+        @keyframes beepFlash {
+            0%, 100% { background: #c0392b; }
+            50% { background: #e74c3c; transform: scale(1.05); }
+        }
+
+        .status-badge {
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 1rem;
+            background: #e8f0ec;
+            color: #1b5e3a;
+            text-align: center;
+        }
+        .action-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 8px;
+        }
+        .btn {
+            border: none;
+            background: white;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: 2px solid #1b5e3a;
+            color: #1b5e3a;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 4px 0 #cbd5d0;
+            min-width: 100px;
+        }
+        .btn-primary {
+            background: #1b5e3a;
+            color: white;
+            border-color: #1b5e3a;
+            box-shadow: 0 4px 0 #0f3d26;
+        }
+        .btn-primary:hover { background: #247a49; }
+        .btn-primary:active { transform: translateY(2px); box-shadow: 0 2px 0 #0f3d26; }
+        .btn-danger {
+            border-color: #b13e3e;
+            color: #b13e3e;
+            box-shadow: 0 4px 0 #d6b8b8;
+        }
+        .btn-danger:hover { background: #fce8e8; }
+        .btn-danger:active { transform: translateY(2px); box-shadow: 0 2px 0 #d6b8b8; }
+        .btn:disabled { opacity: 0.4; transform: none !important; box-shadow: 0 4px 0 #cbd5d0; pointer-events: none; }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #1b5e3a;
+            color: #1b5e3a;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .btn-outline:hover { background: #e8f0ec; }
+        .btn-export {
+            background: #1b5e3a;
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #0f3d26;
+            transition: 0.1s;
+            margin-top: 10px;
+        }
+        .btn-export:hover { background: #247a49; }
+        .btn-export:active { transform: translateY(2px); box-shadow: 0 2px 0 #0f3d26; }
+
+        .p2-card {
+            background: white;
+            border-radius: 28px;
+            padding: 30px 28px;
+            border: 2px solid #1b5e3a;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+        .p2-card .p2-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1b5e3a;
+            margin-bottom: 12px;
+        }
+        .p2-card .p2-instruction {
+            font-size: 1.05rem;
+            color: #2d4d3a;
+            margin-bottom: 14px;
+            font-style: italic;
+        }
+        .p2-card .p2-bullets { list-style: none; padding: 0; }
+        .p2-card .p2-bullets li {
+            padding: 6px 0 6px 28px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%231b5e3a" stroke-width="2"><circle cx="12" cy="12" r="6"/></svg>') left center no-repeat;
+            background-size: 18px;
+            font-size: 1rem;
+            color: #1a2e24;
+        }
+
+        .recording-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #e74c3c;
+            font-weight: 600;
+            animation: pulse 1s infinite;
+        }
+        .recording-indicator .dot {
+            width: 12px;
+            height: 12px;
+            background: #e74c3c;
+            border-radius: 50%;
+            animation: pulse-dot 0.8s infinite;
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.7); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .review-page {
+            display: none;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .review-page.active { display: flex; }
+        .review-section {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 20px 24px;
+            border-left: 5px solid #1b5e3a;
+        }
+        .review-section .section-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #1b5e3a;
+            margin-bottom: 10px;
+        }
+        .review-item {
+            padding: 8px 0;
+            border-bottom: 1px dashed #dce5e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .review-item:last-child { border-bottom: none; }
+        .review-item .q-text {
+            flex: 1;
+            font-size: 0.95rem;
+            color: #1a2e24;
+            min-width: 150px;
+        }
+        .review-item .audio-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .review-item .audio-controls audio {
+            height: 32px;
+            max-width: 140px;
+        }
+
+        .flex-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        .back-link {
+            display: inline-block;
+            margin: 6px 0;
+            color: #1b5e3a;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            background: #eaf3ee;
+            padding: 6px 18px;
+            border-radius: 40px;
+            border: 1px solid #bdd3c6;
+        }
+        .back-link:hover { background: #d4e6dc; }
+
+        @media (max-width: 600px) {
+            .duo-boxes { gap: 16px; }
+            .duo-box { min-width: 140px; padding: 16px; }
+            .duo-box .avatar { font-size: 2.8rem; }
+            .timer-badge { font-size: 1.4rem; padding: 8px 20px; min-width: 120px; }
+            .p2-card { padding: 20px; }
+            .main-title { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== 密码验证层 ===== -->
+<div class="lock-overlay" id="lockOverlay">
+    <div class="lock-title">🔒 Reborn 雅思口语模拟考</div>
+    <div class="lock-sub">请输入访问密码</div>
+    <div class="lock-card">
+        <input type="password" id="lockInput" class="lock-input" placeholder="••••••••" autocomplete="off">
+        <div class="lock-err" id="lockErr"></div>
+        <button class="lock-btn" id="lockBtn">确认进入</button>
+    </div>
+</div>
+
+<div class="app-container" id="app">
+    <!-- Header -->
+    <div class="header-title">
+        <div class="main-title">Reborn新生留学</div>
+        <div class="sub-title">雅思IELTS口语模拟考</div>
+        <div style="font-size: 0.95rem; color: #d7ede0; margin-top: 4px; letter-spacing: 2px;">Speaking: Mock Test</div>
+    </div>
+
+    <!-- ===== 入口页 ===== -->
+    <div id="entryPage" class="page active">
+        <div class="entry-page">
+            <div class="greeting">🎯 雅思口语全真模拟</div>
+            <div class="sub-greeting">点击下方按钮开始考试</div>
+            <button class="entry-btn" id="startExamBtn">🎤 开始口语模拟考 <span class="badge-count">130+ topics</span></button>
+            <div class="footer-message">
+                <div class="slogan">🌟 天天进步，每日新生</div>
+                <div style="font-size:0.9rem; color:#3f6b53;">完整题库 · 随机出题 · 全真录音</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 考试界面 ===== -->
+    <div id="examPage" class="page">
+        <div class="flex-between">
+            <span class="back-link" id="examBackToEntry">← 回到入口</span>
+            <span style="font-weight:600; color:#1b5e3a;" id="examPhaseLabel">📋 Part 1</span>
+        </div>
+
+        <div class="exam-container">
+            <div class="duo-boxes">
+                <div class="duo-box candidate">
+                    <div class="avatar">😄</div>
+                    <div class="label">玉树临风美艳动人的你</div>
+                    <div class="sub-label" id="candidateStatus">准备就绪</div>
+                </div>
+                <div class="duo-box examiner">
+                    <div class="avatar">😒</div>
+                    <div class="label">帅气逼人高冷无比的考官</div>
+                    <div class="sub-label" id="examinerStatus">正在准备题目...</div>
+                    <button class="pardon-btn" id="pardonBtn">🤔 Pardon?</button>
+                </div>
+            </div>
+
+            <div class="flex-center">
+                <div class="timer-badge" id="examTimer">⏳ 0:00</div>
+                <div class="status-badge" id="examStatus">点击下方开始考试</div>
+                <div id="recordingStatus" style="display:none;" class="recording-indicator"><span class="dot"></span> 录音中...</div>
+                <div id="questionCounter" style="font-size:0.9rem; color:#5a7a6a;"></div>
+            </div>
+
+            <div id="p2CardContainer" style="display:none; width:100%; justify-content:center;">
+                <div class="p2-card" id="p2Card">
+                    <div class="p2-title" id="p2Title">Topic</div>
+                    <div class="p2-instruction" id="p2Instruction">Describe ...</div>
+                    <ul class="p2-bullets" id="p2Bullets"></ul>
+                </div>
+            </div>
+
+            <div class="action-row" id="examActions">
+                <button class="btn btn-primary" id="examStartBtn">▶ 开始考试</button>
+                <button class="btn" id="examNextBtn" style="display:none;">⏭ 下一题</button>
+                <button class="btn btn-danger" id="examFinishBtn" style="display:none;">⏹ 结束 Part 2</button>
+            </div>
+
+            <div style="font-size:0.85rem; color:#5a7a6a; text-align:center; border-top:1px solid #dce8e0; padding-top:14px; width:100%;">
+                <span id="examHint">点击「开始考试」进入 Part 1 · 全程自动录音</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 回顾页 ===== -->
+    <div id="reviewPage" class="review-page">
+        <div class="flex-between">
+            <span class="back-link" id="reviewBackToEntry">← 回到入口</span>
+            <span style="font-weight:700; color:#1b5e3a;">📖 考试回顾</span>
+        </div>
+        <div style="text-align:center; font-size:1.6rem; font-weight:700; color:#1b5e3a;">🎉 考试已完成！</div>
+        <div id="reviewContent" style="display:flex; flex-direction:column; gap:20px;"></div>
+        <button class="btn-export" id="exportAllBtn">📥 导出全部录音 (WAV)</button>
+    </div>
+</div>
+
+<script>
+    /* ================================================================
+       一、密码验证逻辑
+       ================================================================ */
+    (function() {
+        const VALID_PASSWORDS = ['61211216', 'reborn2026'];
+        const lockOverlay = document.getElementById('lockOverlay');
+        const lockInput = document.getElementById('lockInput');
+        const lockBtn = document.getElementById('lockBtn');
+        const lockErr = document.getElementById('lockErr');
+
+        function tryUnlock() {
+            const v = lockInput.value.trim();
+            if (VALID_PASSWORDS.includes(v)) {
+                lockOverlay.classList.add('hidden');
+            } else {
+                lockErr.textContent = '密码错误，请重试';
+                lockInput.value = '';
+            }
+        }
+
+        lockBtn.addEventListener('click', tryUnlock);
+        lockInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') tryUnlock();
+        });
+        setTimeout(function() { lockInput.focus(); }, 300);
+    })();
+
+    /* ================================================================
+       二、原有口语模拟考逻辑（完全保留）
+       ================================================================ */
+    (function() {
+        // ================================================================
+        // 1. 完整题库
+        // ================================================================
+
+        // ----- 万年老题 Part 1 (5组) -----
+        const oldPart1 = [
+            { id: "old1", title: "Work or studies", questions: ["What subjects are you studying?", "Do you like your subject?", "Why did you choose to study that subject?", "Do you think that your subject is popular in your country?", "Do you have any plans for your studies in the next five years?", "What are the benefits of being your age?", "Do you want to change your major?", "Do you prefer to study in the mornings or in the afternoons?", "How much time do you spend on your studies each week?", "Are you looking forward to working?", "What technology do you use when you study?", "What changes would you like to see in your school?", "What work do you do?", "Why did you choose to do that type of work (or that job)?", "Do you like your job?", "What requirements did you need to meet to get your current job?", "Do you have any plans for your work in the next five years?", "What do you think is the most important at the moment?", "Do you want to change to another job?", "Do you miss being a student?", "What technology do you use at work?", "Who helps you the most? And how?"] },
+            { id: "old2", title: "Hometown", questions: ["Where is your hometown?", "Is that a big city or a small place?", "Please describe your hometown a little.", "How long have you been living there?", "Do you think you will continue living there for a long time?", "Do you like your hometown?", "Do you like living there?", "What do you like (most) about your hometown?", "Is there anything you dislike about it?", "What's your hometown famous for?", "Did you learn about the history of your hometown at school?", "Are there many young people in your hometown?", "Is your hometown a good place for young people to pursue their careers?", "Have you learned anything about the history of your hometown?", "Did you learn about the culture of your hometown in your childhood?"] },
+            { id: "old3", title: "Home / Accommodation", questions: ["What kind of house or apartment do you want to live in in the future?", "Are the transport facilities to your home very good?", "Do you prefer living in a house or an apartment?", "Please describe the room you live in.", "What part of your home do you like the most?", "How long have you lived there?", "Do you plan to live there for a long time?", "What's the difference between where you are living now and where you have lived in the past?", "Can you describe the place where you live?", "What room does your family spend most of the time in?", "What's your favorite room in your apartment or house?", "What makes you feel pleasant in your home?", "Do you think it is important to live in a comfortable environment?", "Do you live in an apartment or a house?", "Who do you live with?", "What do you usually do in your apartment?", "What kinds of accommodation do you live in?"] },
+            { id: "old4", title: "The area you live in", questions: ["Do you like the area that you live in?", "Where do you like to go in that area?", "Do you know any famous people in your area?", "What are some changes in the area recently?", "Do you know any of your neighbors?", "Are the people in your neighborhood nice and friendly?", "Do you live in a noisy or a quiet area?"] },
+            { id: "old5", title: "The city you live in", questions: ["What city do you live in?", "Do you like this city? Why?", "How long have you lived in this city?", "Are there big changes in this city?", "Is this city your permanent residence?", "Are there people of different ages living in this city?", "Are the people friendly in the city?", "Is the city friendly to children and old people?", "Do you often see your neighbors?", "What's the weather like where you live?", "Would you recommend your city to others?"] }
+        ];
+
+        // ----- Part 1 保留题 (33组) -----
+        const part1Keep = [
+            { id: "p1k1", title: "Food", questions: ["What is your favourite food?", "What kind of food did you like when you were young?", "Do you eat different foods at different times of the year?", "Has your favourite food changed since you were a child?"] },
+            { id: "p1k2", title: "Pets and Animals", questions: ["What's your favourite animal? Why?", "Where do you prefer to keep your pet, indoors or outdoors?", "Have you ever had a pet before?", "What is the most popular animal in China?", "Have you ever visited a zoo?", "How often do you visit a zoo?", "Are there many people keeping pets in your country?", "Should schools teach students knowledge about pets or animals?"] },
+            { id: "p1k3", title: "Sports team", questions: ["Have you ever been part of a sports team?", "Is team sports popular in your culture?", "Do you like watching team games? Why?", "What are the differences between team sports and individual sports?"] },
+            { id: "p1k4", title: "Hobby", questions: ["Do you have any hobbies?", "Did you have any hobbies when you were a child?", "Do you have a hobby that you've had since childhood?", "Do you have the same hobbies as your family members?"] },
+            { id: "p1k5", title: "Morning time", questions: ["Do you like getting up early in the morning?", "What do you usually do in the morning?", "What did you do in the morning when you were little? Why?", "Are there any differences between what you do in the morning now and what you did in the past?", "Do you spend your mornings doing the same things on both weekends and weekdays? Why?"] },
+            { id: "p1k6", title: "Gifts", questions: ["Have you ever sent handmade gifts to others?", "Have you ever received a great gift?", "What do you consider when choosing a gift?", "Do you think you are good at choosing gifts?", "What gift have you received recently?"] },
+            { id: "p1k7", title: "Reading", questions: ["Do you like reading?", "Do you prefer to read on paper or on a screen?", "When do you need to read carefully, and when not?", "Do you prefer scanning or detailed reading?"] },
+            { id: "p1k8", title: "Walking", questions: ["Do you walk a lot?", "Did you often go outside to have a walk when you were a child?", "Why do people like to walk in parks?", "Where would you like to take a long walk if you had the chance?", "Where did you go for a walk lately?"] },
+            { id: "p1k9", title: "Typing", questions: ["Do you prefer typing or handwriting?", "Do you type on a desktop or laptop keyboard every day?", "When did you learn how to type on a keyboard?", "How do you improve your typing?"] },
+            { id: "p1k10", title: "Scenery", questions: ["Do you look out the window at the scenery when travelling by bus or car?", "Do you prefer the mountains or the sea?", "Do you like to take scenery pictures?", "What are the most beautiful sights you have seen while traveling?"] },
+            { id: "p1k11", title: "Building", questions: ["Are there tall buildings near your home?", "Do you take photos of buildings?", "Is there a building that you would like to visit?", "Do you want to live in a tall building?"] },
+            { id: "p1k12", title: "Childhood activities", questions: ["What are your favourite activities?", "What were your favourite activities when you were a child?", "Did you prefer to do activities alone or with a group of people when you were a child?", "Are there any differences between the activities you liked when you were a child and those you like now?"] },
+            { id: "p1k13", title: "Views", questions: ["Do you like taking pictures of different views?", "Do you prefer views in urban areas or rural areas?", "Do you prefer views in your own country or in other countries?", "Have you seen an unforgettable and beautiful view or scenery?"] },
+            { id: "p1k14", title: "Life stages", questions: ["What did you often do with your friends in your childhood?", "What do you think is the most important at the moment?", "Do you have any plans for the next five years?", "How do people remember each stage of their lives?", "Do you enjoy being the age you are now?", "At what age do you think people are the happiest?"] },
+            { id: "p1k15", title: "Spare time", questions: ["Do you often have free time?", "What do you usually do in your spare time?", "Which day do you have more free time on, Saturday or Sunday?", "Would you like to have more free time in the future?"] },
+            { id: "p1k16", title: "Memory", questions: ["Are you good at memorising things?", "Have you ever forgotten something important?", "What do you need to remember in your daily life?", "How do you remember important things?"] },
+            { id: "p1k17", title: "Crowded place", questions: ["Is the city where you live crowded?", "Is there a crowded place near where you live?", "Do you like crowded places?", "Do most people like crowded places?", "When was the last time you were in a crowded place?"] },
+            { id: "p1k18", title: "Music", questions: ["Do you prefer sad or happy music?", "Does happy music make you feel more excited?", "Have you taken any music classes?", "Do you listen to music while doing other things?"] },
+            { id: "p1k19", title: "Teachers", questions: ["Do you have a favorite teacher?", "Do you want to be a teacher in the future?", "Do you have a teacher from your past that you still remember?", "Are you still in touch with your primary school teachers?", "In what way has your favourite teacher helped you?", "Do you like your primary school teachers more than your high school teachers?"] },
+            { id: "p1k20", title: "Social media", questions: ["Have you ever posted anything on social media?", "When did you start using social media?", "Do you think you spend too much time on social media?", "Do your friends use social media?", "What do people often do on social media?"] },
+            { id: "p1k21", title: "Tidiness", questions: ["Do you like to keep things tidy?", "Did you use to keep your room tidy as a child?"] },
+            { id: "p1k22", title: "Websites", questions: ["What kinds of websites do you often visit?", "What is your favourite website?", "Are there any changes to the websites you often visit?", "What kinds of websites are popular in your country?"] },
+            { id: "p1k23", title: "Watch", questions: ["Do you wear a watch?", "Have you ever got a watch as a gift?", "Why do some people wear expensive watches?", "Do you think it is important to wear a watch? Why?"] },
+            { id: "p1k24", title: "Shopping", questions: ["Do you like shopping?", "How often do you go shopping?", "Do you prefer online shopping or in-store shopping?"] },
+            { id: "p1k25", title: "Cars", questions: ["Did you enjoy traveling by car when you were a kid?", "What types of cars do you like?", "Do you prefer to be a driver or a passenger?", "What do you usually do when there is a traffic jam?", "Do you think car colours are important?"] },
+            { id: "p1k26", title: "Public gardens and parks", questions: ["Did you like going to parks as a child?", "Do you still like going to parks now?", "Would you like to see more parks in your city?", "Are there any parks you want to go to in the future?", "Would you prefer to play in a personal garden or public garden?", "How are the parks today different from those you visited as a kid?", "What do you like to do when visiting a park?", "Would you like to play in a public garden or park?"] },
+            { id: "p1k27", title: "Science", questions: ["Do you like science?", "When did you start to learn about science?", "Which science subject is interesting to you?", "What kinds of interesting things have you done with science?", "Do you like watching science TV programs?", "Do Chinese people often visit science museums?"] },
+            { id: "p1k28", title: "Mirrors", questions: ["Do you like looking at yourself in the mirror? How often?", "Have you ever bought mirrors?", "Do you usually take a mirror with you?", "Would you use mirrors to decorate your room?"] },
+            { id: "p1k29", title: "Outer space and stars", questions: ["Have you ever learnt about outer space and stars?", "Do you like science fiction movies? Why?", "Do you want to know more about outer space?", "Do you want to go into outer space in the future?"] },
+            { id: "p1k30", title: "Singing", questions: ["Do you like singing? Why?", "Have you ever learnt how to sing?", "Who do you want to sing for?", "Do you think singing can bring happiness to people?"] },
+            { id: "p1k31", title: "Clothing", questions: ["What kind of clothes do you like to wear?", "Do you prefer to wear comfortable and casual clothes or smart clothes?", "Do you like wearing T-shirts?", "Do you spend a lot of time choosing clothes?"] },
+            { id: "p1k32", title: "Jokes & Comedies", questions: ["Are you good at telling jokes?", "Do your friends like to tell jokes?", "Do you like to watch comedies?", "Have you ever watched a live show?", "Are comedy shows popular in your country?"] },
+            { id: "p1k33", title: "Headphones", questions: ["Do you use headphones?", "What type of headphones do you use?", "When would you use headphones?", "In what conditions would you not use headphones?", "Is wearing headphones comfortable?"] }
+        ];
+
+        // ----- Part 1 新增题 (10组) -----
+        const part1New = [
+            { id: "p1n1", title: "Travelling", questions: ["Do you prefer to sit by the window when travelling?", "Did you have a long journey with your family as a child?"] },
+            { id: "p1n2", title: "Rubbish and recycling", questions: ["Did you recycle when you were a kid?", "Is waste sorting common in your country?", "How do you recycle things like paper and plastic?", "What do you do when you see rubbish on the street?"] },
+            { id: "p1n3", title: "Tiredness", questions: ["What do you do when you feel tired?", "When would you feel tired?"] },
+            { id: "p1n4", title: "Shoes", questions: ["Which do you prefer, fashionable shoes or comfortable shoes?", "How much money do you usually spend on shoes?", "Have you ever bought shoes online?", "Do you like buying shoes? How often?"] },
+            { id: "p1n5", title: "Politeness", questions: ["What did you do to show your politeness as a child?", "On what occasions should we be polite?", "Do you think being polite is very important?", "How did you learn to be polite as a child?"] },
+            { id: "p1n6", title: "Fruit and vegetables", questions: ["Do people in your country like planting vegetables?", "Were there any kind of fruits and vegetables you disliked as a child?", "What kind of fruits and vegetables do you dislike?", "Where do you usually buy fruit and vegetables?", "How often do you eat fruit and vegetables?"] },
+            { id: "p1n7", title: "Advertisement", questions: ["Do you often see advertisements when you are on your phone or computer?", "What kind of advertising do you like?", "Do you like advertisements?", "Do you see a lot of advertising on trains or other transport?", "Is there an advertisement that made an impression on you when you were a child?"] },
+            { id: "p1n8", title: "Paper", questions: ["Do you carry paper and pens with you when you go out?", "Do people still keep handwritten letters today?", "Do you still write physical letters?", "What did you like to do with paper as a child?", "Have you made any crafts with paper?"] },
+            { id: "p1n9", title: "Secondary school", questions: ["Is there anything you miss about your secondary school?", "What was your favourite subject at secondary school?", "Were there any subjects that you found difficult at secondary school?", "Do you remember your first day at secondary school?"] },
+            { id: "p1n10", title: "Name", questions: ["Do you often forget people's names?", "How do you feel when people can't remember your name?", "How do you remember people's names?", "Is it easy for you to remember people's names?"] }
+        ];
+
+        // ----- Part 2&3 新增题 (26组) -----
+        const p2New = [
+            { id: "p2n1", title: "对结果开心的重要决定", instruction: "Describe a time you made an important decision and were happy with the result", bullets: ["What the decision was", "Why you made the decision", "How easy it was for you to make the decision", "And explain why you were happy with the result"], p3: ["Which is better, to make a decision quickly or slowly?", "Do you think most people's decisions are made in their 20s?", "What if people in a group have different opinions on a decision?", "What little decisions do people make every day?", "Do you think it is a good idea to make a small decision every day?", "How can we tell the difference between an important and an easy decision?"] },
+            { id: "p2n2", title: "做困难事情并成功的人", instruction: "Describe a person you know who did something difficult and was successful", bullets: ["Who this person is", "What difficult thing this person did", "Why this person was successful", "And explain how you feel about this person"], p3: ["In which sectors are companies more likely to succeed in China?", "Is it easy to start up a company?", "Other than making money, what is more important for a company?", "Does money equal success?", "How can companies help protect the environment?", "Is it difficult to do business in today's world?"] },
+            { id: "p2n3", title: "快乐人士", instruction: "Describe a happy person you know", bullets: ["Who this person is", "What he/she is like", "How he/she shows happiness", "And explain why you think he/she is a happy person"], p3: ["When do you think people are happiest?", "How can the arts spread positive emotions in society?", "Do you think teachers are able to spot the unhappy children?", "Should teachers know what children are doing all the time?", "What would make a student happy at school?", "Do you think doing a job that you like is more important than other things?"] },
+            { id: "p2n4", title: "看过的名人采访", instruction: "Describe a time you watched a famous person being interviewed", bullets: ["Who the famous person was", "What the interview was about", "When and where you watched the interview", "And explain how you felt about the interview"], p3: ["What should people wear to a job interview?", "Why do we need to attend interviews when applying for jobs?", "What should people do to prepare for a job interview?", "Why do some people think interviews are a waste of time?", "Why do some people dislike being interviewed?", "What kinds of people are usually interviewed?"] },
+            { id: "p2n5", title: "有条理的人", instruction: "Describe a person you know who is very organized", bullets: ["Who this person is", "What this person usually does to stay organized", "In what situations you have noticed this quality", "And explain why you think being organized is important to him/her"], p3: ["Do you think it is important for managers to be well organized?", "Should parents teach their children to be organized?", "What can people do to become more organized?", "Are organized people more likely to be successful at work or in their studies?", "Do you think children should learn to be organized from a young age?", "Why is it important for people to be organized?"] },
+            { id: "p2n6", title: "嘈杂地", instruction: "Describe a noisy place you have been to", bullets: ["Where it is", "When you went there", "What you did there", "And explain why you feel it's a noisy place"], p3: ["How can people consider others' feelings when chatting in public?", "How would people usually respond to noises in your country?", "Which area is exposed to noise more, the city or the countryside?", "What kinds of noises are there in our life?", "Should children not be allowed to make noise under any circumstances?", "Do you think it is good for children to make noise?"] },
+            { id: "p2n7", title: "喜欢的城市自然之地", instruction: "Describe a natural place in your city that you enjoy visiting", bullets: ["Where it is", "What it is like", "How often you go there", "Who you often go there with", "And explain why you enjoy visiting there"], p3: ["Which is more important, protecting the environment or developing the economy?", "Do you think staying in a natural place would help change people's mood?", "Do you think there should be many natural places in cities?"] },
+            { id: "p2n8", title: "攒钱买特别物品", instruction: "Describe a time when you saved money to buy something special", bullets: ["What the special thing was", "Why you wanted to buy it", "How you saved money for it", "And explain how you felt after buying it"], p3: ["Should people spend time on charity, or just money?", "What kind of things do people usually save money for?", "Is it easier to spend money or save money?", "Do you think it is easier to teach teenagers how to manage money when they are around 16 or 17 years old?", "Should parents teach their children to spend money freely or to save money?", "Should schools teach children how to manage money from a young age?"] },
+            { id: "p2n9", title: "小时候学到的新技能", instruction: "Describe a new skill you learned when you were a child", bullets: ["What the skill was", "Who taught you this skill", "How you learned it", "And explain how you felt about learning the skill"], p3: ["Is it important for everyone to have a specialized skill?", "Can a child learn skills from another child?", "Do you think it is easier for children to learn new skills than for adults?", "What are the differences between the way adults learn and the way children learn?", "What are the differences between learning in a group and learning by yourself?", "What skills should children learn before they go to school?"] },
+            { id: "p2n10", title: "喜欢拍照的人", instruction: "Describe a person you know who really likes taking photos", bullets: ["Who the person is", "When and how you got to know him/her", "Where he/she takes photos", "And explain how you feel about him/her"], p3: ["Some people don't mind others walking into their shot when they're taking photos.", "Why do tourists like taking photos while they are travelling?"] },
+            { id: "p2n11", title: "尊敬的比你年长的人", instruction: "Describe someone who is older than you that you admire", bullets: ["Who this person is", "How you knew this person", "What kinds of things you like to do together", "And explain how you feel about this person"], p3: ["What do old people usually do in their daily life?", "Why is there a generation gap between the young and the old?", "Has old people's life quality improved when compared to the past?", "What can young and old people learn from each other?"] },
+            { id: "p2n12", title: "听不感兴趣的话", instruction: "Describe a time when someone talked about something you were not interested in but you kept listening", bullets: ["Who the person was", "What he/she talked about", "Why you kept listening", "And explain how you felt about the experience"], p3: ["How can we tell if a listener is listening carefully?", "What would happen if the listener didn't listen carefully?", "What kind of topics do young people like to talk about today?"] },
+            { id: "p2n13", title: "好的购物服务", instruction: "Describe a time when you received good service in a shop/store", bullets: ["Where the shop is", "When you went to the shop", "What service you received from the staff", "And explain how you felt about the service"], p3: ["Can consumption drive economic growth?", "What are the advantages and disadvantages of shopping online?", "What are the differences between online shopping and in-store shopping?", "Why do some people not like shopping in small shops?", "What are the advantages and disadvantages of shopping in small shops?", "Why are shopping malls so popular in China?"] },
+            { id: "p2n14", title: "擅长做手工的人", instruction: "Describe a person who is good at making things by hand", bullets: ["Who this person is", "What he/she makes", "What materials or technologies he/she uses", "And why you think this person is good at making things by hand"], p3: ["Does art, like music or theater, have an impact on society?", "Is it good to have creative people in a team?", "What impact can artistic buildings have on society?", "Do children these days still like doing arts and crafts?", "Why do some children enjoy making things by hand?", "Do you think art classes are important for children?"] },
+            { id: "p2n15", title: "和朋友度过的愉快夜晚", instruction: "Describe an enjoyable evening you had with your friends", bullets: ["When and where it was", "What you did", "Who you spent the evening with", "And explain why it was enjoyable"], p3: ["What are the differences between young people's leisure time activities and those of old people?", "What can we do to bring family members closer together?", "How do people get along in a big family?"] },
+            { id: "p2n16", title: "浪费时间的活动", instruction: "Describe an activity you do regularly that you think is a waste of time", bullets: ["What it is", "When you usually do it", "Why you do it", "And explain why you think it is a waste of time"], p3: ["Why do some people refuse to abide by rules?", "What kinds of things make people feel pressured?", "Will you continue doing something when you are aware that it's a waste of time?", "How do you balance life and work?"] },
+            { id: "p2n17", title: "拥挤地方", instruction: "Describe a crowded place you went to", bullets: ["Where it was", "When you went there", "Who you went there with", "What you did there"], p3: ["Do you think it is a good trend to have more big cities?", "Do you think there are some people who enjoy crowded places?", "Why do people go to crowded places?", "Will people use bikes more or less in cities in the future?", "Will there be more or less green space in cities in the future?", "Which cities are overcrowded in your country?"] },
+            { id: "p2n18", title: "学习并喜欢历史的人", instruction: "Describe a person who learns history and loves history", bullets: ["Who this person is", "How he/she learns history", "Why he/she loves history", "And explain how you feel about him/her"], p3: ["Besides big historical events, what else is important when learning history?", "Do you think people should learn ancient history before learning modern history?", "Is it important to learn how people in the past lived their lives?", "How do children learn history before they attend school?", "At what age do you think people should begin to learn history?", "Do you think children should begin learning history from an early age?"] },
+            { id: "p2n19", title: "教你新技能的人", instruction: "Describe a person who taught you a new skill", bullets: ["Who this person was", "What the skill was", "How you learned it", "And explain how you felt about this person"], p3: ["Why is self-discipline important when learning a new skill?", "What are the differences between learning from a teacher and learning by oneself?", "How do adults learn a new skill?", "How can parents and teachers teach children new skills?", "Where can children learn new skills?", "Why should children learn new skills?"] },
+            { id: "p2n20", title: "最不喜欢的电影", instruction: "Describe your least favourite movie", bullets: ["When you watched it", "Where you watched it", "What it was about", "And explain why it's your least favourite movie"], p3: ["Can movies help people better understand the cultural background of a country?", "Are movies more likely to help people become more creative than books?", "What are the differences between watching movies at home and in a cinema?", "What kinds of movies are the most popular in China?"] },
+            { id: "p2n21", title: "不喜欢的短途旅行", instruction: "Describe a short trip you often take but do not like", bullets: ["Where you go", "When you go there", "Why you go there", "And explain why you do not like the trip"], p3: ["Which is better for knowing more about a country? Travelling or reading books about it?", "How much time do you think people should spend on a trip abroad?", "Who prefers travelling abroad? The young or the old?", "Do Chinese people like travelling abroad?"] },
+            { id: "p2n22", title: "受欢迎的人", instruction: "Describe a popular person", bullets: ["Who this person is", "What kind of person he or she is", "When you see him/her normally", "And explain why you think this person is popular"], p3: ["Why do people want to be popular?", "Is it easier to become popular nowadays?", "What are the qualities of being a good teacher?", "Do you think good teachers are always popular among students?", "Is it important for a teacher to be popular?", "Why are some students popular in school?"] },
+            { id: "p2n23", title: "钦佩的运动员", instruction: "Describe a successful sportsperson you admire", bullets: ["Who he/she is", "What you know about him/her", "What he/she is like in real life", "What achievement he/she has made"], p3: ["Why are there so few top athletes?", "What is the most popular sport in your country?", "Is it easy to identify children's talents?", "Is talent important in sports?", "What qualities should an athlete have?", "Should students have physical education and do sports at school?"] },
+            { id: "p2n24", title: "喜欢的建筑", instruction: "Describe a building you enjoy visiting (e.g. a library, a shopping mall, etc.)", bullets: ["Where it is", "How you knew it", "What it looks like", "And explain why you enjoy visiting it"], p3: ["Do you think all old buildings should be demolished?", "Do you think old buildings are valuable?"] },
+            { id: "p2n25", title: "印象深刻的聚会", instruction: "Describe a party for a special event that impressed you a lot", bullets: ["When and where it was held", "What the party was held for", "How many people attended it", "And explain why it impressed you a lot"], p3: ["What special events are celebrated in your country?", "Do most people prefer to hold a party in a restaurant or in a pub?", "Do most people prefer to hold a party in a public place or a private place?", "When do people like to hold a party?"] },
+            { id: "p2n26", title: "帮别人提升健康", instruction: "Describe a person whose health and fitness you have helped to improve", bullets: ["Who this person was", "Why you helped him/her", "How you helped him/her", "And explain whether it was easy or difficult"], p3: ["What effect does stress have on health?", "Which group pays more attention to health, young people or old people?"] }
+        ];
+
+        // ----- Part 2&3 保留题 (56组) -----
+        const p2Keep = [
+            { id: "p2k1", title: "完美工作", instruction: "Describe a perfect job you would like to have in the future", bullets: ["What it is", "How you knew it", "What you need to learn to get this job", "And explain why you think it is a perfect job for you"], p3: ["What kind of job can be called a 'dream job'?", "What jobs do children want to do when they grow up?", "Do people's ideal jobs change as they grow up?", "What should people consider when choosing jobs?", "Is salary the main reason why people choose a certain job?", "What kind of jobs are the most popular in your country?"] },
+            { id: "p2k2", title: "想见的名人", instruction: "Describe a famous person you would like to meet", bullets: ["Who he/she is", "How you knew him/her", "How/where you would like to meet him/her", "And explain why you would like to meet him/her"], p3: ["What are the advantages and disadvantages of being a famous child?", "What can today's children do to become famous?", "What can children do with their fame?", "Do people become famous because of their talent?", "Is it easy to become famous in your country?", "Do you want to be a famous person?"] },
+            { id: "p2k3", title: "禁用手机的场合", instruction: "Describe an occasion when you were not allowed to use your mobile phone", bullets: ["When it was", "Where it was", "Why you were not allowed to use your mobile phone", "And how you felt about it"], p3: ["How do young and old people use mobile phones differently?", "What positive and negative impact do mobile phones have on friendship?", "Is it a waste of time to take pictures with mobile phones?", "Do you think it is necessary to have laws on the use of mobile phones?", "What are examples of good and poor phone manners?", "How does the internet benefit people?"] },
+            { id: "p2k4", title: "给别人建议", instruction: "Describe a time when you gave advice to others", bullets: ["When it was", "To whom you gave the advice", "What the advice was", "And explain why you gave the advice"], p3: ["Should people prepare before giving advice?", "Is it good to ask advice from strangers online?", "What are the personalities of people whose job is to give advice to others?", "What are the problems if you ask too many people for advice?", "Why do some people think it is better to ask for advice from friends than from parents?", "When would old people ask young people for advice?"] },
+            { id: "p2k5", title: "想拥有的科技产品", instruction: "Describe a piece of technology (not a phone) that you would like to own", bullets: ["What it is", "How much it costs", "How you knew it", "And explain why you would like to own it"], p3: ["What are the differences between the technology of the past and that of today?", "What technology do young people like to use?", "What are the differences between online and face-to-face communication?", "Do you think technology has changed the way people communicate?", "What negative effects does technology have on people's relationships?", "What are the differences between making friends in real life and online?"] },
+            { id: "p2k6", title: "擅长做计划的人", instruction: "Describe a person who makes plans a lot and is good at planning", bullets: ["Who he/she is", "How you knew him/her", "What plans he/she makes", "And explain how you feel about this person"], p3: ["Do you think it's important to plan ahead?", "What activities do we need to plan ahead?", "Do you think children should plan their future careers?", "Should children ask their teachers or parents for advice when making plans?", "Is making study plans popular among young people?", "Do you think choosing a college major is closely related to a person's future career?"] },
+            { id: "p2k7", title: "喜欢画画的孩子", instruction: "Describe a child who loves drawing/painting", bullets: ["Who he/she is", "How/when you knew him/her", "How often he/she draws/paints", "And explain why you think he/she loves drawing/painting"], p3: ["What is the right age for a child to learn drawing?", "Why do most children draw more often than adults do?", "Why do some people visit galleries or museums instead of viewing artworks online?", "Do you think galleries and museums should be free of charge?", "How do artworks inspire people?", "What are the differences between reading a book and visiting a museum?"] },
+            { id: "p2k8", title: "App/程序", instruction: "Describe a program or app on your computer or phone", bullets: ["What it is", "How often you use it", "When/how you use it", "When/how you found it", "And explain how you feel about it"], p3: ["What are the differences between old and young people when using apps?", "Why do some people not like using apps?", "What apps are popular in your country? Why?", "Should parents limit their children's use of computer programs and computer games? Why and how?", "Do you think young people are more and more reliant on these programs?", "What do you think about some countries banning children from using social media?"] },
+            { id: "p2k9", title: "微笑的场合", instruction: "Describe an occasion when many people were smiling", bullets: ["When it happened", "Who you were with", "What happened", "And explain why most people were smiling"], p3: ["Do you think people who like to smile are more friendly?", "Why do most people smile in photographs?", "Do women smile more than men? Why?", "Do people smile more when they are younger or older?", "Is smiling important in your culture?", "Are there any occasions when people need to pretend to smile?"] },
+            { id: "p2k10", title: "为家人骄傲", instruction: "Describe a time when you felt proud of a family member", bullets: ["When it happened", "Who the person is", "What the person did", "And explain why you felt proud of him/her"], p3: ["When would parents feel proud of their children?", "Should parents reward children? Why and how?", "Is it good to reward children too often? Why?", "On what occasions would adults be proud of themselves?", "Do rewards help a child become better?", "What do you think about children working hard just for grades?"] },
+            { id: "p2k11", title: "对家庭重要的东西", instruction: "Describe something important that has been kept in your family for a long time", bullets: ["What it is", "When your family had it", "How your family got it", "And explain why it is important to your family"], p3: ["What things do families keep for a long time?", "What's the difference between things valued by people in the past and today?", "What kinds of things are kept in museums?", "What's the influence of technology on museums?", "What are the benefits of technology for learning history?", "Why do people visit museums?"] },
+            { id: "p2k12", title: "自行车/摩托车/汽车旅行", instruction: "Describe a bicycle/motorcycle/car trip you would like to go", bullets: ["Who you would like to go with", "Where you would like to go", "When you would like to go", "And explain why you would like to go by bicycle/motorcycle/car"], p3: ["Which form of vehicle is more popular in your country, bikes, cars or motorcycles?", "Do you think air pollution comes mostly from mobile vehicles?", "Do you think people need to change the way of transportation drastically to protect the environment?", "How are the transportation systems in urban areas and rural areas different?", "Why do more people own and drive private vehicles now?", "What do you think of the future of electric cars?"] },
+            { id: "p2k13", title: "机智解决问题的人", instruction: "Describe a person who solved a problem in a smart way", bullets: ["Who this person is", "What the problem was", "How he/she solved it", "And explain why you think he/she did it in a smart way"], p3: ["Do you think children are born smart or they learn to become smart?", "How do children become smart at school?", "Why are some people well-rounded and others only good at one thing?", "Why does modern society need talents of all kinds?", "Do you think smart children are happier than other children?", "Is it important for schools to identify and develop each student's talents?"] },
+            { id: "p2k14", title: "朋友自学", instruction: "Describe one of your friends who learned something without a teacher", bullets: ["Who he/she is", "What he/she learned", "Why he/she learned this", "And explain whether it would be easier to learn from a teacher"], p3: ["Is it necessary to keep learning after graduating from school?", "Should teachers make learning in their classes fun?", "Do you think there are too many subjects for students to learn?", "Is it better to focus on a few subjects or to learn many subjects?", "Do you think enterprises should provide training for their employees?", "Do you think it is good for older adults to continue learning?"] },
+            { id: "p2k15", title: "不享受的音乐活动", instruction: "Describe an event you attended in which you didn't enjoy the music played", bullets: ["What it was", "Who you went with", "Why you decided to go there", "And explain why you didn't enjoy it"], p3: ["What kind of music events do people like today?", "Do you think children should receive some musical education?", "What are the differences between old and young people's music preferences?", "What kind of music events are there in your country?", "Why do many people like listening to music while doing sports?", "What are the differences between listening to music at home and at a live concert?"] },
+            { id: "p2k16", title: "近期看过且享受的电影", instruction: "Describe a movie you watched and enjoyed recently", bullets: ["When and where you watched it", "Who you watched it with", "What it was about", "And explain why you watched this movie"], p3: ["What kinds of movies do you think are successful in your country?", "What are the factors that make a successful movie?", "Do Chinese people prefer to watch domestic movies or foreign movies?", "Do you think only well-known directors can create the best movies?", "Do you think successful movies should have well-known actors or actresses in leading roles?", "Why do people prefer to watch movies in the cinema?"] },
+            { id: "p2k17", title: "有趣的建筑", instruction: "Describe an interesting building", bullets: ["Where it is", "What it looks like", "What function it has", "And explain why you think it is interesting"], p3: ["What types of buildings are popular in your country?", "Is it worth spending a lot of money on the exterior appearance of a building?", "Is it more important for a building to look good on the outside or on the inside?", "Why do people like to visit historical sites?", "Do you think it's reasonable to charge an entry fee for visiting interesting buildings?", "Is it better to live in a new building or an old one?"] },
+            { id: "p2k18", title: "发挥想象力", instruction: "Describe a time you needed to use your imagination", bullets: ["When it was", "Why you needed to use imagination", "How difficult or easy it was", "And explain how you felt about it"], p3: ["Do you think adults can have lots of imagination?", "Do you think imagination is essential for scientists?", "What kinds of jobs need imagination?", "What subjects are helpful for children's imagination?", "What games help develop children's imagination?", "How important is imagination to children?"] },
+            { id: "p2k19", title: "乐于助人的人", instruction: "Describe a person who often helps others", bullets: ["Who this person is", "How often he/she helps others", "How/why he/she helps others", "And how you feel about this person"], p3: ["What can children do to help their parents?", "Should children help their parents with household chores?", "What kind of help do people need when looking for a new job?", "Who should people ask for help, colleagues or family members?", "Do you think schools should teach children to do household chores?", "Why are employees reluctant to ask their managers for help?"] },
+            { id: "p2k20", title: "花费超过预期的物品", instruction: "Describe an item on which you spent more than expected", bullets: ["What it is", "How much you spent on it", "Why you bought it", "And explain why you think you spent more than expected"], p3: ["Do you often buy more than you expected?", "What do you think young people spend most of their money on?", "Do you think it is important to save money? Why?", "Do people buy things they don't need?", "Do you think it is the rich people's responsibility to donate money to people in need?", "What kind of things are people happy to pay a high price for?"] },
+            { id: "p2k21", title: "鼓励别人做不愿做的事", instruction: "Describe a time when you encouraged someone to do something that he/she didn't want to do", bullets: ["Who he or she is", "What you encouraged him/her to do", "How he/she reacted", "And explain why you encouraged him/her to do it"], p3: ["How can leaders encourage their employees?", "When should parents encourage their children?", "What kind of encouragement should parents give?", "Do you think some people are better than others at persuading?", "Should children do everything their parents ask them to do?", "How can employers encourage their staff?"] },
+            { id: "p2k22", title: "想从事的短期海外工作", instruction: "Describe a short-term job you want to have in a foreign country", bullets: ["Where it is", "How you know of it", "What the job is", "And explain why you want to do it"], p3: ["What short-term jobs do young people do in other countries?", "What challenges do young people face when working abroad?", "What are the benefits of working for an international company?", "What personal skills are required to work in an international company?", "What kind of work can young people do in foreign countries?", "Why are some people unwilling to work in other countries?"] },
+            { id: "p2k23", title: "爱护自然之人", instruction: "Describe a person who likes to look after the natural world", bullets: ["Who this person is", "What he or she does", "How he or she does it", "How often he or she does it", "And explain how you feel about this person"], p3: ["Do you think parents should teach their children how to protect the environment?", "What laws about the environment are effective in your country?", "Which do you think people prefer, rewards or punishment, when it comes to government intervention in environmental protection?", "Is it easy for children in cities to get close to the natural world?", "What can people do to protect the natural world?", "Is it important to teach students environmental protection at school?"] },
+            { id: "p2k24", title: "商店", instruction: "Describe a shop/store you enjoy visiting", bullets: ["What the shop's name is", "Where it is", "How often you visit it", "And explain why you like to visit it"], p3: ["Do people in your country go to the shopping mall frequently?", "How have people's shopping habits changed in recent decades?", "Do you think shops and shopping malls will disappear in the future?", "What are the differences between shopping in street markets and big shopping malls?", "What are the differences in the shopping habits of different age groups?", "What are the differences between shopping online and in-store?"] },
+            { id: "p2k25", title: "去过且喜欢的城市", instruction: "Describe a city you enjoyed visiting", bullets: ["Where it is", "When you visited it", "How long you stayed there", "What you did there", "And explain why you enjoyed visiting it"], p3: ["What kinds of facilities do big cities have?", "Do you think modern cities are suitable for young people or old people?", "Before you travel to a city, what factors would you consider?", "What are the disadvantages of living in a very famous city?", "Do you prefer to visit well-developed cities or cities with a long history?", "For those who live in cities, is it because they want to or have to?"] },
+            { id: "p2k26", title: "安静的地方", instruction: "Describe a quiet place you like to go", bullets: ["Where it is", "How you knew it", "How often you go there", "What you do there", "And explain how you feel about the place"], p3: ["Is it easy to find quiet places in your country? Why?", "How do people spend their leisure time in your country?", "How does technology affect the way people spend their leisure time?", "Do you think only old people have time for leisure?", "Why do old people prefer to live in quiet places?", "Why are there more noises made at home now than in the past?"] },
+            { id: "p2k27", title: "喜欢的电视/网络节目", instruction: "Describe a TV or online program you like to watch", bullets: ["What it is", "What it is about", "Who you watch it with", "And explain why you like to watch it"], p3: ["What programs do people like to watch in your country?", "Do people in your country like to watch foreign TV programs?", "What's the benefit of letting kids watch animal videos than visiting zoos?", "Do teachers play videos in class in your country?", "Do you think watching talk shows is a waste of time?", "Do you think we can acquire knowledge from watching TV programs?"] },
+            { id: "p2k28", title: "喜欢或不喜欢的高建筑", instruction: "Describe a tall building you like or dislike", bullets: ["What it is used for", "Where it is", "What it looks like", "And explain why you like/dislike it"], p3: ["Are there many tall buildings in your country?", "What are the differences between those tall buildings in your country?", "Why are different places laid out and designed differently?", "What are the advantages of living in tall buildings?", "Why do some people like to remodel and decorate their homes themselves?", "What kind of interior design style do most people like?"] },
+            { id: "p2k29", title: "有趣视频", instruction: "Describe an interesting video", bullets: ["When and where you watched it", "What it is about", "Why you watched it", "And explain how you feel about it"], p3: ["What kind of videos do people in your country like to watch?", "Which is more helpful, watching videos or reading books?", "What skills can people learn from watching videos?", "Are there any differences between the videos that young people and old people like to watch?", "Are there any differences between the videos that young men and young women like to watch?", "What makes a video go viral online?"] },
+            { id: "p2k30", title: "去过的无聊地方", instruction: "Describe a boring place", bullets: ["Where it is", "Who you went there with", "What you did there", "And explain why you think it is a boring place"], p3: ["Why do most children think education is boring?", "Why aren't young people willing to listen to the experiences of older people?", "What can people do when they feel bored?", "Why are some teachers' classes boring? Are there any solutions?", "Why do some young people feel bored when talking with old people?", "Do most people think news about celebrities is boring?"] },
+            { id: "p2k31", title: "早起经历", instruction: "Describe a time when you got up early", bullets: ["When it was", "What you did", "Why you got up early", "And how you felt about it"], p3: ["Do you know anyone who likes to get up early?", "Why do people get up early?", "What kinds of occasions need people to arrive early?", "Why do some people like to stay up late?", "Is it good to arrive early in any situation?", "What kind of people like getting up early?"] },
+            { id: "p2k32", title: "喜欢在家/花园种菜的人", instruction: "Describe a person who loves to grow plants (e.g. vegetables, flowers) at home or in the garden", bullets: ["Who this person is", "What plants he/she grows", "How he/she grows the plants", "And explain why he/she loves growing plants"], p3: ["What are the advantages of growing vegetables or flowers at home?", "Do many people grow vegetables or flowers at home in your country?", "Is it easy to grow plants at home?", "Why do some people like to grow plants?", "Why do some people prefer to grow their own fruits and vegetables instead of buying them from the market?", "Do you think students should learn to grow plant?"] },
+            { id: "p2k33", title: "想颁布的新法律", instruction: "Describe a new law you would like to introduce in your country", bullets: ["What law it is", "What changes this law brings", "Whether this new law will be popular", "How you came up with the new law", "And explain how you feel about this new law"], p3: ["What rules should students follow at school?", "Do people in your country usually obey the law?", "What kinds of behavior are considered as good behavior?", "Do you think children can learn about the law outside of school?", "What are the benefits for people to obey rules?", "How can parents teach children to obey rules?"] },
+            { id: "p2k34", title: "发小", instruction: "Describe a friend from your childhood", bullets: ["Who he/she is", "Where and how you met each other", "What you often did together", "And explain what made you like him/her"], p3: ["Do you still keep in touch with your friends from childhood? Why or why not?", "How important is childhood friendship to children?", "What do you think of communicating via social media?", "Do you think online communication through social media will replace face-to-face communication?", "What's the difference between having younger friends and older friends?", "Has technology changed people's friendships? How?"] },
+            { id: "p2k35", title: "想从事医疗行业的人", instruction: "Describe a person you know who would like to choose a career in the medical field (e.g. a doctor, a nurse)", bullets: ["When you knew him/her", "When he/she started to think about that", "What he/she would like to do", "And explain why he/she would like to choose this career"], p3: ["Do you think being a doctor is easy or difficult?", "Do you think learning biology is interesting for children?", "Why do some children want to become doctors?", "Do you think governments should put a large amount of money into medical research?", "Why is some doctors' pay high and others' low?"] },
+            { id: "p2k36", title: "拥有成功商业的人", instruction: "Describe a person you know who has a successful business", bullets: ["Who this person is", "How you got to know him/her", "Why and how he/she started the business", "What business he/she does", "And explain why you think the business is successful"], p3: ["Why do some people start their own business?", "Should governments provide financial support to start-ups?", "Do most people prefer shopping at big stores or small stores?", "What makes a business successful?", "What makes a business fail?", "Is it easy to set up a new business in your country?"] },
+            { id: "p2k37", title: "近期改变的计划", instruction: "Describe a plan that you had to change recently", bullets: ["When this happened", "What made you change the plan", "What the new plan was", "And how you felt about the change"], p3: ["Do people often change their plans?", "Would you tell others if you change your plan?", "Why do you think parents still make plans for their children nowadays?", "How does technology help people make plans?", "What kind of plans do people often make?"] },
+            { id: "p2k38", title: "在团队中工作", instruction: "Describe a time when you worked in a group", bullets: ["What you did", "Who you worked with", "What problems you faced", "And explain why you worked in the group"], p3: ["Why do some people prefer to work by themselves?", "What should a leader do to make team members want to follow him or her?", "Should students learn to do group work?", "What group tasks are there in schools?", "What advantages are there for students experiencing teamwork at school?", "How can you tell if a person is a good leader?"] },
+            { id: "p2k39", title: "重要决定", instruction: "Describe an important decision that you made", bullets: ["What the decision was", "How you made your decision", "What the results of the decision were", "And explain why it was important"], p3: ["Do you think children sometimes have to make important decisions?", "What important decisions do teenagers need to make after graduation?", "Who can children turn to for help when making a decision?", "Do you think advertisements can influence our decisions when shopping?", "Do you think the influence of advertising is good?", "How do people usually make important decisions?"] },
+            { id: "p2k40", title: "喜欢的现场体育赛事", instruction: "Describe a live sports event you watched and liked", bullets: ["What it was", "When and where you watched it", "Who you watched it with", "And explain why you liked it"], p3: ["Why do some people like to watch sports events?", "Where do people normally watch sports events?", "What are the advantages of watching sports events online?", "What sports matches are suitable for children to attend?", "Why do some people spend a lot going to other countries to watch sports events?", "What sports games are popular in your country?"] },
+            { id: "p2k41", title: "特别场合的食物", instruction: "Describe a food that people eat on special occasions/events", bullets: ["What it is", "What the special event/occasion is", "How it is cooked/made", "And explain why people eat it on that special occasion/event"], p3: ["Why are there special foods on special occasions or events?", "What are the differences between everyday food and festival food?", "Are there any differences between the food people eat today and the food people ate in the past?", "Do people today prefer eating at home or in a restaurant?"] },
+            { id: "p2k42", title: "擅长学习和说语言的人", instruction: "Describe a person who is good at learning and speaking new languages", bullets: ["How you got to know him/her", "How he/she learns a new language", "What languages he/she can speak", "And explain how you feel about him/her"], p3: ["Are there many people who can speak foreign languages in your country?", "Does speaking other languages help at work?", "Do people learn any languages other than English?", "Why is it easier for children to learn new things than for adults?", "How do people learn new things?", "What is the most important thing for learning a language well?"] },
+            { id: "p2k43", title: "遇到的科技问题", instruction: "Describe a challenging technological problem you faced", bullets: ["What the problem was", "When and where you faced it", "How challenging it was", "And explain how you solved it"], p3: ["What are the advantages and disadvantages of AI?", "Do you think people today should learn about AI technology?", "Should children learn to use AI?", "How can AI help in our lives?", "Do you think students are overly reliant on AI?", "What can teachers do to stop students from relying too much on AI?"] },
+            { id: "p2k44", title: "名人出演的广告", instruction: "Describe an advertisement with a famous person in it", bullets: ["Who the person is", "Where you can see it", "What the advertisement is about", "And explain how you feel about the advertisement"], p3: ["What are the advantages and disadvantages of advertisements?", "Why are many advertisements endorsed by celebrities? How useful are they?", "What is the most important factor in an advertisement?", "Why are some advertisements boring?", "Is advertising important for a company? Why?", "Which is more effective, online advertising or offline advertising?"] },
+            { id: "p2k45", title: "推荐旅行过的地方", instruction: "Describe a place you have travelled to that you would like to recommend to others", bullets: ["What it is", "Where it is", "What you saw and did there", "And explain why you would like to recommend it to others"], p3: ["Where do people in your country often go for holidays?", "What is the ideal length for a holiday?", "How do people usually plan holidays?", "Is it important to plan a holiday ahead?", "Why do many countries try to attract people to visit?", "How do people decide when to travel?"] },
+            { id: "p2k46", title: "喜欢拜访但不想住的家", instruction: "Describe a home that you like to visit but do not want to live in", bullets: ["Where it is", "What it is like", "Why you like to visit it", "And explain why you would not like to live there"], p3: ["Do Chinese people like to visit others' homes?", "What do Chinese people do when they visit others?", "What kind of place do people in your country like to live in?", "What's the difference between homes in cities and those in the countryside?", "What kind of gifts do people usually bring when they visit others?", "How often do you visit your relatives or friends?"] },
+            { id: "p2k47", title: "包含动物的故事或书", instruction: "Describe a story/book with animals in it", bullets: ["What animals are in it", "What the story/book is about", "Why you read the story/book", "And explain what you think of this story/book"], p3: ["Should schools teach children about animals?", "Some people think pets should not be kept in cities. What do you think?", "Many people regard pets as members of their family. What do you think?", "Do many people keep pets in your country?", "What are the advantages of keeping a pet?", "Why do people always tell children stories with animals?"] },
+            { id: "p2k48", title: "别人帮助解决问题", instruction: "Describe a time when a person did something to help you solve a problem", bullets: ["Who the person is", "What the problem was", "How he/she helped you", "And explain how you felt about the experience"], p3: ["How important is it for schools to help children become smarter?"] },
+            { id: "p2k49", title: "保护环境的法律", instruction: "Describe a law on environmental protection", bullets: ["What it is", "How you first learned about it", "Who benefits from it", "And explain how you feel about this law"], p3: ["What kinds of rules do schools in China have?", "Do you think school rules are important?", "Are children unhappy with the school rules?", "How can parents and teachers help children understand and follow rules?", "What are the rules people should obey at work?", "What is the purpose of punishment?"] },
+            { id: "p2k50", title: "很久没收到回复的信息", instruction: "Describe a time when you sent a message or an email to someone but received no reply for a long time", bullets: ["Who you sent it to", "What the message/email was about", "Whether you finally received the reply", "And explain how you felt about the experience"], p3: ["In what situations do people spend a long time responding to others' messages?", "In what situations do people not respond to messages at all?", "What would you do if you did not receive a reply after sending out a message?", "Why do some people prefer sending a message instead of making a call?", "How do you show your respect in your messages?", "Why do some people feel angry when others don't reply to their message?"] },
+            { id: "p2k51", title: "长久目标/抱负", instruction: "Describe a long-term goal/ambition you would like to achieve", bullets: ["How long you have had this goal/ambition", "What it is", "How you will achieve it", "And explain why you set it"], p3: ["Why should children have ambitions?", "What do you think of people going after high positions?", "Why are some young people keen on being fans of superstars?", "Is it good for a person to be ambitious?", "Do you think it is necessary to be ambitious when working in a team in a company?", "Should parents support their children in pursuing their ambitions?"] },
+            { id: "p2k52", title: "遇到困难终成功的人", instruction: "Describe a person who met difficulties but succeeded", bullets: ["Who this person is", "What difficulties he met", "How he overcame the difficulties", "And explain how you feel about him"], p3: ["In your country, what industry is it easier to be successful in?"] },
+            { id: "p2k53", title: "改变重要想法", instruction: "Describe a time when you changed an important opinion of yours", bullets: ["When you changed your opinion", "What the original opinion was", "Why you changed it", "And explain how you felt about the experience"], p3: ["When do most children begin to have their own opinions?", "Whose opinions are more important to children, their parents' or teachers'?", "Do children communicate more with teachers or with parents?", "Who do young people like to share opinions with?"] },
+            { id: "p2k54", title: "想要颁布的环保法律", instruction: "Describe an environmental law you would like your country to introduce", bullets: ["What law it should be", "Why people should follow the law", "Whether the law will be popular", "And explain how you feel about this law"], p3: ["How does technology affect the law?", "What kinds of rules do schools in China have?", "Will there be a law that is universally accepted?", "What environmental laws does your country already have?"] },
+            { id: "p2k55", title: "当地新闻", instruction: "Describe a piece of local news that people are interested in", bullets: ["What it was about", "Where you saw/heard it", "Who was involved", "And explain why people were interested in it"], p3: ["Do people read the newspaper where you live?", "Do people prefer local or international news?", "Do you think it's important to have a national identity?", "How can people develop their national identity?"] },
+            { id: "p2k56", title: "近期改变", instruction: "Describe a change that you made recently", bullets: ["What the change was", "What caused the change", "What you did for the change", "And explain how you feel about the change"], p3: ["Do you think it is good to change one's daily routine?", "Do you think it is good to change jobs?", "Is it good for people to get a job promotion?", "Do people often make plans around their regular routines?", "Who tend to change their daily routine more, young people or old people?"] }
+        ];
+
+        // ================================================================
+        // 2. 工具函数
+        // ================================================================
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function pickRandom(arr, n) {
+            const shuffled = shuffle(arr);
+            return shuffled.slice(0, Math.min(n, shuffled.length));
+        }
+
+        // ================================================================
+        // 3. 全局状态
+        // ================================================================
+        let examState = {
+            phase: 'idle',
+            p1Topics: [],
+            p1Questions: [],
+            p1Index: 0,
+            p2Topic: null,
+            p3Questions: [],
+            p3Index: 0,
+            recordings: [],
+            timer: null,
+            timerSeconds: 0,
+            isRecording: false,
+            mediaRecorder: null,
+            mediaStream: null,
+            audioChunks: [],
+            currentRecordingId: null,
+            speechSynth: window.speechSynthesis,
+            savedP1Questions: [],
+            savedP2Topic: null,
+            savedP3Questions: [],
+            pardonCount: 0,
+            usedP1Topics: new Set(),
+            usedP1Questions: new Set(),
+            usedP3Questions: new Set(),
+            usedP2TopicsForP3: new Set(),
+            currentP1Topic: null,
+            currentP1Question: null,
+            currentP3Question: null,
+        };
+
+        // ================================================================
+        // 4. DOM
+        // ================================================================
+        const $ = id => document.getElementById(id);
+        const startExamBtn = $('startExamBtn');
+        const examPage = $('examPage');
+        const entryPage = $('entryPage');
+        const reviewPage = $('reviewPage');
+        const examTimer = $('examTimer');
+        const examStatus = $('examStatus');
+        const examPhaseLabel = $('examPhaseLabel');
+        const examinerStatus = $('examinerStatus');
+        const candidateStatus = $('candidateStatus');
+        const examStartBtn = $('examStartBtn');
+        const examNextBtn = $('examNextBtn');
+        const examFinishBtn = $('examFinishBtn');
+        const examHint = $('examHint');
+        const questionCounter = $('questionCounter');
+        const recordingStatus = $('recordingStatus');
+        const p2CardContainer = $('p2CardContainer');
+        const p2Title = $('p2Title');
+        const p2Instruction = $('p2Instruction');
+        const p2Bullets = $('p2Bullets');
+        const reviewContent = $('reviewContent');
+        const exportAllBtn = $('exportAllBtn');
+        const pardonBtn = $('pardonBtn');
+
+        // ================================================================
+        // 5. 入口 → 考试
+        // ================================================================
+        startExamBtn.addEventListener('click', function() {
+            showPage('examPage');
+            initExam();
+        });
+
+        function showPage(pageId) {
+            [entryPage, examPage, reviewPage].forEach(p => p.classList.remove('active'));
+            if (pageId === 'entryPage') entryPage.classList.add('active');
+            else if (pageId === 'examPage') examPage.classList.add('active');
+            else if (pageId === 'reviewPage') reviewPage.classList.add('active');
+        }
+
+        document.querySelectorAll('.back-link').forEach(el => {
+            el.addEventListener('click', function() {
+                if (examState.timer) { clearInterval(examState.timer);
+                    examState.timer = null; }
+                if (examState.mediaRecorder && examState.mediaRecorder.state === 'recording') {
+                    examState.mediaRecorder.stop();
+                }
+                showPage('entryPage');
+            });
+        });
+
+        // ================================================================
+        // 6. 初始化考试
+        // ================================================================
+        function initExam() {
+            if (examState.timer) { clearInterval(examState.timer);
+                examState.timer = null; }
+            examState.phase = 'idle';
+            examState.recordings = [];
+            examState.p1Index = 0;
+            examState.p3Index = 0;
+            examState.audioChunks = [];
+            examState.currentRecordingId = null;
+            examState.pardonCount = 0;
+            examState.usedP1Topics = new Set();
+            examState.usedP1Questions = new Set();
+            examState.usedP3Questions = new Set();
+            examState.usedP2TopicsForP3 = new Set();
+            examState.currentP1Topic = null;
+            examState.currentP1Question = null;
+            examState.currentP3Question = null;
+
+            // 提前申请麦克风（只弹一次）
+            if (!examState.mediaStream) {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(stream => {
+                        examState.mediaStream = stream;
+                        console.log('麦克风已就绪');
+                    })
+                    .catch(err => {
+                        console.warn('麦克风权限被拒绝:', err);
+                        examStatus.textContent = '⚠️ 请允许麦克风权限后再开始考试';
+                    });
+            }
+
+            // P1 抽题：方案 A（1 万年老题 + 1 新增题 + 1 保留题）
+            const oldTopic = pickRandom(oldPart1, 1)[0];
+            const newTopic = pickRandom(part1New, 1)[0];
+            const keepTopic = pickRandom(part1Keep, 1)[0];
+            examState.p1Topics = [oldTopic, newTopic, keepTopic];
+            examState.p1Topics.forEach(t => examState.usedP1Topics.add(t.title));
+
+            let allP1Questions = [];
+            examState.p1Topics.forEach(topic => {
+                const picked = pickRandom(topic.questions, 3);
+                picked.forEach(q => {
+                    allP1Questions.push({ topic: topic.title, question: q });
+                    examState.usedP1Questions.add(q);
+                });
+            });
+            examState.p1Questions = allP1Questions;
+            examState.p1Index = 0;
+            examState.savedP1Questions = allP1Questions.map(q => ({ ...q }));
+
+            // P2 抽题：优先新增
+            let p2Topic = pickRandom(p2New, 1)[0];
+            if (!p2Topic) p2Topic = pickRandom(p2Keep, 1)[0];
+            examState.p2Topic = p2Topic;
+            examState.savedP2Topic = { ...examState.p2Topic };
+
+            // P3
+            const p3Pool = examState.p2Topic.p3 || [];
+            const pickedP3 = pickRandom(p3Pool, 4).map(q => ({ question: q }));
+            examState.p3Questions = pickedP3;
+            examState.p3Index = 0;
+            pickedP3.forEach(q => examState.usedP3Questions.add(q.question));
+            examState.savedP3Questions = pickedP3.map(q => ({ ...q }));
+
+            // UI
+            examTimer.textContent = '⏳ 0:00';
+            examTimer.className = 'timer-badge';
+            examStatus.textContent = '点击「开始考试」进入 Part 1';
+            examPhaseLabel.textContent = '📋 Part 1';
+            examinerStatus.textContent = '正在准备题目...';
+            candidateStatus.textContent = '准备就绪';
+            examStartBtn.style.display = 'inline-block';
+            examStartBtn.disabled = false;
+            examNextBtn.style.display = 'none';
+            examFinishBtn.style.display = 'none';
+            examHint.textContent = '点击「开始考试」进入 Part 1 · 全程自动录音';
+            recordingStatus.style.display = 'none';
+            p2CardContainer.style.display = 'none';
+            questionCounter.textContent = '';
+            pardonBtn.classList.remove('show');
+            pardonBtn.disabled = false;
+            pardonBtn.textContent = '🤔 Pardon?';
+
+            examState.phase = 'idle';
+        }
+
+        // ================================================================
+        // 7. 开始考试 (Part 1)
+        // ================================================================
+        examStartBtn.addEventListener('click', function() {
+            if (examState.phase === 'idle') {
+                startPart1();
+            }
+        });
+
+        function startPart1() {
+            examState.phase = 'p1';
+            examState.p1Index = 0;
+            examPhaseLabel.textContent = '📋 Part 1';
+            examStartBtn.style.display = 'none';
+            examNextBtn.style.display = 'inline-block';
+            examNextBtn.textContent = '⏭ 下一题';
+            examFinishBtn.style.display = 'none';
+            examinerStatus.textContent = '考官正在提问 Part 1...';
+            candidateStatus.textContent = '请听题并回答';
+            examHint.textContent = '🔊 听考官提问，60秒内回答 · 自动录音';
+            showP1Question();
+        }
+
+        function showP1Question() {
+            if (examState.p1Index >= examState.p1Questions.length) {
+                startPart2();
+                return;
+            }
+            const q = examState.p1Questions[examState.p1Index];
+            const total = examState.p1Questions.length;
+            questionCounter.textContent = `Part 1 · 第 ${examState.p1Index+1}/${total} 题`;
+            examStatus.textContent = '🔊 考官正在提问...';
+            examinerStatus.textContent = `考官: ${q.topic}`;
+            candidateStatus.textContent = '请听题并回答';
+            examState.currentP1Topic = q.topic;
+            examState.currentP1Question = q.question;
+            examState.pardonCount = 0;
+
+            pardonBtn.classList.add('show');
+            pardonBtn.disabled = false;
+            pardonBtn.textContent = '🤔 Pardon?';
+
+            speakQuestion(q.question, function() {
+                examStatus.textContent = '🎤 请回答 (60秒)';
+                candidateStatus.textContent = '🎤 你的回答时间';
+                startRecording('p1', `P1-${q.topic}-Q${examState.p1Index+1}`);
+                startTimer(60, 'p1');
+            });
+            examNextBtn.disabled = true;
+            setTimeout(() => { examNextBtn.disabled = false; }, 1000);
+        }
+
+        function speakQuestion(text, onEnd) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            utterance.pitch = 1.0;
+            utterance.onend = onEnd;
+            utterance.onerror = onEnd;
+            examState.speechSynth.speak(utterance);
+        }
+
+        // ================================================================
+        // 7b. Pardon 按钮逻辑
+        // ================================================================
+        pardonBtn.addEventListener('click', function() {
+            if (examState.phase !== 'p1' && examState.phase !== 'p3') return;
+            if (examState.pardonCount < 2) {
+                examState.pardonCount++;
+                if (examState.phase === 'p1') {
+                    if (examState.timer) { clearInterval(examState.timer);
+                        examState.timer = null; }
+                    stopRecording();
+                    const q = examState.currentP1Question;
+                    examStatus.textContent = '🔊 考官重新提问...';
+                    candidateStatus.textContent = '请听题并回答';
+                    speakQuestion(q, function() {
+                        examStatus.textContent = '🎤 请回答 (60秒)';
+                        candidateStatus.textContent = '🎤 你的回答时间';
+                        startRecording('p1', `P1-${examState.currentP1Topic}-Q${examState.p1Index+1}-R${examState.pardonCount}`);
+                        startTimer(60, 'p1');
+                    });
+                } else if (examState.phase === 'p3') {
+                    if (examState.timer) { clearInterval(examState.timer);
+                        examState.timer = null; }
+                    stopRecording();
+                    const q = examState.currentP3Question;
+                    examStatus.textContent = '🔊 考官重新提问...';
+                    candidateStatus.textContent = '请听题并回答';
+                    speakQuestion(q, function() {
+                        examStatus.textContent = '🎤 请回答 (90秒)';
+                        candidateStatus.textContent = '🎤 你的回答时间';
+                        startRecording('p3', `P3-Q${examState.p3Index+1}-R${examState.pardonCount}`);
+                        startTimer(90, 'p3');
+                    });
+                }
+                if (examState.pardonCount >= 2) {
+                    pardonBtn.textContent = '⏭ 换一题';
+                    pardonBtn.style.borderColor = '#b13e3e';
+                    pardonBtn.style.color = '#b13e3e';
+                } else {
+                    pardonBtn.textContent = `🤔 Pardon? (${examState.pardonCount}/2)`;
+                }
+            } else {
+                if (examState.phase === 'p1') {
+                    skipP1Question();
+                } else if (examState.phase === 'p3') {
+                    skipP3Question();
+                }
+            }
+        });
+
+        function skipP1Question() {
+            if (examState.timer) { clearInterval(examState.timer);
+                examState.timer = null; }
+            stopRecording();
+
+            const currentTopicObj = [...oldPart1, ...part1New, ...part1Keep].find(t => t.title === examState.currentP1Topic);
+            let newQuestion = null;
+            if (currentTopicObj) {
+                const available = currentTopicObj.questions.filter(q => !examState.usedP1Questions.has(q));
+                if (available.length > 0) {
+                    newQuestion = available[Math.floor(Math.random() * available.length)];
+                }
+            }
+
+            if (newQuestion) {
+                examState.usedP1Questions.add(newQuestion);
+                examState.p1Questions[examState.p1Index] = { topic: examState.currentP1Topic, question: newQuestion };
+                examState.savedP1Questions[examState.p1Index] = { topic: examState.currentP1Topic, question: newQuestion };
+                examState.currentP1Question = newQuestion;
+                examState.pardonCount = 0;
+                pardonBtn.textContent = '🤔 Pardon?';
+                const total = examState.p1Questions.length;
+                questionCounter.textContent = `Part 1 · 第 ${examState.p1Index+1}/${total} 题`;
+                examStatus.textContent = '🔊 考官正在提问...';
+                examinerStatus.textContent = `考官: ${examState.currentP1Topic}`;
+                candidateStatus.textContent = '请听题并回答';
+                speakQuestion(newQuestion, function() {
+                    examStatus.textContent = '🎤 请回答 (60秒)';
+                    candidateStatus.textContent = '🎤 你的回答时间';
+                    startRecording('p1', `P1-${examState.currentP1Topic}-Q${examState.p1Index+1}-NEW`);
+                    startTimer(60, 'p1');
+                });
+            } else {
+                let newTopic = null;
+                const newTopics = part1New.filter(t => !examState.usedP1Topics.has(t.title));
+                if (newTopics.length > 0) {
+                    newTopic = newTopics[Math.floor(Math.random() * newTopics.length)];
+                } else {
+                    const keepTopics = part1Keep.filter(t => !examState.usedP1Topics.has(t.title));
+                    if (keepTopics.length > 0) {
+                        newTopic = keepTopics[Math.floor(Math.random() * keepTopics.length)];
+                    }
+                }
+                if (!newTopic) {
+                    newTopic = part1Keep[Math.floor(Math.random() * part1Keep.length)];
+                }
+                const available = newTopic.questions.filter(q => !examState.usedP1Questions.has(q));
+                const newQ = available.length > 0 ? available[Math.floor(Math.random() * available.length)] : newTopic.questions[0];
+                examState.usedP1Topics.add(newTopic.title);
+                examState.usedP1Questions.add(newQ);
+                examState.currentP1Topic = newTopic.title;
+                examState.currentP1Question = newQ;
+                examState.p1Questions[examState.p1Index] = { topic: newTopic.title, question: newQ };
+                examState.savedP1Questions[examState.p1Index] = { topic: newTopic.title, question: newQ };
+                examState.pardonCount = 0;
+                pardonBtn.textContent = '🤔 Pardon?';
+                const total = examState.p1Questions.length;
+                questionCounter.textContent = `Part 1 · 第 ${examState.p1Index+1}/${total} 题`;
+                examStatus.textContent = '🔊 考官正在提问...';
+                examinerStatus.textContent = `考官: ${newTopic.title}`;
+                candidateStatus.textContent = '请听题并回答';
+                speakQuestion(newQ, function() {
+                    examStatus.textContent = '🎤 请回答 (60秒)';
+                    candidateStatus.textContent = '🎤 你的回答时间';
+                    startRecording('p1', `P1-${newTopic.title}-Q${examState.p1Index+1}-NEW`);
+                    startTimer(60, 'p1');
+                });
+            }
+        }
+
+        function skipP3Question() {
+            if (examState.timer) { clearInterval(examState.timer);
+                examState.timer = null; }
+            stopRecording();
+
+            const currentTopic = examState.p2Topic;
+            const available = (currentTopic.p3 || []).filter(q => !examState.usedP3Questions.has(q));
+            let newQ = null;
+            if (available.length > 0) {
+                newQ = available[Math.floor(Math.random() * available.length)];
+            } else {
+                let newTopic = null;
+                const newTopics = p2New.filter(t => !examState.usedP2TopicsForP3.has(t.title));
+                if (newTopics.length > 0) {
+                    newTopic = newTopics[Math.floor(Math.random() * newTopics.length)];
+                } else {
+                    const keepTopics = p2Keep.filter(t => !examState.usedP2TopicsForP3.has(t.title));
+                    if (keepTopics.length > 0) {
+                        newTopic = keepTopics[Math.floor(Math.random() * keepTopics.length)];
+                    }
+                }
+                if (!newTopic) newTopic = p2New[Math.floor(Math.random() * p2New.length)];
+                examState.usedP2TopicsForP3.add(newTopic.title);
+                examState.p2Topic = newTopic;
+                const newPool = (newTopic.p3 || []).filter(q => !examState.usedP3Questions.has(q));
+                newQ = newPool.length > 0 ? newPool[Math.floor(Math.random() * newPool.length)] : (newTopic.p3 || [])[0];
+            }
+            if (!newQ) {
+                newQ = examState.currentP3Question;
+            }
+            examState.usedP3Questions.add(newQ);
+            examState.p3Questions[examState.p3Index] = { question: newQ };
+            examState.savedP3Questions[examState.p3Index] = { question: newQ };
+            examState.currentP3Question = newQ;
+            examState.pardonCount = 0;
+            pardonBtn.textContent = '🤔 Pardon?';
+            const total = examState.p3Questions.length;
+            questionCounter.textContent = `Part 3 · 第 ${examState.p3Index+1}/${total} 题`;
+            examStatus.textContent = '🔊 考官正在提问...';
+            examinerStatus.textContent = '考官: Part 3 追问';
+            candidateStatus.textContent = '请听题并回答';
+            speakQuestion(newQ, function() {
+                examStatus.textContent = '🎤 请回答 (90秒)';
+                candidateStatus.textContent = '🎤 你的回答时间';
+                startRecording('p3', `P3-Q${examState.p3Index+1}-NEW`);
+                startTimer(90, 'p3');
+            });
+        }
+
+        // ================================================================
+        // 8. Part 2
+        // ================================================================
+        function startPart2() {
+            examState.phase = 'p2_prep';
+            examPhaseLabel.textContent = '📋 Part 2';
+            examNextBtn.style.display = 'none';
+            examFinishBtn.style.display = 'none';
+            questionCounter.textContent = 'Part 2 · 准备阶段';
+            examinerStatus.textContent = '考官: 请准备 Part 2 话题';
+            candidateStatus.textContent = '📝 准备中...';
+            pardonBtn.classList.remove('show');
+
+            const topic = examState.p2Topic;
+            p2Title.textContent = topic.title;
+            p2Instruction.textContent = topic.instruction;
+            p2Bullets.innerHTML = topic.bullets.map(b => `<li>${b}</li>`).join('');
+            p2CardContainer.style.display = 'flex';
+            examHint.textContent = '📝 你有60秒准备，然后开始2分钟回答';
+
+            examStatus.textContent = '⏳ 准备时间 60秒';
+            examTimer.className = 'timer-badge prep';
+            startTimer(60, 'p2_prep', function() {
+                startPart2Speak();
+            });
+        }
+
+        function startPart2Speak() {
+            examState.phase = 'p2_speak';
+            examPhaseLabel.textContent = '📋 Part 2 · 答题';
+            examStatus.textContent = '🎤 开始回答 (2分钟)';
+            candidateStatus.textContent = '🎤 你的回答时间';
+            examTimer.className = 'timer-badge';
+            examHint.textContent = '🔊 你有2分钟时间回答，计时结束后自动进入 Part 3';
+            examFinishBtn.style.display = 'inline-block';
+            examFinishBtn.textContent = '⏹ 结束 Part 2';
+            pardonBtn.classList.remove('show');
+
+            startRecording('p2', 'Part2-' + examState.p2Topic.title);
+            startTimer(120, 'p2_speak', function() {
+                stopRecording();
+                examFinishBtn.style.display = 'none';
+                startPart3();
+            });
+        }
+
+        // ================================================================
+        // 9. Part 3
+        // ================================================================
+        function startPart3() {
+            examState.phase = 'p3';
+            examState.p3Index = 0;
+            examPhaseLabel.textContent = '📋 Part 3';
+            examNextBtn.style.display = 'inline-block';
+            examNextBtn.textContent = '⏭ 下一题';
+            examFinishBtn.style.display = 'none';
+            p2CardContainer.style.display = 'none';
+            examinerStatus.textContent = '考官正在提问 Part 3...';
+            candidateStatus.textContent = '请听题并回答';
+            examHint.textContent = '🔊 听考官提问，90秒内回答 · 自动录音';
+            showP3Question();
+        }
+
+        function showP3Question() {
+            if (examState.p3Index >= examState.p3Questions.length) {
+                finishExam();
+                return;
+            }
+            const q = examState.p3Questions[examState.p3Index];
+            const total = examState.p3Questions.length;
+            questionCounter.textContent = `Part 3 · 第 ${examState.p3Index+1}/${total} 题`;
+            examStatus.textContent = '🔊 考官正在提问...';
+            examinerStatus.textContent = '考官: Part 3 追问';
+            candidateStatus.textContent = '请听题并回答';
+            examState.currentP3Question = q.question;
+            examState.pardonCount = 0;
+
+            pardonBtn.classList.add('show');
+            pardonBtn.disabled = false;
+            pardonBtn.textContent = '🤔 Pardon?';
+
+            speakQuestion(q.question, function() {
+                examStatus.textContent = '🎤 请回答 (90秒)';
+                candidateStatus.textContent = '🎤 你的回答时间';
+                startRecording('p3', `P3-Q${examState.p3Index+1}`);
+                startTimer(90, 'p3');
+            });
+            examNextBtn.disabled = true;
+            setTimeout(() => { examNextBtn.disabled = false; }, 1000);
+        }
+
+        // ================================================================
+        // 10. 计时器
+        // ================================================================
+        function startTimer(seconds, phase, onEnd) {
+            if (examState.timer) { clearInterval(examState.timer);
+                examState.timer = null; }
+            examState.timerSeconds = seconds;
+            updateTimerDisplay(seconds, phase);
+
+            examState.timer = setInterval(() => {
+                examState.timerSeconds--;
+                if (examState.timerSeconds <= 0) {
+                    clearInterval(examState.timer);
+                    examState.timer = null;
+                    playBeep();
+                    if (phase === 'p1' || phase === 'p3') {
+                        stopRecording();
+                        if (phase === 'p1') {
+                            examState.p1Index++;
+                            showP1Question();
+                        } else if (phase === 'p3') {
+                            examState.p3Index++;
+                            showP3Question();
+                        }
+                    } else if (phase === 'p2_prep') {
+                        if (onEnd) onEnd();
+                    } else if (phase === 'p2_speak') {
+                        if (onEnd) onEnd();
+                    }
+                    return;
+                }
+                updateTimerDisplay(examState.timerSeconds, phase);
+            }, 1000);
+        }
+
+        function updateTimerDisplay(seconds, phase) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            const label = phase === 'p2_prep' ? '⏳' : (phase === 'p2_speak' ? '⏱️' : '⏳');
+            examTimer.textContent = `${label} ${mins}:${secs.toString().padStart(2, '0')}`;
+            examTimer.className = 'timer-badge' + (phase === 'p2_prep' ? ' prep' : '');
+        }
+
+        function playBeep() {
+            try {
+                const ctx = new(window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.frequency.value = 800;
+                osc.type = 'sine';
+                gain.gain.value = 0.4;
+                osc.start();
+                osc.stop(ctx.currentTime + 0.15);
+                examTimer.classList.add('beep');
+                setTimeout(() => examTimer.classList.remove('beep'), 500);
+            } catch (e) {}
+        }
+
+        // ================================================================
+        // 11. 录音（复用同一个 stream）
+        // ================================================================
+        function startRecording(phase, label) {
+            if (examState.mediaRecorder && examState.mediaRecorder.state === 'recording') {
+                examState.mediaRecorder.stop();
+            }
+            examState.audioChunks = [];
+            examState.currentRecordingId = label;
+            recordingStatus.style.display = 'flex';
+
+            function doRecord(stream) {
+                const recorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+                examState.mediaRecorder = recorder;
+                recorder.ondataavailable = e => {
+                    if (e.data.size > 0) examState.audioChunks.push(e.data);
+                };
+                recorder.onstop = function() {
+                    const blob = new Blob(examState.audioChunks, { type: 'audio/webm' });
+                    const reader = new FileReader();
+                    reader.onload = function() {
+                        const arrayBuffer = reader.result;
+                        const ctx = new(window.AudioContext || window.webkitAudioContext)();
+                        ctx.decodeAudioData(arrayBuffer, function(audioBuffer) {
+                            const wavBlob = audioBufferToWav(audioBuffer);
+                            const url = URL.createObjectURL(wavBlob);
+                            examState.recordings.push({
+                                id: label,
+                                phase: phase,
+                                label: label,
+                                blob: wavBlob,
+                                url: url
+                            });
+                            recordingStatus.style.display = 'none';
+                        }, function() {
+                            const url = URL.createObjectURL(blob);
+                            examState.recordings.push({
+                                id: label,
+                                phase: phase,
+                                label: label,
+                                blob: blob,
+                                url: url
+                            });
+                            recordingStatus.style.display = 'none';
+                        });
+                    };
+                    reader.readAsArrayBuffer(blob);
+                };
+                recorder.start();
+                examState.isRecording = true;
+            }
+
+            if (examState.mediaStream && examState.mediaStream.active) {
+                doRecord(examState.mediaStream);
+            } else {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(stream => {
+                        examState.mediaStream = stream;
+                        doRecord(stream);
+                    })
+                    .catch(err => {
+                        console.warn('录音权限被拒绝:', err);
+                        recordingStatus.style.display = 'none';
+                        examStatus.textContent = '⚠️ 无法录音，请允许麦克风权限';
+                    });
+            }
+        }
+
+        function stopRecording() {
+            if (examState.mediaRecorder && examState.mediaRecorder.state === 'recording') {
+                examState.mediaRecorder.stop();
+                examState.isRecording = false;
+                recordingStatus.style.display = 'none';
+            }
+        }
+
+        function audioBufferToWav(buffer) {
+            const numChannels = buffer.numberOfChannels;
+            const sampleRate = buffer.sampleRate;
+            const format = 1;
+            const bitDepth = 16;
+            const samples = buffer.getChannelData(0);
+            const dataLength = samples.length * 2;
+            const bufferLength = 44 + dataLength;
+            const arrayBuffer = new ArrayBuffer(bufferLength);
+            const view = new DataView(arrayBuffer);
+
+            function writeString(view, offset, string) {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            }
+            writeString(view, 0, 'RIFF');
+            view.setUint32(4, 36 + dataLength, true);
+            writeString(view, 8, 'WAVE');
+            writeString(view, 12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, format, true);
+            view.setUint16(22, numChannels, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * numChannels * 2, true);
+            view.setUint16(32, numChannels * 2, true);
+            view.setUint16(34, bitDepth, true);
+            writeString(view, 36, 'data');
+            view.setUint32(40, dataLength, true);
+
+            let offset = 44;
+            for (let i = 0; i < samples.length; i++) {
+                const s = Math.max(-1, Math.min(1, samples[i]));
+                const val = s < 0 ? s * 0x8000 : s * 0x7FFF;
+                view.setInt16(offset, val, true);
+                offset += 2;
+            }
+            return new Blob([arrayBuffer], { type: 'audio/wav' });
+        }
+
+        // ================================================================
+        // 12. 下一题 / 结束
+        // ================================================================
+        examNextBtn.addEventListener('click', function() {
+            if (examState.phase === 'p1') {
+                stopRecording();
+                if (examState.timer) { clearInterval(examState.timer);
+                    examState.timer = null; }
+                examState.p1Index++;
+                showP1Question();
+            } else if (examState.phase === 'p3') {
+                stopRecording();
+                if (examState.timer) { clearInterval(examState.timer);
+                    examState.timer = null; }
+                examState.p3Index++;
+                showP3Question();
+            }
+        });
+
+        examFinishBtn.addEventListener('click', function() {
+            if (examState.phase === 'p2_speak') {
+                stopRecording();
+                if (examState.timer) { clearInterval(examState.timer);
+                    examState.timer = null; }
+                examFinishBtn.style.display = 'none';
+                startPart3();
+            }
+        });
+
+        // ================================================================
+        // 13. 结束 → 回顾
+        // ================================================================
+        function finishExam() {
+            examState.phase = 'done';
+            examPhaseLabel.textContent = '✅ 考试完成';
+            examStatus.textContent = '🎉 全部完成！查看回顾';
+            examNextBtn.style.display = 'none';
+            examFinishBtn.style.display = 'none';
+            examHint.textContent = '点击下方按钮查看回顾';
+            p2CardContainer.style.display = 'none';
+            recordingStatus.style.display = 'none';
+            questionCounter.textContent = '';
+            pardonBtn.classList.remove('show');
+            setTimeout(() => { showReview(); }, 500);
+        }
+
+        function showReview() {
+            showPage('reviewPage');
+            renderReview();
+        }
+
+        function renderReview() {
+            let html = '';
+
+            // ---- Part 1 ----
+            html += `<div class="review-section"><div class="section-title">📋 Part 1 考题</div>`;
+            if (examState.savedP1Questions && examState.savedP1Questions.length > 0) {
+                examState.savedP1Questions.forEach((q, idx) => {
+                    const rec = examState.recordings.find(r => r.label === `P1-${q.topic}-Q${idx+1}`);
+                    html += `<div class="review-item">
+                        <span class="q-text"><strong>${q.topic}</strong>: ${q.question}</span>
+                        <div class="audio-controls">`;
+                    if (rec) {
+                        html += `<audio controls src="${rec.url}"></audio>`;
+                        html += `<button class="btn-outline" onclick="window.downloadAudio('${rec.id}')">⬇️</button>`;
+                    } else {
+                        let found = false;
+                        for (let r of examState.recordings) {
+                            if (r.label && r.label.includes(q.topic) && r.phase === 'p1') {
+                                html += `<audio controls src="${r.url}"></audio>`;
+                                html += `<button class="btn-outline" onclick="window.downloadAudio('${r.id}')">⬇️</button>`;
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            html += `<span style="color:#999;font-size:0.8rem;">未录音</span>`;
+                        }
+                    }
+                    html += `<button class="btn-outline" onclick="window.speakText('${q.question.replace(/'/g, "\\'")}')">🔊</button>`;
+                    html += `</div></div>`;
+                });
+            }
+            html += `</div>`;
+
+            // ---- Part 2 ----
+            const topic = examState.savedP2Topic || examState.p2Topic;
+            const recP2 = examState.recordings.find(r => r.phase === 'p2');
+            html += `<div class="review-section"><div class="section-title">📌 Part 2 考题</div>`;
+            html += `<div class="review-item"><span class="q-text"><strong>${topic.title}</strong><br>${topic.instruction}<br>${topic.bullets.map(b => '• ' + b).join('<br>')}</span>`;
+            html += `<div class="audio-controls">`;
+            if (recP2) {
+                html += `<audio controls src="${recP2.url}"></audio>`;
+                html += `<button class="btn-outline" onclick="window.downloadAudio('${recP2.id}')">⬇️</button>`;
+            } else {
+                html += `<span style="color:#999;font-size:0.8rem;">未录音</span>`;
+            }
+            html += `<button class="btn-outline" onclick="window.speakText('${topic.instruction.replace(/'/g, "\\'")}')">🔊</button>`;
+            html += `</div></div></div>`;
+
+            // ---- Part 3 ----
+            html += `<div class="review-section"><div class="section-title">💬 Part 3 考题</div>`;
+            if (examState.savedP3Questions && examState.savedP3Questions.length > 0) {
+                examState.savedP3Questions.forEach((q, idx) => {
+                    const rec = examState.recordings.find(r => r.label === `P3-Q${idx+1}`);
+                    html += `<div class="review-item">
+                        <span class="q-text">${q.question}</span>
+                        <div class="audio-controls">`;
+                    if (rec) {
+                        html += `<audio controls src="${rec.url}"></audio>`;
+                        html += `<button class="btn-outline" onclick="window.downloadAudio('${rec.id}')">⬇️</button>`;
+                    } else {
+                        let found = false;
+                        for (let r of examState.recordings) {
+                            if (r.phase === 'p3' && r.label && r.label.includes('P3')) {
+                                html += `<audio controls src="${r.url}"></audio>`;
+                                html += `<button class="btn-outline" onclick="window.downloadAudio('${r.id}')">⬇️</button>`;
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            html += `<span style="color:#999;font-size:0.8rem;">未录音</span>`;
+                        }
+                    }
+                    html += `<button class="btn-outline" onclick="window.speakText('${q.question.replace(/'/g, "\\'")}')">🔊</button>`;
+                    html += `</div></div>`;
+                });
+            }
+            html += `</div>`;
+
+            reviewContent.innerHTML = html;
+        }
+
+        // ================================================================
+        // 14. 全局导出函数
+        // ================================================================
+        window.speakText = function(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            window.speechSynthesis.speak(utterance);
+        };
+
+        window.downloadAudio = function(id) {
+            const rec = examState.recordings.find(r => r.id === id);
+            if (rec) {
+                const a = document.createElement('a');
+                a.href = rec.url;
+                a.download = `${id}.wav`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+        };
+
+        exportAllBtn.addEventListener('click', function() {
+            if (examState.recordings.length === 0) {
+                alert('没有录音可导出');
+                return;
+            }
+            examState.recordings.forEach(rec => {
+                const a = document.createElement('a');
+                a.href = rec.url;
+                a.download = `${rec.id}.wav`;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => document.body.removeChild(a), 200);
+            });
+        });
+
+        document.getElementById('reviewBackToEntry').addEventListener('click', function() {
+            showPage('entryPage');
+        });
+
+        showPage('entryPage');
+    })();
+</script>
+</body>
+</html>

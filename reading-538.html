@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Reborner · 雅思核心词汇 · 全量终极版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(165deg, #f2f8ec 0%, #e0ecd4 100%);
+            padding: 1.5rem 1rem 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 520px;
+            width: 100%;
+        }
+
+        /* ========== 密码验证层 ========== */
+        .lock-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(165deg, #f2f8ec 0%, #e0ecd4 100%);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        .lock-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .lock-title {
+            font-size: 2rem;
+            font-weight: 360;
+            color: #2d543b;
+            text-align: center;
+            margin-bottom: 0.4rem;
+            line-height: 1.35;
+        }
+        .lock-sub {
+            font-size: 1rem;
+            color: #618967;
+            font-weight: 300;
+            margin-bottom: 2rem;
+        }
+        .lock-card {
+            background: #fcfff8;
+            border: 1px solid #d2e2c7;
+            border-radius: 36px;
+            padding: 2rem 1.5rem;
+            width: 100%;
+            max-width: 340px;
+            box-shadow: 0 12px 28px rgba(130, 160, 120, 0.18);
+        }
+        .lock-input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            font-size: 1rem;
+            background: #f6ffee;
+            border: 1px solid #cde0c3;
+            border-radius: 14px;
+            color: #1c4a2a;
+            text-align: center;
+            outline: none;
+            letter-spacing: 2px;
+        }
+        .lock-input:focus {
+            border-color: #8bb282;
+        }
+        .lock-err {
+            color: #c0504d;
+            text-align: center;
+            margin-top: 0.7rem;
+            height: 18px;
+            font-size: 0.88rem;
+        }
+        .lock-btn {
+            margin-top: 1rem;
+            width: 100%;
+            padding: 0.85rem;
+            background: #cde5c2;
+            color: #1b4125;
+            border: none;
+            border-radius: 40px;
+            font-size: 1.05rem;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #9abb90;
+            transition: transform 0.1s;
+        }
+        .lock-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #9abb90;
+        }
+
+        /* ========== 封面层 ========== */
+        .cover-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(165deg, #f2f8ec 0%, #e0ecd4 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        .cover-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .cover-title {
+            font-size: 2.8rem;
+            font-weight: 360;
+            color: #2d543b;
+            letter-spacing: -0.3px;
+            margin-bottom: 0.2rem;
+        }
+        .cover-sub {
+            font-size: 1.2rem;
+            color: #618967;
+            font-weight: 300;
+            margin-bottom: 2.5rem;
+        }
+        .cover-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+            max-width: 340px;
+        }
+        .cover-btn {
+            border: none;
+            border-radius: 60px;
+            padding: 1.2rem 2rem;
+            font-size: 1.3rem;
+            font-weight: 440;
+            cursor: pointer;
+            transition: 0.15s ease;
+            box-shadow: 0 4px 12px rgba(130, 160, 120, 0.15);
+            text-align: center;
+            background: #fcfff8;
+            border: 1px solid #d2e2c7;
+            color: #2b5538;
+        }
+        .cover-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(130, 160, 120, 0.25);
+        }
+        .cover-btn:active {
+            transform: translateY(0);
+        }
+        .cover-btn.primary {
+            background: #d4ebc5;
+            border-color: #9abb90;
+            color: #1e4529;
+            font-weight: 500;
+        }
+        .cover-btn.primary:hover {
+            background: #c5e0b4;
+        }
+        .cover-btn .icon {
+            margin-right: 0.5rem;
+        }
+        .cover-footer {
+            margin-top: 2.5rem;
+            font-size: 1rem;
+            color: #799e7a;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        /* ========== 原有词汇页面样式 ========== */
+        .header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 360;
+            color: #2d543b;
+            line-height: 1.4;
+            letter-spacing: -0.3px;
+            font-style: normal;
+            margin-bottom: 0.4rem;
+        }
+        .header .sub {
+            font-size: 1.2rem;
+            color: #618967;
+            font-weight: 300;
+            line-height: 1.4;
+            font-style: normal;
+            border: none;
+            padding-left: 0;
+        }
+        /* ⭐ 新增：切换词汇按钮 */
+        .switch-word-btn {
+            background: #eaf3ee;
+            border: 1px solid #bdd3c6;
+            border-radius: 40px;
+            padding: 8px 20px;
+            color: #1b5e3a;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            margin-bottom: 16px;
+            font-family: inherit;
+            transition: background 0.15s;
+        }
+        .switch-word-btn:hover {
+            background: #d4e6dc;
+        }
+        .switch-word-btn:active {
+            transform: scale(0.97);
+        }
+
+        .chapter-scroll {
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            padding: 0.2rem 0 0.6rem 0;
+            scrollbar-width: none;
+        }
+        .chapter-scroll::-webkit-scrollbar { display: none; }
+        .chap-flex {
+            display: inline-flex;
+            gap: 0.7rem;
+            padding: 0 0.2rem;
+        }
+        .chap-btn {
+            background: #f3fcee;
+            border: 1px solid #d2e2c7;
+            border-radius: 40px;
+            padding: 0.65rem 1.5rem;
+            font-size: 1.02rem;
+            font-weight: 430;
+            color: #2b5538;
+            white-space: nowrap;
+            box-shadow: 0 2px 6px rgba(150, 180, 140, 0.08);
+            transition: 0.1s;
+            cursor: pointer;
+        }
+        .chap-btn.active {
+            background: #cde5c2;
+            border-color: #8bb282;
+            color: #1b4125;
+            font-weight: 500;
+        }
+        .subchapter-scroll {
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            padding: 0 0 0.9rem 0;
+            scrollbar-width: none;
+        }
+        .subchapter-scroll::-webkit-scrollbar { display: none; }
+        .sub-flex {
+            display: inline-flex;
+            gap: 0.6rem;
+            padding: 0 0.2rem;
+        }
+        .sub-btn {
+            background: #ecf7e4;
+            border: 1px solid #cde0c0;
+            border-radius: 30px;
+            padding: 0.4rem 1.3rem;
+            font-size: 0.96rem;
+            font-weight: 400;
+            color: #336941;
+            white-space: nowrap;
+            box-shadow: 0 1px 4px rgba(120,150,100,0.1);
+            cursor: pointer;
+        }
+        .sub-btn.active-sub {
+            background: #d4ebc5;
+            border-color: #9abb90;
+            color: #1e4529;
+            font-weight: 460;
+        }
+        .word-count-badge {
+            font-size: 0.75rem;
+            background: #c3ddb6;
+            border-radius: 20px;
+            padding: 0.15rem 0.6rem;
+            margin-left: 0.5rem;
+            color: #23522e;
+        }
+        .flip-container {
+            perspective: 1000px;
+            width: 100%;
+            margin: 1.2rem 0 1.5rem 0;
+        }
+        .flipper {
+            position: relative;
+            width: 100%;
+            height: auto;
+            transition: transform 0.4s ease;
+            transform-style: preserve-3d;
+        }
+        .flipper.flipped {
+            transform: rotateY(180deg);
+        }
+        .front, .back {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 100%;
+            border-radius: 42px;
+            padding: 2.8rem 1.2rem;
+            background: #fcfff8;
+            border: 1px solid #e3f0da;
+            box-shadow: 0 10px 20px rgba(130, 160, 120, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 240px;
+        }
+        .back {
+            position: absolute;
+            transform: rotateY(180deg);
+            min-height: 240px;
+        }
+        .en-word {
+            font-size: 3rem;
+            font-weight: 370;
+            color: #1c4a2a;
+            line-height: 1.3;
+            word-break: break-word;
+            text-align: center;
+            width: 100%;
+        }
+        .ch-word {
+            font-size: 2.2rem;
+            font-weight: 340;
+            color: #316a42;
+            margin-top: 0.5rem;
+            text-align: center;
+            width: 100%;
+        }
+        .pos {
+            font-size: 1.2rem;
+            color: #719b79;
+            font-weight: 380;
+            text-align: center;
+            width: 100%;
+        }
+        .nav-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.2rem;
+            margin: 1.5rem 0 2rem 0;
+            flex-wrap: wrap;
+        }
+        .nav-btn {
+            background: #f1fde9;
+            border: 1px solid #cde0c3;
+            border-radius: 60px;
+            padding: 0.7rem 2.2rem;
+            font-size: 1.2rem;
+            color: #295e36;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            cursor: pointer;
+        }
+        .quiz-btn {
+            background: #e2f1d8;
+            border-color: #aacaa0;
+            font-weight: 440;
+        }
+        .thumb-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1rem 0 0.8rem;
+        }
+        .thumb-header span {
+            font-size: 1.2rem;
+            color: #3d6d4b;
+            font-weight: 330;
+        }
+        .export-btn {
+            background: #dbeace;
+            border: 1px solid #adc9a2;
+            border-radius: 40px;
+            padding: 0.4rem 1.3rem;
+            font-size: 1rem;
+            color: #23562f;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .thumb-grid-container {
+            max-height: 280px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 20px;
+            padding: 0.2rem 0.2rem 0.5rem 0.2rem;
+            scrollbar-width: thin;
+            scrollbar-color: #b5d3ae #e8f3e0;
+        }
+        .thumb-grid-container::-webkit-scrollbar { width: 5px; }
+        .thumb-grid-container::-webkit-scrollbar-track { background: #e8f3e0; border-radius: 10px; }
+        .thumb-grid-container::-webkit-scrollbar-thumb { background: #b5d3ae; border-radius: 10px; }
+        .thumb-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.6rem;
+            padding: 0.2rem;
+        }
+        .thumb-item {
+            background: #f9fff3;
+            border: 1px solid #dbefd0;
+            border-radius: 24px;
+            padding: 0.7rem 0.3rem 0.7rem 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+            box-shadow: 0 2px 6px rgba(160, 180, 140, 0.1);
+            min-width: 0;
+        }
+        .thumb-item input[type="checkbox"] {
+            width: 1.2rem;
+            height: 1.2rem;
+            accent-color: #86b07c;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+        .thumb-item label {
+            font-size: 0.9rem;
+            color: #2e623d;
+            font-weight: 420;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+            cursor: pointer;
+        }
+        .quiz-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(200, 225, 190, 0.8);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+            padding: 1rem;
+        }
+        .quiz-overlay.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        .quiz-panel {
+            background: #f6ffee;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 48px;
+            padding: 2.2rem 1.5rem;
+            border: 1px solid #daefce;
+            box-shadow: 0 20px 30px rgba(90, 120, 70, 0.2);
+        }
+        .quiz-panel h3 {
+            font-size: 2rem;
+            font-weight: 320;
+            color: #2f6040;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        .close-area { display: flex; justify-content: flex-end; }
+        .close-quiz {
+            font-size: 2.8rem; line-height: 0.8; color: #6d9b71;
+            background: none; border: none; padding: 0 0.5rem; cursor: pointer;
+        }
+        .quiz-card {
+            background: white;
+            border-radius: 42px;
+            padding: 2.5rem 1rem;
+            margin: 1.5rem 0;
+            border: 1px solid #d1e6c5;
+            text-align: center;
+        }
+        .quiz-card .big-en {
+            font-size: 3.2rem;
+            color: #1e4d2b;
+            font-weight: 340;
+            word-break: break-word;
+        }
+        .quiz-footer { display: flex; justify-content: center; gap: 2rem; margin: 1rem 0; }
+        .quiz-footer .nav-btn { font-size: 1.4rem; padding: 0.5rem 2rem; }
+        .quiz-counter { text-align: center; color: #517d58; font-size: 1.1rem; }
+        .tip { color: #799e7a; font-size: 0.95rem; margin-top: 1rem; text-align: center; }
+
+        @media (max-width: 480px) {
+            .cover-title { font-size: 2rem; }
+            .cover-btn { font-size: 1.1rem; padding: 1rem 1.5rem; }
+            .lock-title { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== 密码验证层 ===== -->
+<div class="lock-overlay" id="lockOverlay">
+    <div class="lock-title">🔒 Reborner 雅思阅读核心词汇</div>
+    <div class="lock-sub">请输入访问密码</div>
+    <div class="lock-card">
+        <input type="password" id="lockInput" class="lock-input" placeholder="••••••••" autocomplete="off">
+        <div class="lock-err" id="lockErr"></div>
+        <button class="lock-btn" id="lockBtn">确认进入</button>
+    </div>
+</div>
+
+<!-- ===== 封面层 ===== -->
+<div class="cover-overlay" id="coverOverlay">
+    <div class="cover-title">🌱 Reborner 新生留学</div>
+    <div class="cover-sub">雅思核心词汇 · 全量终极版</div>
+    <div class="cover-buttons">
+        <button class="cover-btn primary" id="enter538Btn">
+            <span class="icon">📚</span> 538核心词汇
+        </button>
+        <button class="cover-btn" id="advancedBtn">
+            <span class="icon">🚀</span> 高阶核心词汇
+        </button>
+    </div>
+    <div class="cover-footer">天天进步，每日新生</div>
+</div>
+
+<!-- ===== 原有538词汇页面 ===== -->
+<div class="container">
+    <div class="header">
+        <button class="switch-word-btn" id="backToCoverBtn">← 切换词汇（538 / 高阶）</button>
+        <h1>Reborner 雅思阅读基础核心词汇</h1>
+        <div class="sub">天天进步，每日新生</div>
+    </div>
+
+    <div class="chapter-scroll" id="mainCategoryScroll"><div class="chap-flex" id="mainCategoryFlex"></div></div>
+    <div class="subchapter-scroll" id="subCategoryScroll"><div class="sub-flex" id="subCategoryFlex"></div></div>
+
+    <div class="flip-container" id="flipContainer">
+        <div class="flipper" id="flipper">
+            <div class="front" id="cardFront"><div class="en-word" id="mainEn">resemble</div></div>
+            <div class="back" id="cardBack">
+                <div class="en-word" id="backEn">resemble</div>
+                <div class="pos" id="posInfo">v.</div>
+                <div class="ch-word" id="mainCh">像，与......相似</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-row">
+        <button class="nav-btn" id="prevBtn">← 前</button>
+        <button class="nav-btn" id="nextBtn">后 →</button>
+        <button class="nav-btn quiz-btn" id="quizOpenBtn">🎯 quiz</button>
+    </div>
+
+    <div class="thumb-header">
+        <span>📌 本章全部单词 · 勾选难词</span>
+        <button class="export-btn" id="exportDifficultBtn">📎 导出我的难词</button>
+    </div>
+    <div class="thumb-grid-container"><div class="thumb-grid" id="thumbGrid"></div></div>
+    <div class="tip">✓ 点击卡片翻转 · 勾选方格标记难词</div>
+</div>
+
+<div class="quiz-overlay" id="quizOverlay">
+    <div class="quiz-panel">
+        <div class="close-area"><button class="close-quiz" id="closeQuizBtn">⨯</button></div>
+        <h3>🔍 随机小测</h3>
+        <div class="quiz-card"><div class="big-en" id="quizWord">resemble</div></div>
+        <div class="quiz-footer">
+            <button class="nav-btn" id="quizPrevBtn">←</button>
+            <button class="nav-btn" id="quizNextBtn">→</button>
+        </div>
+        <div class="quiz-counter" id="quizCounter">1 / 5</div>
+    </div>
+</div>
+
+<script>
+/* ================================================================
+   一、密码验证逻辑
+   ================================================================ */
+(function() {
+    const VALID_PASSWORDS = ['61211216', 'reborn2026'];
+    const lockOverlay = document.getElementById('lockOverlay');
+    const lockInput = document.getElementById('lockInput');
+    const lockBtn = document.getElementById('lockBtn');
+    const lockErr = document.getElementById('lockErr');
+
+    function tryUnlock() {
+        const v = lockInput.value.trim();
+        if (VALID_PASSWORDS.includes(v)) {
+            lockOverlay.classList.add('hidden');
+        } else {
+            lockErr.textContent = '密码错误，请重试';
+            lockInput.value = '';
+        }
+    }
+
+    lockBtn.addEventListener('click', tryUnlock);
+    lockInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') tryUnlock();
+    });
+    setTimeout(function() { lockInput.focus(); }, 300);
+})();
+
+/* ================================================================
+   二、原有词汇页面逻辑
+   ================================================================ */
+(function() {
+    const vocabData = [
+        { en: "resemble", ch: "像，与......相似", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "recognize", ch: "认出，识别；承认", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "adjust", ch: "调整，使适合", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "approach", ch: "方法；接近", pos: "n./v.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "fundamental", ch: "基本的，基础的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "rely on", ch: "依靠，依赖", pos: "phr.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "domestic", ch: "家庭的；国内的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "measure", ch: "测量", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "trait", ch: "特性，特征", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "coin", ch: "创造；硬币", pos: "v./n.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "artificial", ch: "仿造的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "prompt", ch: "促进，激起", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "exchange", ch: "交换", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "underlie", ch: "成为......基础", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "ignore", ch: "忽视，不顾", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "fertilizer", ch: "化肥，肥料", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "that", ch: "那；那个", pos: "pron.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "and", ch: "和，而且", pos: "conj.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "rather than", ch: "而非，不是", pos: "phr.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "thanks to", ch: "由于，幸亏", pos: "phr.", mainCategory: "最高频119", subCategory: "Unit 1" },
+        { en: "diversity", ch: "多样性，差异", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "isolate", ch: "使隔离，使孤立", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "avoid", ch: "避免", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "budget", ch: "预算", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "adapt to", ch: "使适应", pos: "phr.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "alternative", ch: "供替代的；替代品", pos: "adj./n.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "compensate", ch: "补偿，赔偿", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "component", ch: "成分，要素", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "military", ch: "军事的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "criteria", ch: "标准", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "curriculum", ch: "课程", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "feasible", ch: "可行的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "constrain", ch: "束缚，限制", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "deficiency", ch: "缺陷，缺点", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "supplement", ch: "补充", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "distinguish", ch: "区别，辨别", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "analyze", ch: "分析，解释", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "emphasize", ch: "强调，着重", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "enormous", ch: "巨大的，极大的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "imitate", ch: "模仿", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 2" },
+        { en: "impair", ch: "削弱，减少", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "hinder", ch: "阻碍", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "legitimate", ch: "合法的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "limitation", ch: "限制", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "convention", ch: "手法；习俗", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "demanding", ch: "苛求的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "determine", ch: "决定", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "accelerate", ch: "加速，促进", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "ancient", ch: "古代的；古老的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "beneficial", ch: "有益的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "chronic", ch: "慢性的，长期性的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "conscious", ch: "有意识的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "minimize", ch: "最小化", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "immunity", ch: "免疫力", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "imperative", ch: "必要的，紧急的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "secrete", ch: "分泌", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "exaggerate", ch: "夸大，夸张", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "transmit", ch: "传达，传输", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "extinct", ch: "灭绝", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "exclusive", ch: "独有的；排外的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 3" },
+        { en: "guarantee", ch: "保证，担保", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "inherit", ch: "继承", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "witness", ch: "见证，证据；目击者", pos: "n./v.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "magnetic", ch: "有磁性的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "loss", ch: "减少；亏损", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "option", ch: "选择", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "prefer to", ch: "更喜欢", pos: "phr.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "priority", ch: "优先权", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "primary", ch: "主要的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "principle", ch: "原理", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "potential", ch: "潜能；潜在的", pos: "n./adj.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "quantity", ch: "量，数量", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "settle", ch: "解决；定居", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "sophisticate", ch: "使复杂", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "specific", ch: "明确的；特殊的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "survive", ch: "存活，幸存", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "swift", ch: "迅速的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "unexpectedly", ch: "出乎意料地", pos: "adv.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "surrounding", ch: "环境", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "attempt", ch: "试图，尝试", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 4" },
+        { en: "expertise", ch: "专门技术", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "faculty", ch: "能力；全体教员", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "donate", ch: "捐赠", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "dynamics", ch: "动力学", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "incentive", ch: "刺激，动机", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "mortality", ch: "死亡率", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "peripheral", ch: "外围的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "vicinity", ch: "邻近，附近", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "threaten", ch: "威胁，危及", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "practice", ch: "实行；练习", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "bacteria", ch: "细菌", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "be subject to", ch: "受......支配", pos: "phr.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "be liable to", ch: "易于......", pos: "phr.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "innate", ch: "天生的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "pattern", ch: "模式", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "therapy", ch: "治疗，理疗", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "original", ch: "原始的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "confidential", ch: "机密的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "cognitive", ch: "认知的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "comply with", ch: "照做，遵守", pos: "phr.", mainCategory: "最高频119", subCategory: "Unit 5" },
+        { en: "consult", ch: "查阅，商量，请教", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 6" },
+        { en: "superior", ch: "上级的；优秀的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 6" },
+        { en: "co-operation", ch: "合作，协作", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 6" },
+        { en: "co-ordinate", ch: "使协调", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 6" },
+        { en: "differ", ch: "使...相异；不同", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 6" },
+        { en: "cue", ch: "线索", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 6" },
+        { en: "signal", ch: "信号", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 6" },
+        { en: "abandon", ch: "放弃，遗弃", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 6" },
+        { en: "halt", ch: "停止", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 6" },
+        { en: "fragile", ch: "脆弱的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 6" },
+        { en: "retain", ch: "记住", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 6" },
+        { en: "vanish", ch: "消失，绝迹", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 6" },
+        { en: "delivery", ch: "递送", pos: "n.", mainCategory: "最高频119", subCategory: "Unit 6" },
+        { en: "erode", ch: "侵蚀", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 6" },
+        { en: "induce", ch: "引起，引诱", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 6" },
+        { en: "stable", ch: "稳定的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 6" },
+        { en: "integrate", ch: "使成整体", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 6" },
+        { en: "equal", ch: "平等的", pos: "adj.", mainCategory: "最高频119", subCategory: "Unit 6" },
+        { en: "grant", ch: "拨款；授予", pos: "v.", mainCategory: "最高频119", subCategory: "Unit 6" },
+        { en: "adversity", ch: "逆境", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "aggression", ch: "侵犯", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "aid", ch: "援助", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "altitude", ch: "高度", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "application", ch: "应用", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "array", ch: "排列", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "association", ch: "协会", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "attitude", ch: "态度", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "authority", ch: "权威", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "boundary", ch: "边界", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "burden", ch: "负担", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "calamity", ch: "灾难", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "capacity", ch: "容量", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "comment", ch: "评论", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "commitment", ch: "承诺", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "conflict", ch: "冲突", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "correlation", ch: "关联", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "courtship", ch: "求爱", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "crash", ch: "碰撞", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "credibility", ch: "可信性", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "criminal", ch: "罪犯", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "crisis", ch: "危机", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "criticism", ch: "批评", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "deadline", ch: "期限", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "delay", ch: "延迟", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "depression", ch: "抑郁", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "documentation", ch: "文件", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "domain", ch: "领域", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "drought", ch: "干旱", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "encyclopaedia", ch: "百科全书", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "entrepreneur", ch: "企业家", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "equator", ch: "赤道", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "estate", ch: "房地产", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "evidence", ch: "证据", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "experiment", ch: "实验", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "famine", ch: "饥荒", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "fitness", ch: "健康", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "foe", ch: "危害物", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "format", ch: "格式", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "fragment", ch: "碎片", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "gene", ch: "基因", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "habitat", ch: "栖息地", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "hardship", ch: "苦难", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "hypothesis", ch: "假设", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "impact", ch: "影响", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "installment", ch: "分期付款", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "intelligence", ch: "智力", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "interaction", ch: "互动", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "interference", ch: "干涉", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "label", ch: "标签", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "lack", ch: "缺乏", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "landscape", ch: "景观", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "likelihood", ch: "可能性", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "limb", ch: "四肢", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "look-in", ch: "机会", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "log", ch: "日志", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "malfunction", ch: "故障", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "mammal", ch: "哺乳动物", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "manufacture", ch: "生产", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "mate", ch: "配偶", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "mechanism", ch: "机制", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "mercury", ch: "水银", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "moisture", ch: "湿度", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "monitor", ch: "监视器", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "motif", ch: "主题", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "norm", ch: "规范", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "notoriety", ch: "恶名", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "objective", ch: "目标", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "obligation", ch: "义务", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "odour", ch: "气味", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "optimum", ch: "最佳效果", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "organ", ch: "器官", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "peak", ch: "顶点", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "permit", ch: "许可证", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "phase", ch: "阶段", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "poverty", ch: "贫穷", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "predict", ch: "预测", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "recreation", ch: "娱乐", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "reduction", ch: "减少", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "rehearsal", ch: "排演", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "revision", ch: "修正", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "ruin", ch: "毁灭", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "shade", ch: "阴影", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "skepticism", ch: "怀疑", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "solicitor", ch: "律师", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "stride", ch: "进展", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "substance", ch: "物质", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "sufficiency", ch: "充足", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "supremacy", ch: "至高地位", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "symptom", ch: "症状", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "tension", ch: "紧张", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "term", ch: "术语", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "theme", ch: "主题", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "therapy", ch: "治疗", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "toll", ch: "通行费", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "trace", ch: "痕迹", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "utilization", ch: "利用", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "wellbeing", ch: "健康", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "witness", ch: "目击者", pos: "n.", mainCategory: "次高频239", subCategory: "名词" },
+        { en: "accumulate", ch: "积累", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "approve", ch: "批准", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "assign", ch: "分配", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "bear", ch: "承担", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "blight", ch: "损害", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "bungle", ch: "搞砸", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "certify", ch: "证明", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "cater", ch: "迎合", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "commute", ch: "通勤", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "compare", ch: "比较", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "conceal", ch: "隐藏", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "concur", ch: "同意", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "confer", ch: "授予", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "confuse", ch: "使困惑", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "designate", ch: "指定", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "detain", ch: "扣留", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "devastate", ch: "摧毁", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "disclose", ch: "揭露", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "disrupt", ch: "破坏", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "distract", ch: "分心", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "distribute", ch: "分配", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "evolve", ch: "进化", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "exploit", ch: "利用", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "extend", ch: "扩展", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "extract", ch: "提取", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "fulfill", ch: "实现", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "harbor", ch: "怀有", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "indulge", ch: "沉溺", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "infest", ch: "侵扰", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "interrupt", ch: "打断", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "involve", ch: "涉及", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "label", ch: "贴标签", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "manifest", ch: "表现", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "migrate", ch: "迁移", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "mould", ch: "塑造", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "obscure", ch: "掩盖", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "obtain", ch: "获得", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "overcome", ch: "克服", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "paralyse", ch: "麻痹", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "participate", ch: "参与", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "persuade", ch: "说服", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "plagiarise", ch: "抄袭", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "plot", ch: "密谋", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "pose", ch: "提出", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "prohibit", ch: "禁止", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "prolong", ch: "延长", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "promote", ch: "促进", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "prosper", ch: "繁荣", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "purify", ch: "净化", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "qualify", ch: "取得资格", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "react", ch: "反应", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "reject", ch: "拒绝", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "reproduce", ch: "繁殖", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "revive", ch: "复苏", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "steer", ch: "引导", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "stimulate", ch: "刺激", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "succumb", ch: "屈服", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "subdivide", ch: "细分", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "supersede", ch: "取代", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "suppress", ch: "压制", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "threaten", ch: "威胁", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "transcend", ch: "超越", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "transit", ch: "运输", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "trigger", ch: "触发", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "underestimate", ch: "低估", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "underlie", ch: "成为基础", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "view", ch: "看待", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "yield", ch: "生产", pos: "v.", mainCategory: "次高频239", subCategory: "动词" },
+        { en: "addictive", ch: "上瘾的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "agreeable", ch: "令人愉快的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "allergic", ch: "过敏的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "catastrophic", ch: "灾难的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "civil", ch: "市民的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "communal", ch: "公共的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "conservative", ch: "保守的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "considerable", ch: "相当大的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "contingent", ch: "视情况而定的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "controversial", ch: "有争议的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "damp", ch: "潮湿的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "democratic", ch: "民主的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "demographic", ch: "人口统计的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "dental", ch: "牙科的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "disparate", ch: "不同的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "dominant", ch: "主导的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "dramatic", ch: "戏剧性的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "durable", ch: "持久的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "ecofriendly", ch: "环保的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "elderly", ch: "年长的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "elusive", ch: "难以捉摸的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "established", ch: "已建立的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "ethical", ch: "道德的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "exceptional", ch: "异常的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "exhausted", ch: "疲惫的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "explicit", ch: "明确的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "finite", ch: "有限的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "gifted", ch: "有天赋的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "graphic", ch: "图形的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "harsh", ch: "严酷的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "impressive", ch: "印象深刻的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "inaccurate", ch: "不准确的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "inactive", ch: "不活跃的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "inappropriate", ch: "不恰当的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "intense", ch: "强烈的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "interior", ch: "内部的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "introverted", ch: "内向的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "keen", ch: "热切的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "linguistic", ch: "语言的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "lopsided", ch: "不平衡的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "marine", ch: "海洋的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "mental", ch: "精神的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "meteorological", ch: "气象的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "native", ch: "本地的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "nocturnal", ch: "夜间的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "objective", ch: "客观的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "offensive", ch: "冒犯的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "official", ch: "官方的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "ordinary", ch: "普通的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "paramount", ch: "最重要的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "patient", ch: "耐心的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "pessimistic", ch: "悲观的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "physical", ch: "身体的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "portable", ch: "便携的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "pressing", ch: "紧迫的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "private", ch: "私人的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "radical", ch: "激进的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "rare", ch: "稀有的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "relevant", ch: "相关的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "religious", ch: "宗教的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "reluctant", ch: "不情愿的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "responsible", ch: "负责的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "scenic", ch: "风景优美的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "subtle", ch: "微妙的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "suspicious", ch: "可疑的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "sustainable", ch: "可持续的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "tropical", ch: "热带的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "unbiased", ch: "公正的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "uniform", ch: "一致的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "valuable", ch: "有价值的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "versatile", ch: "多功能的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "violent", ch: "暴力的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "visible", ch: "可见的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "visual", ch: "视觉的", pos: "adj.", mainCategory: "次高频239", subCategory: "形容词" },
+        { en: "erratically", ch: "不稳定地", pos: "adv.", mainCategory: "次高频239", subCategory: "副词" },
+        { en: "eventually", ch: "最终", pos: "adv.", mainCategory: "次高频239", subCategory: "副词" },
+        { en: "mainly", ch: "主要地", pos: "adv.", mainCategory: "次高频239", subCategory: "副词" },
+        { en: "solely", ch: "唯一地", pos: "adv.", mainCategory: "次高频239", subCategory: "副词" },
+        { en: "unexpectedly", ch: "意外地", pos: "adv.", mainCategory: "次高频239", subCategory: "副词" },
+        { en: "be consistent with", ch: "与...一致", pos: "phr.", mainCategory: "次高频239", subCategory: "固定搭配" },
+        { en: "in accordance with", ch: "依照", pos: "phr.", mainCategory: "次高频239", subCategory: "固定搭配" },
+        { en: "manage to do", ch: "设法完成", pos: "phr.", mainCategory: "次高频239", subCategory: "固定搭配" },
+        { en: "out of the question", ch: "不可能", pos: "phr.", mainCategory: "次高频239", subCategory: "固定搭配" },
+        { en: "plenty of", ch: "大量的", pos: "phr.", mainCategory: "次高频239", subCategory: "固定搭配" },
+        { en: "refer to", ch: "涉及", pos: "phr.", mainCategory: "次高频239", subCategory: "固定搭配" },
+        { en: "thanks to", ch: "由于", pos: "phr.", mainCategory: "次高频239", subCategory: "固定搭配" },
+        { en: "establish", ch: "建立", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 1 树立" },
+        { en: "embed", ch: "嵌入", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 1 树立" },
+        { en: "coin", ch: "创造（新词）", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 1 树立" },
+        { en: "initial", ch: "最初的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 1 树立" },
+        { en: "infancy", ch: "婴儿期；初期", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 1 树立" },
+        { en: "pioneer", ch: "先驱；开拓", pos: "n./v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 1 树立" },
+        { en: "preliminary", ch: "初步的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 1 树立" },
+        { en: "constitute", ch: "构成", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 1 树立" },
+        { en: "emerge", ch: "出现", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 1 树立" },
+        { en: "innovation", ch: "创新", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 1 树立" },
+        { en: "innate", ch: "天生的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 2 本能" },
+        { en: "inherently", ch: "固有地", pos: "adv.", mainCategory: "核心词汇模块分类", subCategory: "Unit 2 本能" },
+        { en: "spontaneous", ch: "自发的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 2 本能" },
+        { en: "instinctive", ch: "本能的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 2 本能" },
+        { en: "intention", ch: "意图", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 2 本能" },
+        { en: "device", ch: "装置", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 2 本能" },
+        { en: "objective", ch: "目标；客观的", pos: "n./adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 2 本能" },
+        { en: "aspect", ch: "方面", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 2 本能" },
+        { en: "perspective", ch: "视角", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 2 本能" },
+        { en: "ingredient", ch: "成分", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "appendage", ch: "附属物", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "component", ch: "组件", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "segment", ch: "部分", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "fragment", ch: "碎片", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "hemisphere", ch: "半球", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "proportion", ch: "比例", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "comprise", ch: "包含", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "interact", ch: "互动", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "relevant", ch: "相关的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "correlation", ch: "相关性", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "coordinate", ch: "协调；坐标", pos: "v./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "participant", ch: "参与者", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "intervention", ch: "干预", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "engage", ch: "参与", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "synthesis", ch: "合成", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "mechanism", ch: "机制", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "assembly", ch: "组装", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "integrate", ch: "整合", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "compile", ch: "编译", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "site", ch: "地点", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "compound", ch: "化合物；混合", pos: "n./v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 3 加入" },
+        { en: "contemporary", ch: "当代的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 4 现存" },
+        { en: "simultaneously", ch: "同时地", pos: "adv.", mainCategory: "核心词汇模块分类", subCategory: "Unit 4 现存" },
+        { en: "existence", ch: "存在", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 4 现存" },
+        { en: "persistent", ch: "持续的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 4 现存" },
+        { en: "permanent", ch: "永久的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 4 现存" },
+        { en: "prolong", ch: "延长", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 4 现存" },
+        { en: "durable", ch: "耐用的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 4 现存" },
+        { en: "endure", ch: "忍受", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 4 现存" },
+        { en: "constantly", ch: "不断地", pos: "adv.", mainCategory: "核心词汇模块分类", subCategory: "Unit 4 现存" },
+        { en: "sustainable", ch: "可持续的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 4 现存" },
+        { en: "undergo", ch: "经历", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 4 现存" },
+        { en: "tolerate", ch: "容忍", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 4 现存" },
+        { en: "chronic", ch: "慢性的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 4 现存" },
+        { en: "periodic", ch: "周期性的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 4 现存" },
+        { en: "essential", ch: "必要的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "fundamental", ch: "基本的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "substantial", ch: "实质的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "emphasis", ch: "强调", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "reinforce", ch: "加强", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "primarily", ch: "主要地", pos: "adv.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "dominant", ch: "主导的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "vital", ch: "至关重要的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "crucial", ch: "关键的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "spectacular", ch: "壮观的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "astonishing", ch: "惊人的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "eminent", ch: "杰出的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "considerable", ch: "相当大的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "enormous", ch: "巨大的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "sufficient", ch: "充足的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "abundant", ch: "丰富的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "tremendous", ch: "极大的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "immense", ch: "无限的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "infinite", ch: "无穷的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "myriad", ch: "无数（的）", pos: "n./adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 5 本质" },
+        { en: "rival", ch: "竞争对手；与...竞争", pos: "n./v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 6 竞争" },
+        { en: "aggressive", ch: "侵略性的；进取的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 6 竞争" },
+        { en: "conflict", ch: "冲突", pos: "n./v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 6 竞争" },
+        { en: "debate", ch: "辩论", pos: "n./v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 6 竞争" },
+        { en: "paradox", ch: "悖论", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 6 竞争" },
+        { en: "controversy", ch: "争议", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 6 竞争" },
+        { en: "contradict", ch: "矛盾", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 6 竞争" },
+        { en: "contrary", ch: "相反的；反面", pos: "adj./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 6 竞争" },
+        { en: "contrast", ch: "对比", pos: "n./v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 6 竞争" },
+        { en: "reverse", ch: "逆转；相反的", pos: "v./n./adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 6 竞争" },
+        { en: "alternative", ch: "替代方案；可选的", pos: "n./adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 6 竞争" },
+        { en: "wobble", ch: "摇晃", pos: "v./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 6 竞争" },
+        { en: "fragile", ch: "脆弱的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 7 脆弱" },
+        { en: "vulnerable", ch: "易受伤害的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 7 脆弱" },
+        { en: "seldom", ch: "很少", pos: "adv.", mainCategory: "核心词汇模块分类", subCategory: "Unit 7 脆弱" },
+        { en: "abandon", ch: "抛弃", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 7 脆弱" },
+        { en: "eliminate", ch: "消除", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 7 脆弱" },
+        { en: "isolate", ch: "孤立", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 7 脆弱" },
+        { en: "exclusive", ch: "排他的；独有的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 7 脆弱" },
+        { en: "insulate", ch: "隔离；绝缘", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 7 脆弱" },
+        { en: "interval", ch: "间隔", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 7 脆弱" },
+        { en: "margin", ch: "边缘；利润", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 7 脆弱" },
+        { en: "ignorance", ch: "无知", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 7 脆弱" },
+        { en: "investigate", ch: "调查", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 8 查明" },
+        { en: "inspection", ch: "检查", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 8 查明" },
+        { en: "detect", ch: "检测", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 8 查明" },
+        { en: "perceive", ch: "察觉", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 8 查明" },
+        { en: "perception", ch: "感知", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 8 查明" },
+        { en: "conscious", ch: "有意识的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 8 查明" },
+        { en: "ascertain", ch: "查明", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 8 查明" },
+        { en: "insight", ch: "洞察力", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 8 查明" },
+        { en: "comprehensive", ch: "全面的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 8 查明" },
+        { en: "appreciate", ch: "欣赏；理解", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 8 查明" },
+        { en: "demonstrate", ch: "证明；展示", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 9 明显" },
+        { en: "apparent", ch: "明显的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 9 明显" },
+        { en: "reveal", ch: "揭示", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 9 明显" },
+        { en: "explicit", ch: "明确的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 9 明显" },
+        { en: "distinct", ch: "独特的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 9 明显" },
+        { en: "definite", ch: "明确的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 9 明显" },
+        { en: "illustrate", ch: "说明", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 9 明显" },
+        { en: "depict", ch: "描绘", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 9 明显" },
+        { en: "interpret", ch: "解释", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 9 明显" },
+        { en: "implication", ch: "含义；暗示", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 9 明显" },
+        { en: "convince", ch: "说服", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 9 明显" },
+        { en: "persuade", ch: "劝说", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 9 明显" },
+        { en: "distinguish", ch: "区分", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 10 特别" },
+        { en: "trait", ch: "特征", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 10 特别" },
+        { en: "diverse", ch: "多样的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 10 特别" },
+        { en: "odd", ch: "奇怪的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 10 特别" },
+        { en: "attribute", ch: "属性；归因于", pos: "n./v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 10 特别" },
+        { en: "unprecedented", ch: "前所未有的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 10 特别" },
+        { en: "exotic", ch: "异国的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 10 特别" },
+        { en: "patent", ch: "专利；获得专利", pos: "n./v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 10 特别" },
+        { en: "drastically", ch: "剧烈地", pos: "adv.", mainCategory: "核心词汇模块分类", subCategory: "Unit 10 特别" },
+        { en: "intensive", ch: "密集的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 10 特别" },
+        { en: "radical", ch: "激进的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 10 特别" },
+        { en: "harsh", ch: "严厉的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 10 特别" },
+        { en: "rigidly", ch: "严格地", pos: "adv.", mainCategory: "核心词汇模块分类", subCategory: "Unit 10 特别" },
+        { en: "estimate", ch: "估计", pos: "v./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 11 假设" },
+        { en: "assess", ch: "评估", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 11 假设" },
+        { en: "evaluate", ch: "评价", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 11 假设" },
+        { en: "hypothesis", ch: "假设", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 11 假设" },
+        { en: "predict", ch: "预测", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 11 假设" },
+        { en: "presumably", ch: "推测地", pos: "adv.", mainCategory: "核心词汇模块分类", subCategory: "Unit 11 假设" },
+        { en: "assumption", ch: "假定", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 11 假设" },
+        { en: "proposition", ch: "提议", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 11 假设" },
+        { en: "speculate", ch: "推测", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 11 假设" },
+        { en: "anticipate", ch: "预期", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 11 假设" },
+        { en: "skeptical", ch: "怀疑的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 11 假设" },
+        { en: "deduce", ch: "推断", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 11 假设" },
+        { en: "abstract", ch: "抽象的；摘要", pos: "adj./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 11 假设" },
+        { en: "notion", ch: "概念", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 11 假设" },
+        { en: "depression", ch: "抑郁；萧条", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "constraint", ch: "约束", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "retain", ch: "保留", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "restrict", ch: "限制", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "confine", ch: "限制", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "interfere", ch: "干涉", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "distort", ch: "扭曲", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "distract", ch: "分散注意力", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "erode", ch: "侵蚀", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "mortality", ch: "死亡率", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "extinction", ch: "灭绝", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "devastate", ch: "毁灭", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "erosion", ch: "侵蚀", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "collapse", ch: "崩溃", pos: "v./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "suppress", ch: "压制", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "dispose", ch: "处理", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "vanish", ch: "消失", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "ultimate", ch: "最终的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "protest", ch: "抗议", pos: "v./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "dismiss", ch: "解雇；驳回", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 12 衰弱" },
+        { en: "equivalent", ch: "相等的；等价物", pos: "adj./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 13 标准" },
+        { en: "identical", ch: "完全相同的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 13 标准" },
+        { en: "consistent", ch: "一致的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 13 标准" },
+        { en: "resemble", ch: "相似", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 13 标准" },
+        { en: "imitation", ch: "模仿", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 13 标准" },
+        { en: "simulate", ch: "模拟", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 13 标准" },
+        { en: "legislation", ch: "立法", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 13 标准" },
+        { en: "norm", ch: "规范", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 13 标准" },
+        { en: "conventional", ch: "传统的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 13 标准" },
+        { en: "prevailing", ch: "流行的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 13 标准" },
+        { en: "ethical", ch: "伦理的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 13 标准" },
+        { en: "criteria", ch: "标准", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 13 标准" },
+        { en: "consensus", ch: "共识", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 13 标准" },
+        { en: "conform", ch: "符合；遵守", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 13 标准" },
+        { en: "corresponding", ch: "相应的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 13 标准" },
+        { en: "approximately", ch: "大约", pos: "adv.", mainCategory: "核心词汇模块分类", subCategory: "Unit 13 标准" },
+        { en: "virtually", ch: "几乎", pos: "adv.", mainCategory: "核心词汇模块分类", subCategory: "Unit 13 标准" },
+        { en: "roughly", ch: "粗略地", pos: "adv.", mainCategory: "核心词汇模块分类", subCategory: "Unit 13 标准" },
+        { en: "cultivate", ch: "培养", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "preserve", ch: "保护", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "conservation", ch: "保护", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "advocate", ch: "提倡；倡导者", pos: "v./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "superior", ch: "优越的；上级", pos: "adj./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "canopy", ch: "树冠", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "commitment", ch: "承诺", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "accelerate", ch: "加速", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "mature", ch: "成熟的；成熟", pos: "adj./v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "enable", ch: "使能够", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "assign", ch: "分配", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "accommodate", ch: "容纳", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "facilitate", ch: "促进", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "provision", ch: "供应", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "nurture", ch: "培育", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "refine", ch: "精炼", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "enhance", ch: "增强", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "extract", ch: "提取；摘录", pos: "v./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "remedy", ch: "补救", pos: "n./v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "bias", ch: "偏见", pos: "n./v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "entitle", ch: "赋予权利", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 14 赞同" },
+        { en: "modify", ch: "修改", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 15 改变" },
+        { en: "convert", ch: "转换", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 15 改变" },
+        { en: "substitute", ch: "替代", pos: "v./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 15 改变" },
+        { en: "exceed", ch: "超过", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 15 改变" },
+        { en: "transcend", ch: "超越", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 15 改变" },
+        { en: "subsequent", ch: "随后的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 15 改变" },
+        { en: "consecutive", ch: "连续的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 15 改变" },
+        { en: "accompany", ch: "陪伴", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 15 改变" },
+        { en: "descendant", ch: "后代", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 15 改变" },
+        { en: "inherent", ch: "固有的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 15 改变" },
+        { en: "cognitive", ch: "认知的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 16 聪明" },
+        { en: "ingenious", ch: "聪明的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 16 聪明" },
+        { en: "intelligence", ch: "智力", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 16 聪明" },
+        { en: "encyclopedia", ch: "百科全书", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 16 聪明" },
+        { en: "profound", ch: "深刻的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 16 聪明" },
+        { en: "sophisticated", ch: "复杂的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 16 聪明" },
+        { en: "versatile", ch: "多才多艺的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 16 聪明" },
+        { en: "dynamic", ch: "动态的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 16 聪明" },
+        { en: "resilience", ch: "韧性", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 16 聪明" },
+        { en: "stretch", ch: "伸展", pos: "v./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 16 聪明" },
+        { en: "discharge", ch: "释放", pos: "v./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 16 聪明" },
+        { en: "enthusiasm", ch: "热情", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 16 聪明" },
+        { en: "robust", ch: "强健的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 16 聪明" },
+        { en: "derive", ch: "源于", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 17 获得" },
+        { en: "obtain", ch: "获得", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 17 获得" },
+        { en: "purchase", ch: "购买", pos: "v./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 17 获得" },
+        { en: "embrace", ch: "拥抱；接受", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 17 获得" },
+        { en: "gather", ch: "收集", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 17 获得" },
+        { en: "excavate", ch: "挖掘", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 17 获得" },
+        { en: "accumulate", ch: "积累", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 17 获得" },
+        { en: "exploit", ch: "开发；剥削", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 17 获得" },
+        { en: "accessible", ch: "可进入的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 17 获得" },
+        { en: "utilization", ch: "利用", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 17 获得" },
+        { en: "capable", ch: "有能力的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "capacity", ch: "容量", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "appropriate", ch: "合适的；挪用", pos: "adj./v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "proper", ch: "适当的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "viable", ch: "可行的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "flourish", ch: "繁荣", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "prospect", ch: "前景", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "convenient", ch: "方便的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "adequate", ch: "足够的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "feasible", ch: "可行的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "desirable", ch: "理想的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "inevitably", ch: "不可避免地", pos: "adv.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "conduct", ch: "进行；行为", pos: "v./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "undertake", ch: "承担", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "implement", ch: "实施；工具", pos: "v./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "harness", ch: "利用；马具", pos: "v./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "dedicate", ch: "奉献", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "valid", ch: "有效的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "precise", ch: "精确的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "elaborate", ch: "详尽的；详细说明", pos: "adj./v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 18 功效" },
+        { en: "domestic", ch: "国内的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 19 本地" },
+        { en: "aboriginal", ch: "土著的；土著人", pos: "adj./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 19 本地" },
+        { en: "inhabit", ch: "居住", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 19 本地" },
+        { en: "adjacent", ch: "邻近的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 19 本地" },
+        { en: "consequence", ch: "后果", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 20 原因" },
+        { en: "incentive", ch: "激励", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 20 原因" },
+        { en: "trigger", ch: "触发；扳机", pos: "v./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 20 原因" },
+        { en: "consequent", ch: "随之发生的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 20 原因" },
+        { en: "enforce", ch: "执行", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 20 原因" },
+        { en: "substance", ch: "物质", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "artificial", ch: "人造的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "phenomenon", ch: "现象", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "archaeologist", ch: "考古学家", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "pesticide", ch: "杀虫剂", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "obsession", ch: "痴迷", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "parasite", ch: "寄生虫", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "albeit", ch: "尽管", pos: "conj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "encounter", ch: "遭遇", pos: "v./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "campaign", ch: "运动；发起运动", pos: "n./v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "heritage", ch: "遗产", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "optimist", ch: "乐观主义者", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "military", ch: "军事的；军队", pos: "adj./n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "curriculum", ch: "课程", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "terrestrial", ch: "陆地的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "estate", ch: "地产", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "plantation", ch: "种植园", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "circumstance", ch: "情况", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "crater", ch: "火山口", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "commodity", ch: "商品", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "infrastructure", ch: "基础设施", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "infection", ch: "感染", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "gesture", ch: "手势；做手势", pos: "n./v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "devote", ch: "奉献", pos: "v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "moderate", ch: "适度的；缓和", pos: "adj./v.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "scenario", ch: "情景", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "reluctant", ch: "不情愿的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "aesthetic", ch: "美学的", pos: "adj.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" },
+        { en: "atmosphere", ch: "大气；氛围", pos: "n.", mainCategory: "核心词汇模块分类", subCategory: "Unit 21 其他" }
+    ];
+
+    const mainCategories = ["最高频119", "次高频239", "核心词汇模块分类"];
+    function getSubCategories(mainCat) {
+        if (mainCat === "最高频119") return ["Unit 1", "Unit 2", "Unit 3", "Unit 4", "Unit 5", "Unit 6"];
+        if (mainCat === "次高频239") return ["名词", "动词", "形容词", "副词", "固定搭配"];
+        return ["Unit 1 树立","Unit 2 本能","Unit 3 加入","Unit 4 现存","Unit 5 本质","Unit 6 竞争","Unit 7 脆弱","Unit 8 查明","Unit 9 明显","Unit 10 特别","Unit 11 假设","Unit 12 衰弱","Unit 13 标准","Unit 14 赞同","Unit 15 改变","Unit 16 聪明","Unit 17 获得","Unit 18 功效","Unit 19 本地","Unit 20 原因","Unit 21 其他"];
+    }
+
+    let currentMainCat = "最高频119";
+    let currentSubCat = "Unit 1";
+    let currentWords = vocabData.filter(w => w.mainCategory === currentMainCat && w.subCategory === currentSubCat);
+    if (currentWords.length === 0) currentWords = vocabData.filter(w => w.mainCategory === currentMainCat);
+    let currentIndex = 0;
+    let difficultSet = new Set();
+
+    const mainCategoryFlex = document.getElementById('mainCategoryFlex');
+    const subCategoryFlex = document.getElementById('subCategoryFlex');
+    const flipper = document.getElementById('flipper');
+    const mainEn = document.getElementById('mainEn');
+    const backEn = document.getElementById('backEn');
+    const posInfo = document.getElementById('posInfo');
+    const mainCh = document.getElementById('mainCh');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const thumbGrid = document.getElementById('thumbGrid');
+    const exportBtn = document.getElementById('exportDifficultBtn');
+    const quizOpen = document.getElementById('quizOpenBtn');
+    const quizOverlay = document.getElementById('quizOverlay');
+    const closeQuiz = document.getElementById('closeQuizBtn');
+    const quizWord = document.getElementById('quizWord');
+    const quizPrev = document.getElementById('quizPrevBtn');
+    const quizNext = document.getElementById('quizNextBtn');
+    const quizCounter = document.getElementById('quizCounter');
+
+    flipper.addEventListener('click', () => flipper.classList.toggle('flipped'));
+
+    function renderMainCats() {
+        mainCategoryFlex.innerHTML = '';
+        mainCategories.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.className = `chap-btn ${cat === currentMainCat ? 'active' : ''}`;
+            btn.innerText = cat;
+            btn.dataset.main = cat;
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#mainCategoryFlex .chap-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentMainCat = cat;
+                const subs = getSubCategories(currentMainCat);
+                currentSubCat = subs.length > 0 ? subs[0] : '';
+                renderSubCats();
+                updateWordListAndDisplay();
+            });
+            mainCategoryFlex.appendChild(btn);
+        });
+    }
+
+    function renderSubCats() {
+        subCategoryFlex.innerHTML = '';
+        const subs = getSubCategories(currentMainCat);
+        subs.forEach(sub => {
+            const btn = document.createElement('button');
+            btn.className = `sub-btn ${sub === currentSubCat ? 'active-sub' : ''}`;
+            btn.innerText = sub;
+            btn.dataset.sub = sub;
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active-sub'));
+                btn.classList.add('active-sub');
+                currentSubCat = sub;
+                updateWordListAndDisplay();
+            });
+            const cnt = vocabData.filter(w => w.mainCategory === currentMainCat && w.subCategory === sub).length;
+            const span = document.createElement('span');
+            span.className = 'word-count-badge';
+            span.innerText = cnt;
+            btn.appendChild(span);
+            subCategoryFlex.appendChild(btn);
+        });
+    }
+
+    function updateWordListAndDisplay() {
+        let filtered = vocabData.filter(w => w.mainCategory === currentMainCat && w.subCategory === currentSubCat);
+        if (filtered.length === 0) filtered = vocabData.filter(w => w.mainCategory === currentMainCat);
+        currentWords = filtered;
+        currentIndex = currentWords.length > 0 ? 0 : -1;
+        refreshMainCard();
+        renderThumbnails();
+    }
+
+    function refreshMainCard() {
+        if (currentWords.length === 0 || currentIndex < 0) {
+            mainEn.innerText = '无'; backEn.innerText = ''; posInfo.innerText = ''; mainCh.innerText = ''; return;
+        }
+        const w = currentWords[currentIndex];
+        mainEn.innerText = w.en;
+        backEn.innerText = w.en;
+        posInfo.innerText = w.pos || '';
+        mainCh.innerText = w.ch;
+        flipper.classList.remove('flipped');
+    }
+
+    function renderThumbnails() {
+        thumbGrid.innerHTML = '';
+        currentWords.forEach((w, idx) => {
+            const key = `${w.en}|${w.ch}`;
+            const card = document.createElement('div');
+            card.className = 'thumb-item';
+            card.innerHTML = `<input type="checkbox" class="diff-check" data-key="${key}" ${difficultSet.has(key) ? 'checked' : ''}><label>${w.en}</label>`;
+            card.addEventListener('click', (e) => {
+                if (e.target.tagName !== 'INPUT') { currentIndex = idx; refreshMainCard(); }
+            });
+            const chk = card.querySelector('.diff-check');
+            chk.addEventListener('change', (e) => {
+                e.stopPropagation();
+                const k = e.target.dataset.key;
+                e.target.checked ? difficultSet.add(k) : difficultSet.delete(k);
+            });
+            thumbGrid.appendChild(card);
+        });
+    }
+
+    function exportDifficult() {
+        const selected = vocabData.filter(v => difficultSet.has(`${v.en}|${v.ch}`));
+        if (!selected.length) { alert('没有勾选难词'); return; }
+        let csv = "英文,词性,中文含义\n";
+        selected.forEach(w => csv += `"${w.en}","${w.pos || ''}","${w.ch}"\n`);
+        const blob = new Blob(["\uFEFF"+csv], {type:"text/csv;charset=utf-8;"});
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "ielts_difficult_words.csv";
+        link.click();
+    }
+
+    let quizList = [], quizIdx = 0;
+    function openQuiz() {
+        if (!currentWords.length) return;
+        const shuffled = [...currentWords].sort(()=>Math.random()-0.5);
+        quizList = shuffled.slice(0, Math.min(10, currentWords.length));
+        quizIdx = 0; updateQuizDisplay(); quizOverlay.classList.add('show');
+    }
+    function updateQuizDisplay() { if(quizList.length){ quizWord.innerText = quizList[quizIdx].en; quizCounter.innerText = `${quizIdx+1}/${quizList.length}`; } }
+    function closeQuizFn() { quizOverlay.classList.remove('show'); }
+
+    prevBtn.addEventListener('click', ()=>{
+        if(!currentWords.length) return;
+        currentIndex = (currentIndex-1+currentWords.length)%currentWords.length; refreshMainCard();
+    });
+    nextBtn.addEventListener('click', ()=>{
+        if(!currentWords.length) return;
+        currentIndex = (currentIndex+1)%currentWords.length; refreshMainCard();
+    });
+    exportBtn.addEventListener('click', exportDifficult);
+    quizOpen.addEventListener('click', openQuiz);
+    closeQuiz.addEventListener('click', closeQuizFn);
+    quizPrev.addEventListener('click', ()=>{ if(quizList.length){ quizIdx = (quizIdx-1+quizList.length)%quizList.length; updateQuizDisplay(); } });
+    quizNext.addEventListener('click', ()=>{ if(quizList.length){ quizIdx = (quizIdx+1)%quizList.length; updateQuizDisplay(); } });
+    quizOverlay.addEventListener('click', (e)=>{ if(e.target===quizOverlay) closeQuizFn(); });
+
+    // ===== 封面层按钮逻辑 =====
+    document.getElementById('enter538Btn').addEventListener('click', function() {
+        document.getElementById('coverOverlay').classList.add('hidden');
+    });
+
+    document.getElementById('advancedBtn').addEventListener('click', function() {
+        window.open('https://liuyanglouise.github.io/advanced-vocabulary-21-days-xuexiyumoxie/', '_blank');
+    });
+
+    // ⭐ 新增：538 页顶部按钮 → 回到封面页（538/高阶 选择）
+    document.getElementById('backToCoverBtn').addEventListener('click', function() {
+        document.getElementById('coverOverlay').classList.remove('hidden');
+    });
+
+    renderMainCats(); renderSubCats();
+    setTimeout(()=>{ const f=document.querySelector('.sub-btn'); if(f) f.classList.add('active-sub'); },20);
+    updateWordListAndDisplay();
+})();
+</script>
+</body>
+</html>
