@@ -1,267 +1,762 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello, Reborner!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Roboto', 'Noto Sans SC', sans-serif;
-            background-color: #1A1A1A;
-            color: #FFFFFF;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-            transition: all 0.3s ease;
-        }
-        
-        body.light-mode {
-            background-color: #FFFFFF;
-            color: #1A1A1A;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 800px;
-            min-height: 600px;
-            background-color: #1A1A1A;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        body.light-mode .container {
-            background-color: #FFFFFF;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .logo-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 60px;
-            text-align: center;
-        }
-        
-        .hexagon-icon {
-            position: relative;
-            width: 60px;
-            height: 70px;
-            margin-bottom: 15px;
-        }
-        
-        .hexagon {
-            position: absolute;
-            width: 60px;
-            height: 70px;
-            background-color: transparent;
-            border: 2px solid #FFFFFF;
-            border-radius: 2px;
-        }
-        
-        body.light-mode .hexagon {
-            border-color: #1A1A1A;
-        }
-        
-        .hexagon:nth-child(1) { top: 0; left: 0; }
-        .hexagon:nth-child(2) { top: 10px; left: 35px; transform: scale(0.85); opacity: 0.8; }
-        .hexagon:nth-child(3) { top: 10px; left: -35px; transform: scale(0.85); opacity: 0.8; }
-        .hexagon:nth-child(4) { top: 40px; left: 18px; transform: scale(0.7); opacity: 0.6; }
-        .hexagon:nth-child(5) { top: 40px; left: -18px; transform: scale(0.7); opacity: 0.6; }
-        
-        .logo-main {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        
-        .subtitle {
-            font-size: 1.1rem;
-            color: #CCCCCC;
-            letter-spacing: 3px;
-            margin-top: 10px;
-        }
-        
-        body.light-mode .subtitle {
-            color: #666;
-        }
-        
-        .password-card {
-            background: #262626;
-            border-radius: 16px;
-            padding: 30px 25px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            border: 1px solid #3a3a3a;
-        }
-        
-        body.light-mode .password-card {
-            background: #f5f5f5;
-            border: 1px solid #ddd;
-        }
-        
-        .password-label {
-            text-align: center;
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            color: #ccc;
-        }
-        
-        body.light-mode .password-label {
-            color: #333;
-        }
-        
-        .password-input {
-            width: 100%;
-            padding: 14px 18px;
-            font-size: 1rem;
-            background: #1A1A1A;
-            border: 1px solid #3a3a3a;
-            border-radius: 12px;
-            color: #fff;
-            text-align: center;
-            outline: none;
-        }
-        
-        body.light-mode .password-input {
-            background: #fff;
-            color: #000;
-            border: 1px solid #ccc;
-        }
-        
-        .confirm-btn {
-            margin-top: 20px;
-            width: 100%;
-            padding: 12px;
-            background: #2c2c2c;
-            color: #fff;
-            border: none;
-            border-radius: 40px;
-            font-size: 1rem;
-            cursor: pointer;
-            box-shadow: 0 5px 0 #121212;
-        }
-        
-        body.light-mode .confirm-btn {
-            background: #e0e0e0;
-            color: #000;
-            box-shadow: 0 5px 0 #b0b0b0;
-        }
-        
-        .confirm-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 1px 0 #121212;
-        }
-        
-        .error-message {
-            color: #ff6b6b;
-            text-align: center;
-            margin-top: 15px;
-            height: 20px;
-        }
-        
-        .theme-slider-container {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-        
-        .theme-slider {
-            width: 60px;
-            height: 30px;
-            background: #262626;
-            border-radius: 15px;
-            position: relative;
-            cursor: pointer;
-        }
-        
-        body.light-mode .theme-slider {
-            background: #e0e0e0;
-        }
-        
-        .slider-dot {
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 24px;
-            height: 24px;
-            background: #fff;
-            border-radius: 50%;
-            transition: 0.3s;
-        }
-        
-        body.light-mode .slider-dot {
-            left: 33px;
-            background: #1A1A1A;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>Reborn提优，just join in！</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; }
+body {
+    font-family: 'Roboto', 'Noto Sans SC', sans-serif;
+    background: #1A1A1A;
+    color: #FFFFFF;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+body.light-mode { background: #FFFFFF; color: #1A1A1A; }
+
+#lockScreen {
+    position: fixed; inset: 0;
+    background: #1A1A1A;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 2rem 1.5rem;
+    z-index: 99999;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+#lockScreen.hide { opacity: 0; transform: translateY(-30px); pointer-events: none; }
+.lock-hex-row { position: relative; width: 80px; height: 90px; margin-bottom: 24px; }
+.lock-hex-row div {
+    position: absolute; width: 60px; height: 70px;
+    border: 2px solid #fff; border-radius: 2px;
+    animation: hexAppear 3.5s ease-in-out infinite;
+}
+.lock-hex-row div:nth-child(1) { top: 0; left: 10px; }
+.lock-hex-row div:nth-child(2) { top: 10px; left: 45px; transform: scale(0.85); }
+.lock-hex-row div:nth-child(3) { top: 10px; left: -25px; transform: scale(0.85); }
+.lock-hex-row div:nth-child(4) { top: 40px; left: 28px; transform: scale(0.7); }
+.lock-hex-row div:nth-child(5) { top: 40px; left: -8px; transform: scale(0.7); }
+@keyframes hexAppear {
+    0%{opacity:0;transform:scale(.8) rotate(10deg);}
+    20%{opacity:1;transform:scale(1) rotate(0);}
+    80%{opacity:1;transform:scale(1) rotate(0);}
+    100%{opacity:0;transform:scale(.8) rotate(-10deg);}
+}
+.lock-title { color: #fff; font-size: 1.7rem; font-weight: 700; letter-spacing: 2px; margin-bottom: 4px; }
+.lock-sub { color: #999; font-size: 0.85rem; letter-spacing: 4px; margin-bottom: 32px; text-transform: uppercase; }
+.lock-card {
+    background: #262626; border: 1px solid #3a3a3a;
+    border-radius: 16px; padding: 28px 24px;
+    width: 100%; max-width: 380px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+.lock-label { color: #ccc; font-size: 0.95rem; text-align: center; margin-bottom: 14px; }
+.lock-input {
+    width: 100%; padding: 14px 18px; font-size: 1.05rem;
+    background: #1A1A1A; border: 1px solid #3a3a3a;
+    border-radius: 12px; color: #fff; text-align: center;
+    letter-spacing: 3px; outline: none; font-family: inherit;
+}
+.lock-input:focus { border-color: #2E5938; }
+.lock-err { color: #ff6b6b; font-size: 0.85rem; height: 18px; margin-top: 10px; text-align: center; }
+.lock-btn {
+    width: 100%; margin-top: 10px; padding: 14px;
+    background: #2E5938; color: #fff; border: none;
+    border-radius: 40px; font-size: 1rem; font-weight: 600;
+    letter-spacing: 2px; cursor: pointer; font-family: inherit;
+    transition: all 0.15s; box-shadow: 0 4px 0 #1f452b;
+}
+.lock-btn:hover { background: #3a6e4a; }
+
+#app { position: fixed; inset: 0; overflow: hidden; opacity: 0; transition: opacity 0.5s ease; }
+#app.ready { opacity: 1; }
+
+.page {
+    position: absolute; inset: 0;
+    overflow: hidden;
+    transform: translateX(100%);
+    transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+    will-change: transform;
+    background: #1A1A1A;
+    z-index: 1;
+}
+body.light-mode .page { background: #FFFFFF; }
+.page.active { transform: translateX(0); }
+.page.behind { transform: translateX(-30%); }
+.page iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+    background: #fff;
+}
+
+.theme-toggle-global {
+    position: fixed; top: 20px; right: 20px;
+    width: 60px; height: 30px;
+    background: #262626; border-radius: 15px;
+    cursor: pointer;
+    z-index: 2147483000;
+    transition: background 0.3s;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    pointer-events: auto;
+}
+body.light-mode .theme-toggle-global { background: #E0E0E0; }
+.theme-toggle-global .dot {
+    position: absolute; top: 3px; left: 3px;
+    width: 24px; height: 24px; background: #fff;
+    border-radius: 50%; transition: all 0.3s;
+    pointer-events: none;
+}
+body.light-mode .theme-toggle-global .dot { left: 33px; background: #1A1A1A; }
+
+.nav-btn-overlay {
+    position: fixed;
+    top: 20px;
+    padding: 8px 18px;
+    background: rgba(38,38,38,0.95);
+    border: 1px solid #3a3a3a;
+    border-radius: 40px;
+    color: #fff;
+    font-size: 0.85rem;
+    font-family: inherit;
+    cursor: pointer;
+    z-index: 2147483000;
+    display: none;
+    align-items: center;
+    gap: 6px;
+    backdrop-filter: blur(8px);
+    transition: background 0.15s;
+    white-space: nowrap;
+    pointer-events: auto;
+}
+body.light-mode .nav-btn-overlay {
+    background: rgba(255,255,255,0.95);
+    border-color: #E0E0E0;
+    color: #1A1A1A;
+}
+.nav-btn-overlay:hover { background: rgba(60,60,60,0.95); }
+body.light-mode .nav-btn-overlay:hover { background: #E5E5E5; }
+.nav-btn-overlay.show { display: inline-flex; }
+
+#navBack { left: 20px; }
+#navBackLevel { left: 130px; }
+#navHome { right: 100px; }
+
+.home-content {
+    width: 100%; height: 100%;
+    display: flex; justify-content: center; align-items: center;
+    padding: 20px;
+}
+.home-container {
+    width: 100%; max-width: 800px; min-height: 600px;
+    background-color: #1A1A1A;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: space-between;
+    padding: 40px; border-radius: 12px;
+    position: relative; overflow: hidden;
+    transition: all 0.3s ease;
+}
+body.light-mode .home-container {
+    background-color: #FFFFFF;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+.home-logo-section {
+    display: flex; flex-direction: column; align-items: center;
+    margin-bottom: 40px;
+}
+.home-logo-container {
+    display: flex; align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap; justify-content: center; gap: 8px;
+}
+.home-hexagon-icon {
+    position: relative; width: 60px; height: 70px;
+    margin-right: 10px; flex-shrink: 0;
+}
+.home-hexagon {
+    position: absolute; width: 60px; height: 70px;
+    background-color: transparent;
+    border: 2px solid #FFFFFF;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    animation: hexAppear 3.5s ease-in-out infinite;
+    opacity: 0;
+}
+body.light-mode .home-hexagon { border-color: #1A1A1A; }
+.home-hexagon:nth-child(1) { top: 0; left: 0; }
+.home-hexagon:nth-child(2) { top: 10px; left: 35px; transform: scale(0.85); opacity: 0.8; }
+.home-hexagon:nth-child(3) { top: 10px; left: -35px; transform: scale(0.85); opacity: 0.8; }
+.home-hexagon:nth-child(4) { top: 40px; left: 18px; transform: scale(0.7); opacity: 0.6; }
+.home-hexagon:nth-child(5) { top: 40px; left: -18px; transform: scale(0.7); opacity: 0.6; }
+
+.home-logo-text {
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+body.light-mode .home-logo-text { color: #1A1A1A; }
+
+.home-subtitle {
+    font-size: 1rem;
+    font-weight: 300;
+    color: #CCCCCC;
+    letter-spacing: 3px;
+    margin-top: 6px;
+}
+body.light-mode .home-subtitle { color: #666666; }
+
+.home-main-content {
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+}
+.home-button-section {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-bottom: 30px;
+}
+.home-button {
+    background-color: #262626;
+    border: none;
+    border-radius: 10px;
+    padding: 22px 24px;
+    color: #FFFFFF;
+    font-size: 1.2rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 1px;
+    font-family: inherit;
+    position: relative;
+    overflow: hidden;
+}
+body.light-mode .home-button { background-color: #F0F0F0; color: #1A1A1A; }
+.home-button:hover { transform: translateY(-3px); font-weight: 600; }
+
+.home-footer {
+    width: 100%;
+    padding-top: 20px;
+    border-top: 1px solid #262626;
+    font-size: 0.9rem;
+    color: #999999;
+    text-align: center;
+}
+body.light-mode .home-footer { border-top-color: #E0E0E0; color: #666666; }
+
+@keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
+@media (max-width: 480px) {
+    #navBack { left: 12px; }
+    #navBackLevel { left: 100px; }
+    #navHome { right: 78px; }
+    .nav-btn-overlay { top: 12px; padding: 6px 14px; font-size: 0.75rem; }
+    .theme-toggle-global { top: 12px; right: 12px; transform: scale(0.85); }
+    .home-logo-text { font-size: 1.6rem; white-space: normal; text-align: center; }
+    .home-container { padding: 24px 16px; min-height: 500px; }
+}
+</style>
 </head>
-
 <body>
-    <div class="container">
-        <div class="theme-slider-container">
-            <div class="theme-slider" id="themeSwitch">
-                <div class="slider-dot"></div>
-            </div>
-        </div>
 
-        <div class="logo-section">
-            <div class="hexagon-icon">
-                <div class="hexagon"></div>
-                <div class="hexagon"></div>
-                <div class="hexagon"></div>
-                <div class="hexagon"></div>
-                <div class="hexagon"></div>
-            </div>
-            <div class="logo-main">Hello, Reborner!</div>
-            <div class="subtitle">Veni • Vidi • Vici</div>
-        </div>
+<div id="lockScreen">
+    <div class="lock-hex-row">
+        <div></div><div></div><div></div><div></div><div></div>
+    </div>
+    <div class="lock-title">Reborn提优</div>
+    <div class="lock-sub">Veni · Vidi · Vici</div>
+    <div class="lock-card">
+        <div class="lock-label">🔒 请输入访问密码</div>
+        <input type="password" id="lockInput" class="lock-input" placeholder="••••••••" autocomplete="off">
+        <div class="lock-err" id="lockErr"></div>
+        <button class="lock-btn" id="lockBtn">确认进入</button>
+    </div>
+</div>
 
-        <div class="password-card">
-            <div class="password-label">请输入密码</div>
-            <input type="password" id="pwd" class="password-input" placeholder="••••••••">
-            <div class="error-message" id="tip"></div>
-            <button class="confirm-btn" onclick="checkPassword()">确认进入</button>
-        </div>
+<div id="app">
+
+    <div class="theme-toggle-global" id="themeToggleGlobal">
+        <div class="dot"></div>
     </div>
 
-    <script>
-        // 密码（和你之前一样）
-        const MY_PASSWORD = "61211216";
+    <button class="nav-btn-overlay" id="navBack">← 返回</button>
+    <button class="nav-btn-overlay" id="navBackLevel">← 回主页</button>
+    <button class="nav-btn-overlay" id="navHome">🏠 回到首页</button>
 
-        // 主题切换
-        const themeSwitch = document.getElementById('themeSwitch');
-        themeSwitch.addEventListener('click', () => {
-            document.body.classList.toggle('light-mode');
+    <section class="page active" data-page="home">
+        <div class="home-content">
+            <div class="home-container">
+                <div class="home-logo-section">
+                    <div class="home-logo-container">
+                        <div class="home-hexagon-icon">
+                            <div class="home-hexagon"></div>
+                            <div class="home-hexagon"></div>
+                            <div class="home-hexagon"></div>
+                            <div class="home-hexagon"></div>
+                            <div class="home-hexagon"></div>
+                        </div>
+                        <div class="home-logo-text">Reborn提优，just join in！</div>
+                    </div>
+                    <div class="home-subtitle">Veni • Vidi • Vici</div>
+                </div>
+
+                <div class="home-main-content">
+                    <div class="home-button-section">
+                        <button class="home-button" data-nav="core">核心词汇</button>
+                        <button class="home-button" data-nav="speaking-entry">口语题库</button>
+                        <button class="home-button" data-nav="listening-paper">听力密卷</button>
+                        <button class="home-button" data-nav="reading-paper">阅读密卷</button>
+                    </div>
+                </div>
+
+                <div class="home-footer">天天进步，每日新生</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="page" data-page="core" data-back="home" data-back-text="← 回主页">
+        <iframe src="core-entry.html"></iframe>
+    </section>
+
+    <section class="page" data-page="listening" data-back="core" data-back-text="← 回核心词汇">
+        <iframe src="listening-entry.html"></iframe>
+    </section>
+
+    <section class="page" data-page="listening-study" data-back="core" data-back-text="← 回核心词汇">
+        <iframe src="listening-study.html"></iframe>
+    </section>
+
+    <section class="page" data-page="listening-quiz" data-back="core" data-back-text="← 回核心词汇">
+        <iframe src="listening-quiz.html"></iframe>
+    </section>
+
+    <section class="page" data-page="reading" data-back="core" data-back-text="← 回核心词汇">
+        <iframe src="reading-538.html"></iframe>
+    </section>
+
+    <section class="page" data-page="reading-advanced" data-back="core" data-back-text="← 回核心词汇">
+        <div style="width:100%;height:100%;display:flex;justify-content:center;align-items:center;background:#1A1A1A;">
+            <div style="text-align:center;color:#fff;padding:40px;">
+                <div style="font-size:3rem;margin-bottom:20px;">🚀</div>
+                <div style="font-size:1.4rem;margin-bottom:20px;">高阶核心词汇</div>
+                <div style="color:#999;margin-bottom:30px;line-height:1.6;">此页面为外链，点击下方按钮在新标签页打开</div>
+                <a href="https://liuyanglouise.github.io/advanced-vocabulary-21-days-xuexiyumoxie/" target="_blank" style="display:inline-block;padding:14px 40px;background:#2E5938;color:#fff;border-radius:40px;text-decoration:none;font-size:1.1rem;font-weight:600;">🚀 打开高阶词汇</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="page" data-page="speaking-entry" data-back="home" data-back-text="← 回主页">
+        <iframe src="speaking-entry.html"></iframe>
+    </section>
+
+    <section class="page" data-page="speaking-bank" data-back="speaking-entry" data-back-text="← 回口语题库">
+        <iframe src="speaking-bank.html" allow="autoplay"></iframe>
+    </section>
+
+    <section class="page" data-page="speaking-mock" data-back="speaking-entry" data-back-text="← 回口语题库">
+        <iframe src="speaking-mock.html" allow="microphone; autoplay"></iframe>
+    </section>
+
+    <section class="page" data-page="writing" data-back="core" data-back-text="← 回核心词汇">
+        <iframe src="writing-entry.html"></iframe>
+    </section>
+
+    <section class="page" data-page="writing-t1" data-back="writing" data-back-text="← 回写作素材">
+        <iframe src="writing-t1-entry.html"></iframe>
+    </section>
+
+    <section class="page" data-page="t1-dynamic" data-back="writing" data-back-text="← 回写作素材">
+        <iframe src="t1-dynamic.html"></iframe>
+    </section>
+    <section class="page" data-page="t1-static" data-back="writing" data-back-text="← 回写作素材">
+        <iframe src="t1-static.html"></iframe>
+    </section>
+    <section class="page" data-page="t1-map" data-back="writing" data-back-text="← 回写作素材">
+        <iframe src="t1-map.html"></iframe>
+    </section>
+    <section class="page" data-page="t1-flow" data-back="writing" data-back-text="← 回写作素材">
+        <iframe src="t1-flow.html"></iframe>
+    </section>
+
+    <section class="page" data-page="writing-t2" data-back="writing" data-back-text="← 回写作素材">
+        <iframe src="writing-t2-entry.html"></iframe>
+    </section>
+
+    <section class="page" data-page="t2-gov" data-back="writing" data-back-text="← 回写作素材">
+        <iframe src="T2-gov.html"></iframe>
+    </section>
+    <section class="page" data-page="t2-health" data-back="writing" data-back-text="← 回写作素材">
+        <iframe src="T2-health.html"></iframe>
+    </section>
+    <section class="page" data-page="t2-edu" data-back="writing" data-back-text="← 回写作素材">
+        <iframe src="T2-edu.html"></iframe>
+    </section>
+    <section class="page" data-page="t2-econ" data-back="writing" data-back-text="← 回写作素材">
+        <iframe src="T2-econ.html"></iframe>
+    </section>
+    <section class="page" data-page="t2-tech" data-back="writing" data-back-text="← 回写作素材">
+        <iframe src="T2-tech.html"></iframe>
+    </section>
+    <section class="page" data-page="t2-media" data-back="writing" data-back-text="← 回写作素材">
+        <iframe src="T2-media.html"></iframe>
+    </section>
+    <section class="page" data-page="t2-energy" data-back="writing" data-back-text="← 回写作素材">
+        <iframe src="T2-energy.html"></iframe>
+    </section>
+    <section class="page" data-page="t2-city" data-back="writing" data-back-text="← 回写作素材">
+        <iframe src="T2-city.html"></iframe>
+    </section>
+    <section class="page" data-page="t2-culture" data-back="writing" data-back-text="← 回写作素材">
+        <iframe src="T2-culture.html"></iframe>
+    </section>
+
+    <section class="page" data-page="listening-paper" data-back="home" data-back-text="← 回主页">
+        <div style="width:100%;height:100%;display:flex;justify-content:center;align-items:center;background:#1A1A1A;">
+            <div style="text-align:center;color:#fff;padding:40px;">
+                <div style="font-size:3rem;margin-bottom:20px;">🎧</div>
+                <div style="font-size:1.4rem;margin-bottom:20px;">听力密卷</div>
+                <div style="color:#999;margin-bottom:30px;line-height:1.6;">此页面为外链，点击下方按钮在新标签页打开</div>
+                <a href="https://liuyanglouise.github.io/reborn-ielts-listening-mock-test/" target="_blank" style="display:inline-block;padding:14px 40px;background:#2E5938;color:#fff;border-radius:40px;text-decoration:none;font-size:1.1rem;font-weight:600;">🎧 打开听力密卷</a>
+            </div>
+        </div>
+    </section>
+    <section class="page" data-page="reading-paper" data-back="home" data-back-text="← 回主页">
+        <div style="width:100%;height:100%;display:flex;justify-content:center;align-items:center;background:#1A1A1A;">
+            <div style="text-align:center;color:#fff;padding:40px;">
+                <div style="font-size:3rem;margin-bottom:20px;">📖</div>
+                <div style="font-size:1.4rem;margin-bottom:20px;">阅读密卷</div>
+                <div style="color:#999;margin-bottom:30px;line-height:1.6;">此页面为外链，点击下方按钮在新标签页打开</div>
+                <a href="https://liuyanglouise.github.io/reborn-ielts-reading-mock-test/" target="_blank" style="display:inline-block;padding:14px 40px;background:#2E5938;color:#fff;border-radius:40px;text-decoration:none;font-size:1.1rem;font-weight:600;">📖 打开阅读密卷</a>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    const VALID = ['61211216', 'reborn2026'];
+    const lockScreen = document.getElementById('lockScreen');
+    const lockInput = document.getElementById('lockInput');
+    const lockBtn = document.getElementById('lockBtn');
+    const lockErr = document.getElementById('lockErr');
+    const app = document.getElementById('app');
+    const themeToggle = document.getElementById('themeToggleGlobal');
+
+    function isReloadOrFresh() {
+        const nav = performance.getEntriesByType('navigation')[0];
+        if (nav) return nav.type === 'navigate' || nav.type === 'reload';
+        return true;
+    }
+
+    function checkAuth() {
+        if (isReloadOrFresh()) sessionStorage.removeItem('loginOk');
+        if (sessionStorage.getItem('loginOk') === 'yes') { unlockApp(true); return; }
+        lockScreen.style.display = 'flex';
+        setTimeout(() => lockInput.focus(), 300);
+    }
+
+    function tryUnlock() {
+        const v = lockInput.value.trim();
+        if (VALID.includes(v)) {
+            sessionStorage.setItem('loginOk', 'yes');
+            unlockApp(false);
+        } else {
+            lockErr.textContent = '密码错误，请重试';
+            lockInput.value = '';
+            lockInput.focus();
+        }
+    }
+
+    function unlockApp(skip) {
+        if (skip) { lockScreen.style.display = 'none'; app.classList.add('ready'); }
+        else {
+            lockScreen.classList.add('hide');
+            setTimeout(() => { lockScreen.style.display = 'none'; app.classList.add('ready'); }, 500);
+        }
+    }
+
+    lockBtn.addEventListener('click', tryUnlock);
+    lockInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+
+    // 麦克风权限：进首页申请一次，全站复用
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(function(stream) {
+                window.__micStream = stream;
+            })
+            .catch(function(err) {});
+    }
+
+    // 主题
+    function syncIframeTheme(iframe) {
+        try {
+            const doc = iframe.contentDocument;
+            if (!doc || !doc.body) return;
+            const isLight = document.body.classList.contains('light-mode');
+            if (isLight) doc.body.classList.add('light-mode');
+            else doc.body.classList.remove('light-mode');
+            doc.querySelectorAll('[id$="LogoText"], .logo-text').forEach(el => {
+                if (isLight && el.textContent.includes('黑皮书'))
+                    el.textContent = el.textContent.replace('黑皮书', '白皮书');
+                else if (!isLight && el.textContent.includes('白皮书'))
+                    el.textContent = el.textContent.replace('白皮书', '黑皮书');
+            });
+            if (iframe.contentWindow) {
+                iframe.contentWindow.postMessage({ type: 'theme', isLight: isLight }, '*');
+            }
+        } catch (err) {}
+    }
+
+    function applyTheme(isLight) {
+        if (isLight) document.body.classList.add('light-mode');
+        else document.body.classList.remove('light-mode');
+        document.querySelectorAll('iframe').forEach(syncIframeTheme);
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    }
+
+    if (localStorage.getItem('theme') === 'light') applyTheme(true);
+    else applyTheme(false);
+
+    themeToggle.addEventListener('click', () => {
+        applyTheme(!document.body.classList.contains('light-mode'));
+    });
+
+    // 导航
+    const navBack = document.getElementById('navBack');
+    const navBackLevel = document.getElementById('navBackLevel');
+    const navHome = document.getElementById('navHome');
+    const historyStack = [];
+
+    function getPage(name) { return document.querySelector(`.page[data-page="${name}"]`); }
+
+    function navigateTo(targetName, pushHistory) {
+        const current = document.querySelector('.page.active');
+        const target = getPage(targetName);
+        if (!target || (current && current.dataset.page === targetName)) return;
+
+        if (current) {
+            current.classList.remove('active');
+            current.classList.add('behind');
+            setTimeout(() => current.classList.remove('behind'), 500);
+        }
+        target.classList.add('active');
+
+        const iframe = target.querySelector('iframe');
+        if (iframe) setTimeout(() => syncIframeTheme(iframe), 100);
+
+        updateNavButtons(targetName);
+
+        if (pushHistory !== false && current) historyStack.push(current.dataset.page);
+    }
+
+    function goBack() {
+        const prev = historyStack.pop();
+        navigateTo(prev || 'home', false);
+    }
+
+    function goHome() {
+        historyStack.length = 0;
+        navigateTo('home', false);
+    }
+
+    function goBackLevel() {
+        const current = document.querySelector('.page.active');
+        if (!current) return;
+        const backTarget = current.dataset.back;
+        if (backTarget) navigateTo(backTarget);
+    }
+
+    function updateNavButtons(pageName) {
+        const current = document.querySelector('.page.active');
+        if (!current) return;
+
+        if (pageName === 'home') {
+            navBack.classList.remove('show');
+            navBackLevel.classList.remove('show');
+            navHome.classList.remove('show');
+            return;
+        }
+
+        navBack.classList.add('show');
+
+        const backLevelText = current.dataset.backText;
+        if (backLevelText) {
+            navBackLevel.textContent = backLevelText;
+            navBackLevel.classList.add('show');
+        } else {
+            navBackLevel.classList.remove('show');
+        }
+
+        navHome.classList.add('show');
+    }
+
+    navBack.addEventListener('click', goBack);
+    navBackLevel.addEventListener('click', goBackLevel);
+    navHome.addEventListener('click', goHome);
+
+    document.querySelectorAll('.home-button').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const target = this.dataset.nav;
+            const rect = this.getBoundingClientRect();
+            const ripple = document.createElement('div');
+            const size = Math.max(rect.width, rect.height);
+            ripple.style.cssText = `
+                position:absolute;border-radius:50%;transform:scale(0);
+                animation:ripple 0.6s linear;pointer-events:none;
+                width:${size}px;height:${size}px;
+                left:${e.clientX - rect.left - size/2}px;
+                top:${e.clientY - rect.top - size/2}px;
+                background:${document.body.classList.contains('light-mode') ? 'rgba(26,26,26,0.15)' : 'rgba(255,255,255,0.25)'};
+            `;
+            this.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+            setTimeout(() => navigateTo(target), 80);
         });
+    });
 
-        // 密码正确 → 跳转到总目录
-        function checkPassword() {
-            const input = document.getElementById('pwd').value;
-            const tip = document.getElementById('tip');
+    const PAGE_MAP = {
+        'core-entry.html': { '听力词汇': 'listening', '阅读词汇': 'reading', '口语题库': 'speaking-entry', '写作素材': 'writing' },
+        'listening-entry.html': { '词汇学习': 'listening-study', '默写检查': 'listening-quiz' },
+        'speaking-entry.html': { '口语实考题库': 'speaking-bank', '口语模拟考试': 'speaking-mock' },
+        'writing-entry.html': { 'Task 1': 'writing-t1', 'Task 2': 'writing-t2' },
+        'writing-t1-entry.html': { '动态图': 't1-dynamic', '静态图': 't1-static', '地图': 't1-map', '流程图': 't1-flow' },
+        'writing-t2-entry.html': {
+            '政府与公共政策': 't2-gov', '健康与心理': 't2-health', '教育': 't2-edu',
+            '经济与消费': 't2-econ', '科技与工作': 't2-tech', '媒体与广告': 't2-media',
+            '能源与环境': 't2-energy', '社会生活与城市': 't2-city', '文化与全球化': 't2-culture'
+        },
+        'reading-538.html': {
+            '538核心词汇': 'reading',
+            '高阶核心词汇': 'reading-advanced',
+            '高阶词汇': 'reading-advanced',
+            'advanced': 'reading-advanced'
+        }
+    };
 
-            if (input === MY_PASSWORD) {
-                window.location.href = "main.html";
-            } else {
-                tip.textContent = "密码错误，请重试";
+    function getIframeFileName(iframe) {
+        const src = iframe.getAttribute('src') || '';
+        return src.split('?')[0].split('/').pop();
+    }
+
+    document.querySelectorAll('.page iframe').forEach(iframe => {
+        iframe.addEventListener('load', function() {
+            try {
+                const doc = iframe.contentDocument;
+                if (!doc) return;
+                doc.querySelectorAll('.theme-slider-container, .theme-slider').forEach(el => el.style.display = 'none');
+                syncIframeTheme(iframe);
+
+                const fileName = getIframeFileName(iframe);
+                const map = PAGE_MAP[fileName];
+                if (map) {
+                    doc.querySelectorAll('button, a').forEach(el => {
+                        el.addEventListener('click', function(e) {
+                            const url = this.dataset.url || this.getAttribute('href') || '';
+                            for (const [key, targetPage] of Object.entries(map)) {
+                                if (url.includes(key) || this.textContent.includes(key)) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    navigateTo(targetPage);
+                                    return;
+                                }
+                            }
+                        }, true);
+                    });
+                }
+            } catch (err) {}
+        });
+    });
+
+    // 接收 iframe 消息
+    window.addEventListener('message', function(e) {
+        const data = e.data;
+        if (!data || !data.type) return;
+        if (data.type === 'navigate' && data.page) {
+            navigateTo(data.page);
+        }
+        if (data.type === 'requestMic') {
+            if (window.__micStream && window.__micStream.active) {
+                try { e.source.postMessage({ type: 'micGranted' }, '*'); } catch(err) {}
+            } else if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(function(stream) {
+                        window.__micStream = stream;
+                        try { e.source.postMessage({ type: 'micGranted' }, '*'); } catch(err) {}
+                    })
+                    .catch(function(err) {
+                        try { e.source.postMessage({ type: 'micDenied', error: String(err) }, '*'); } catch(err2) {}
+                    });
             }
         }
-    </script>
+        if (data.type === 'speak' && data.text) {
+            var sender = e.source;
+            playText(data.text, data.accent, function() {
+                try { sender.postMessage({ type: 'speakEnd' }, '*'); } catch(err) {}
+            });
+        }
+    });
+
+    // ⭐ playText：优先有道（短句+长句都试），失败降级 speechSynthesis
+    // ⭐ 播完调用 onDone()，父页面据此回 speakEnd 给 iframe
+    function playText(text, accent, onDone) {
+        if (!text) { if (onDone) onDone(); return; }
+
+        var fired = false;
+        function done() {
+            if (fired) return;
+            fired = true;
+            if (onDone) { try { onDone(); } catch(e) {} }
+        }
+
+        // 优先有道（短句、长句都试）
+        try {
+            var audio = new Audio('https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(text) + '&type=2');
+            audio.volume = 0.9;
+            audio.onended = done;
+            audio.onerror = function() {
+                // 有道失败 → speechSynthesis 兜底
+                fallbackToSpeech(text, accent, done);
+            };
+            var playPromise = audio.play();
+            if (playPromise && playPromise.catch) {
+                playPromise.catch(function() {
+                    fallbackToSpeech(text, accent, done);
+                });
+            }
+            // 超时兜底（避免 onended 不触发卡死）
+            setTimeout(done, Math.max(4000, text.length * 150));
+        } catch (err) {
+            fallbackToSpeech(text, accent, done);
+        }
+    }
+
+    function fallbackToSpeech(text, accent, done) {
+        if ('speechSynthesis' in window) {
+            try {
+                var u = new SpeechSynthesisUtterance(text);
+                u.lang = (accent === 'us') ? 'en-US' : 'en-GB';
+                u.rate = 0.9;
+                u.onend = done;
+                u.onerror = done;
+                window.speechSynthesis.speak(u);
+                setTimeout(done, Math.max(4000, text.length * 150));
+                return;
+            } catch (err) {}
+        }
+        done();
+    }
+
+    checkAuth();
+    updateNavButtons('home');
+
+})();
+</script>
 </body>
 </html>
