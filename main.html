@@ -361,6 +361,11 @@ body.light-mode .home-footer { border-top-color: #E0E0E0; color: #666666; }
         <iframe src="speaking-bank.html" allow="autoplay"></iframe>
     </section>
 
+    <!-- ⭐ 新增：自主练习页面 -->
+    <section class="page" data-page="speaking-practice" data-back="speaking-entry" data-back-text="← 回口语题库">
+        <iframe src="speaking-practice.html" allow="microphone; autoplay"></iframe>
+    </section>
+
     <section class="page" data-page="speaking-mock" data-back="speaking-entry" data-back-text="← 回口语题库">
         <iframe src="speaking-mock.html" allow="microphone; autoplay"></iframe>
     </section>
@@ -617,10 +622,15 @@ body.light-mode .home-footer { border-top-color: #E0E0E0; color: #666666; }
         });
     });
 
+    // ⭐ PAGE_MAP 里 speaking-entry.html 新增了"自主练习"
     const PAGE_MAP = {
         'core-entry.html': { '听力词汇': 'listening', '阅读词汇': 'reading', '口语题库': 'speaking-entry', '写作素材': 'writing' },
         'listening-entry.html': { '词汇学习': 'listening-study', '默写检查': 'listening-quiz' },
-        'speaking-entry.html': { '口语实考题库': 'speaking-bank', '口语模拟考试': 'speaking-mock' },
+        'speaking-entry.html': {
+            '口语实考题库': 'speaking-bank',
+            '自主练习': 'speaking-practice',
+            '口语模拟考试': 'speaking-mock'
+        },
         'writing-entry.html': { 'Task 1': 'writing-t1', 'Task 2': 'writing-t2' },
         'writing-t1-entry.html': { '动态图': 't1-dynamic', '静态图': 't1-static', '地图': 't1-map', '流程图': 't1-flow' },
         'writing-t2-entry.html': {
