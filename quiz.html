@@ -75,6 +75,34 @@
         .result-title.green { color: var(--color-main-green); }
         .result-title.orange { color: var(--color-orange); }
         .result-title.red { color: var(--color-error); }
+
+        /* ⭐ 新增：本次检查单元展示 */
+        .units-info {
+            background: #fff;
+            border-radius: var(--radius-input);
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            border-left: 4px solid var(--color-main-green);
+            font-size: 14px;
+            color: #444;
+            line-height: 1.7;
+        }
+        .units-info .ui-label {
+            font-weight: 700;
+            color: var(--color-main-green);
+            margin-right: 6px;
+        }
+        .units-info .ui-item {
+            display: inline-block;
+            background: #f0f5ec;
+            color: var(--color-main-green);
+            border-radius: 20px;
+            padding: 2px 12px;
+            margin: 3px 6px 3px 0;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
         .stats-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px 32px; background: #fff; padding: 16px 20px; border-radius: var(--radius-btn); box-shadow: var(--shadow-btn); margin-bottom: 18px; }
         .stats-grid .stat { display: flex; align-items: baseline; gap: 6px; }
         .stats-grid .stat .num { font-size: 26px; font-weight: 700; color: var(--color-main-green); }
@@ -149,6 +177,8 @@
         <div class="result-card" id="resultCard">
             <div class="confetti-line">✨ 🎉 ✨ 🎊 ✨ 🌸 ✨</div>
             <div class="result-title" id="resultTitle">✅ 默写完成！</div>
+            <!-- ⭐ 新增：本次检查单元展示容器 -->
+            <div class="units-info" id="unitsInfo"></div>
             <div class="stats-grid" id="statsGrid"></div>
             <div style="font-weight:500; margin-bottom:6px;">📋 需要复习的词汇</div>
             <div class="error-list" id="errorList"></div>
@@ -249,6 +279,7 @@
             var homeBtn = document.getElementById('homeBtn');
             var exportBtn = document.getElementById('exportBtn');
             var resultTitle = document.getElementById('resultTitle');
+            var unitsInfo = document.getElementById('unitsInfo');   // ⭐ 新增
 
             function showToast(msg, duration) {
                 duration = duration || 2000;
@@ -298,7 +329,6 @@
 
                 var inIframe = (window.parent && window.parent !== window);
                 if (inIframe) {
-                    // 只发消息给父页面，由父页面统一播放，避免重复声音
                     try {
                         window.parent.postMessage({
                             type: 'speak',
@@ -307,7 +337,6 @@
                         }, '*');
                     } catch(e) {}
                 } else {
-                    // 不在 iframe 里，自己播
                     if ('speechSynthesis' in window) {
                         speechSynthesis.cancel();
                         var utter = new SpeechSynthesisUtterance(word);
@@ -451,6 +480,16 @@
                 resultCard.style.display = 'block';
                 requestAnimationFrame(function() { resultCard.classList.add('visible'); });
 
+                // ⭐ 渲染本次检查单元
+                var unitsHtml = '<div class="ui-label">📚 本次检查单元：</div>';
+                units.forEach(function(id) {
+                    var u = window.VOCABULARY_DATA[id];
+                    var unitName = u ? (u.name || '') : '';
+                    unitsHtml += '<span class="ui-item">' + id + ' ' + unitName + '</span>';
+                });
+                unitsHtml += '<div style="margin-top:6px;font-size:13px;color:#888;">共 ' + units.length + ' 个单元 · 随机抽取 ' + quizWords.length + ' 个词</div>';
+                unitsInfo.innerHTML = unitsHtml;
+
                 var correct = 0, wrong = 0, skipped = 0;
                 results.forEach(function(r) {
                     if (r.status === 'correct') correct++;
@@ -492,6 +531,7 @@
                 var lines = [];
                 lines.push('📘 Reborner · 雅思听力核心词汇 · 错词导出');
                 lines.push('导出时间: ' + new Date().toLocaleString());
+                lines.push('检查单元: ' + units.join(', '));
                 lines.push('─'.repeat(40));
                 errors.forEach(function(r, idx) {
                     lines.push((idx + 1) + '. ' + r.word + '  →  你的答案: ' + (r.userAnswer || '(未填)'));
@@ -549,7 +589,6 @@
             homeBtn.addEventListener('click', function() {
                 if (!confirm('回到首页，当前进度将丢失。')) return;
                 if (window.parent && window.parent !== window) {
-                    // 在 iframe 里，交给父页面导航，避免套娃
                     window.parent.postMessage({ type: 'navigate', page: 'home' }, '*');
                 } else {
                     window.location.href = 'index.html';
