@@ -201,6 +201,7 @@ body{background:#f5f7fa;min-height:100vh;display:flex;justify-content:center;ali
       </div>
 
       <div class="bottom-actions">
+        <button class="btn-outline" id="prevQBtn" style="display:none;">⏮ 上一题</button>
         <button class="btn-outline" id="nextQBtn" style="display:none;">⏭ 下一题</button>
         <button class="btn-main" id="doneTopicBtn">✅ 已完成</button>
       </div>
@@ -238,12 +239,7 @@ body{background:#f5f7fa;min-height:100vh;display:flex;justify-content:center;ali
 
 <script>
 (function(){
-// ============================================================
-// 1. 工具
-// ============================================================
 const $ = id => document.getElementById(id);
-function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
-function pickRandom(a,n){return shuffle(a).slice(0,Math.min(n,a.length));}
 function fmtTime(sec){const m=Math.floor(sec/60);const s=sec%60;return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
 
 let toastTimer=null;
@@ -266,7 +262,7 @@ $('modalCancel').addEventListener('click',()=>{$('modalMask').classList.remove('
 $('modalConfirm').addEventListener('click',()=>{$('modalMask').classList.remove('show');if(modalResolve)modalResolve(true);});
 
 // ============================================================
-// 2. 题库（Part1 / Part2 / Part3）
+// 题库
 // ============================================================
 const part1Data = [
   {title:"Work or studies", questions:["What subjects are you studying?","Do you like your subject?","Why did you choose to study that subject?","Do you think that your subject is popular in your country?","Do you have any plans for your studies in the next five years?","What are the benefits of being your age?","Do you want to change your major?","Do you prefer to study in the mornings or in the afternoons?","How much time do you spend on your studies each week?","Are you looking forward to working?","What technology do you use when you study?","What changes would you like to see in your school?","What work do you do?","Why did you choose to do that type of work (or that job)?","Do you like your job?","What requirements did you need to meet to get your current job?","Do you have any plans for your work in the next five years?","What do you think is the most important at the moment?","Do you want to change to another job?","Do you miss being a student?","What technology do you use at work?","Who helps you the most? And how?"]},
@@ -384,7 +380,6 @@ const part2Data = [
   {title:"交通拥堵", instruction:"Describe a time when you were stuck in a traffic jam for a very long time", bullets:["When it happened","Where you were stuck","What you did while waiting","And explain how you felt in the traffic jam"], p3:["How can we solve the traffic jam problem?","Do you think developing public transport can solve traffic jam problems?","Do you think the high ways will help reduce traffic jams?","What are good ways to manage traffic?","Do you like to use public transport?","Would you rather be in a car or a bus in a traffic jam?"]}
 ];
 
-// Part3 数据：从 P2 派生
 const part3Data = part2Data.map((p2, idx) => ({
   title: p2.title + " (P3)",
   fromP2: p2.title,
@@ -392,57 +387,31 @@ const part3Data = part2Data.map((p2, idx) => ({
 }));
 
 // ============================================================
-// 3. 全局状态
+// 状态
 // ============================================================
 const state = {
   userName: '',
-  // 已练习记录：{ part1: {topicIndex: {qIndex: [rec1, rec2...]}}, part2: {...}, part3: {...} }
-  records: {
-    part1: {},
-    part2: {},
-    part3: {}
-  },
-  // 当前练习
+  records: { part1: {}, part2: {}, part3: {} },
   current: {
-    part: null,           // 'part1' | 'part2' | 'part3'
-    topicIndex: 0,
-    qIndex: 0,
-    // P2 专用
-    p2Timer: null,
-    p2Seconds: 0,
-    p2Paused: false,
-    p2Stopped: false,
+    part: null, topicIndex: 0, qIndex: 0,
+    p2Timer: null, p2Seconds: 0, p2Paused: false, p2Stopped: false,
   },
-  // 录音
-  mediaRecorder: null,
-  audioChunks: [],
-  recordingStartTime: 0,
-  recTimer: null,
-  recSeconds: 0,
-  currentStream: null,
-  isRecording: false,
-  // P2 进度条
-  p2ForceStopAt: 240,  // 4分钟
+  mediaRecorder: null, audioChunks: [], recordingStartTime: 0,
+  recTimer: null, recSeconds: 0, currentStream: null, isRecording: false,
+  p2ForceStopAt: 240,
 };
 
 // ============================================================
-// 4. 页面切换
+// 页面切换
 // ============================================================
-const pages = {
-  name: $('namePage'),
-  catalog: $('catalogPage'),
-  practice: $('practicePage'),
-  summary: $('summaryPage'),
-};
+const pages = { name: $('namePage'), catalog: $('catalogPage'), practice: $('practicePage'), summary: $('summaryPage') };
 function showPage(name){
-  Object.keys(pages).forEach(k=>{
-    pages[k].classList.toggle('active', k===name);
-  });
+  Object.keys(pages).forEach(k=>pages[k].classList.toggle('active', k===name));
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
 // ============================================================
-// 5. 名字输入
+// 名字输入
 // ============================================================
 $('nameBtn').addEventListener('click', ()=>{
   const v = $('nameInput').value.trim();
@@ -457,21 +426,14 @@ $('nameBtn').addEventListener('click', ()=>{
   showPage('catalog');
 });
 $('nameInput').addEventListener('keydown', e=>{ if(e.key==='Enter') $('nameBtn').click(); });
-
-$('backToName').addEventListener('click', ()=>{
-  if(state.isRecording) stopRecording();
-  showPage('name');
-});
+$('backToName').addEventListener('click', ()=>{ if(state.isRecording) stopRecording(); showPage('name'); });
 
 // ============================================================
-// 6. 目录渲染
+// 目录
 // ============================================================
 function renderCatalog(){
-  const p1List = $('p1List');
-  const p2List = $('p2List');
-  const p3List = $('p3List');
+  const p1List = $('p1List'), p2List = $('p2List'), p3List = $('p3List');
   p1List.innerHTML=''; p2List.innerHTML=''; p3List.innerHTML='';
-
   part1Data.forEach((t, idx)=>{
     const done = state.records.part1[idx] && Object.keys(state.records.part1[idx]).length>0;
     const div = document.createElement('div');
@@ -480,7 +442,6 @@ function renderCatalog(){
     div.addEventListener('click', ()=>enterPractice('part1', idx));
     p1List.appendChild(div);
   });
-
   part2Data.forEach((t, idx)=>{
     const done = state.records.part2[idx] && Object.keys(state.records.part2[idx]).length>0;
     const div = document.createElement('div');
@@ -489,7 +450,6 @@ function renderCatalog(){
     div.addEventListener('click', ()=>enterPractice('part2', idx));
     p2List.appendChild(div);
   });
-
   part3Data.forEach((t, idx)=>{
     const done = state.records.part3[idx] && Object.keys(state.records.part3[idx]).length>0;
     const div = document.createElement('div');
@@ -501,7 +461,7 @@ function renderCatalog(){
 }
 
 // ============================================================
-// 7. 进入练习
+// 进入练习
 // ============================================================
 function enterPractice(part, topicIndex){
   if(state.isRecording) stopRecording();
@@ -515,19 +475,14 @@ function enterPractice(part, topicIndex){
   state.current.p2Stopped = false;
   renderPractice();
   showPage('practice');
-
-  // P2 进入后自动开始1分钟倒计时
-  if(part === 'part2'){
-    setTimeout(()=>startP2Timer(), 400);
-  }
+  if(part === 'part2'){ setTimeout(()=>startP2Timer(), 400); }
 }
 
 // ============================================================
-// 8. 练习页渲染
+// 练习页渲染
 // ============================================================
 function getCurrentTopic(){
-  const p = state.current.part;
-  const i = state.current.topicIndex;
+  const p = state.current.part, i = state.current.topicIndex;
   if(p==='part1') return part1Data[i];
   if(p==='part2') return part2Data[i];
   if(p==='part3') return part3Data[i];
@@ -538,7 +493,7 @@ function getCurrentQuestionList(){
   if(!t) return [];
   if(state.current.part==='part1') return t.questions;
   if(state.current.part==='part3') return t.questions;
-  return []; // P2 单独处理
+  return [];
 }
 function getCurrentQuestion(){
   if(state.current.part==='part2'){
@@ -568,32 +523,40 @@ function renderPractice(){
     ul.innerHTML='';
     ul.style.display='none';
   }
-
-  // 显示/隐藏按钮文字
   $('toggleQBtn').textContent = $('qEn').classList.contains('hidden-q') ? '👁 显示话题' : '👁 隐藏话题';
 
-  // 底部按钮：P2 没有"下一题"
+  // 底部按钮：P2 没有上一题/下一题
   if(state.current.part==='part2'){
     $('nextQBtn').style.display='none';
+    $('prevQBtn').style.display='none';
   } else {
     $('nextQBtn').style.display='inline-block';
     const list = getCurrentQuestionList();
     $('nextQBtn').textContent = (state.current.qIndex >= list.length-1) ? '⏭ 已完成最后一题' : '⏭ 下一题';
+
+    // 上一题按钮显示与禁用
+    $('prevQBtn').style.display='inline-block';
+    if(state.current.qIndex <= 0){
+      $('prevQBtn').disabled = true;
+      $('prevQBtn').style.opacity = '0.4';
+      $('prevQBtn').style.cursor = 'not-allowed';
+    } else {
+      $('prevQBtn').disabled = false;
+      $('prevQBtn').style.opacity = '1';
+      $('prevQBtn').style.cursor = 'pointer';
+    }
   }
 
   // P2 进度条区域
-  if(state.current.part==='part2'){
-    $('p2Area').style.display='block';
-  } else {
-    $('p2Area').style.display='none';
-  }
+  if(state.current.part==='part2'){ $('p2Area').style.display='block'; }
+  else { $('p2Area').style.display='none'; }
 
   renderRecList();
   updateRecBtn();
 }
 
 // ============================================================
-// 9. 显示/隐藏 + 发音
+// 显示/隐藏 + 发音
 // ============================================================
 $('toggleQBtn').addEventListener('click', ()=>{
   const qEn = $('qEn');
@@ -612,7 +575,7 @@ $('speakQBtn').addEventListener('click', ()=>{
 });
 
 // ============================================================
-// 10. 录音
+// 录音
 // ============================================================
 function updateRecBtn(){
   const btn = $('recBtn');
@@ -624,12 +587,10 @@ function updateRecBtn(){
     btn.classList.remove('recording');
   }
 }
-
 $('recBtn').addEventListener('click', ()=>{
   if(state.isRecording){ stopRecording(); }
   else { startRecording(); }
 });
-
 function startRecording(){
   if(state.isRecording) return;
   navigator.mediaDevices.getUserMedia({audio:true})
@@ -677,34 +638,20 @@ function saveRecording(){
   reader.readAsArrayBuffer(blob);
   if(state.currentStream){ state.currentStream.getTracks().forEach(t=>t.stop()); state.currentStream=null; }
 }
-
 function pushRecord(blob, url, duration){
   const part = state.current.part;
   const topicIdx = state.current.topicIndex;
   const qIdx = state.current.part==='part2' ? 0 : state.current.qIndex;
   const t = getCurrentTopic();
   const qText = getCurrentQuestion().en;
-
   if(!state.records[part][topicIdx]) state.records[part][topicIdx] = {};
   if(!state.records[part][topicIdx][qIdx]) state.records[part][topicIdx][qIdx] = [];
-
   const recIdx = state.records[part][topicIdx][qIdx].length + 1;
   const fileName = `${state.userName}_${part.toUpperCase()}_${t.title.replace(/[\\/:*?"<>|]/g,'_')}_Q${qIdx+1}_第${recIdx}次.wav`;
-
-  state.records[part][topicIdx][qIdx].push({
-    recIdx,
-    blob,
-    url,
-    duration,
-    fileName,
-    qText,
-    topicTitle: t.title,
-  });
-
+  state.records[part][topicIdx][qIdx].push({ recIdx, blob, url, duration, fileName, qText, topicTitle: t.title });
   renderRecList();
   showToast('✅ 已保存 第'+recIdx+'次录音');
 }
-
 function audioBufferToWav(buffer){
   const numChannels = buffer.numberOfChannels;
   const sampleRate = buffer.sampleRate;
@@ -732,7 +679,7 @@ function audioBufferToWav(buffer){
 }
 
 // ============================================================
-// 11. 录音列表渲染
+// 录音列表
 // ============================================================
 function renderRecList(){
   const container = $('recList');
@@ -740,7 +687,6 @@ function renderRecList(){
   const part = state.current.part;
   const topicIdx = state.current.topicIndex;
   const qIdx = state.current.part==='part2' ? 0 : state.current.qIndex;
-
   const recs = (state.records[part][topicIdx] && state.records[part][topicIdx][qIdx]) || [];
   if(recs.length===0){
     container.innerHTML = '<div style="color:#999;font-size:0.85rem;">暂无录音</div>';
@@ -775,8 +721,15 @@ function renderRecList(){
 }
 
 // ============================================================
-// 12. 下一题 / 已完成
+// 上一题 / 下一题 / 已完成
 // ============================================================
+$('prevQBtn').addEventListener('click', ()=>{
+  if(state.isRecording){ showToast('请先停止录音'); return; }
+  if(state.current.qIndex <= 0) return;
+  state.current.qIndex--;
+  renderPractice();
+});
+
 $('nextQBtn').addEventListener('click', ()=>{
   if(state.isRecording){ showToast('请先停止录音'); return; }
   const list = getCurrentQuestionList();
@@ -807,7 +760,7 @@ $('backToCatalog').addEventListener('click', ()=>{
 });
 
 // ============================================================
-// 13. P2 1分钟倒计时 + 进度条 + 4分钟强制停止
+// P2 计时
 // ============================================================
 function startP2Timer(){
   if(state.current.p2Timer) clearInterval(state.current.p2Timer);
@@ -817,24 +770,17 @@ function startP2Timer(){
   $('p2ProgressBar').style.width = '0%';
   $('p2ProgressLabel').textContent = '准备开始...';
   $('p2PauseBtn').textContent = '⏸ 暂停';
-
   state.current.p2Timer = setInterval(()=>{
     if(state.current.p2Paused || state.current.p2Stopped) return;
     state.current.p2Seconds++;
     updateP2Progress();
-    // 到4分钟强制停止
-    if(state.current.p2Seconds >= state.p2ForceStopAt){
-      stopP2Force();
-    }
+    if(state.current.p2Seconds >= state.p2ForceStopAt){ stopP2Force(); }
   }, 1000);
 }
-
 function updateP2Progress(){
   const s = state.current.p2Seconds;
-  // 进度条：4分钟为100%
   const pct = Math.min(100, (s/state.p2ForceStopAt)*100);
   $('p2ProgressBar').style.width = pct + '%';
-
   if(s < 60){
     $('p2ProgressLabel').textContent = `⏱️ 准备时间 ${s}/60 秒`;
   } else if(s < 120){
@@ -845,7 +791,6 @@ function updateP2Progress(){
     $('p2ProgressLabel').textContent = `🎉 恭喜你达到2分钟啦！继续录制中 (${fmtTime(s)})`;
   }
 }
-
 function stopP2Force(){
   state.current.p2Stopped = true;
   if(state.current.p2Timer){ clearInterval(state.current.p2Timer); state.current.p2Timer=null; }
@@ -853,10 +798,8 @@ function stopP2Force(){
   $('p2ProgressLabel').textContent = '⛔ 已达4分钟上限，录音已自动停止';
   showToast('⛔ 已达4分钟上限，录音已自动停止');
 }
-
 $('p2PauseBtn').addEventListener('click', ()=>{
   if(state.current.p2Stopped){
-    // 重新开始
     state.current.p2Stopped = false;
     state.current.p2Seconds = 0;
     startP2Timer();
@@ -866,7 +809,6 @@ $('p2PauseBtn').addEventListener('click', ()=>{
   state.current.p2Paused = !state.current.p2Paused;
   $('p2PauseBtn').textContent = state.current.p2Paused ? '▶ 继续' : '⏸ 暂停';
 });
-
 $('p2ResetBtn').addEventListener('click', async ()=>{
   const ok = await showModal('归零倒计时','确定把倒计时归零并重新开始？','确认');
   if(!ok) return;
@@ -880,34 +822,26 @@ $('p2ResetBtn').addEventListener('click', async ()=>{
 });
 
 // ============================================================
-// 14. 结束全部练习
+// 结束全部
 // ============================================================
 $('finishAllBtn').addEventListener('click', async ()=>{
   const hasAny = Object.keys(state.records.part1).length>0 ||
                  Object.keys(state.records.part2).length>0 ||
                  Object.keys(state.records.part3).length>0;
-  if(!hasAny){
-    showToast('还没有练习记录哦');
-    return;
-  }
+  if(!hasAny){ showToast('还没有练习记录哦'); return; }
   const ok = await showModal('结束全部练习','确认结束本次练习？将显示所有已练话题和录音。','结束');
   if(!ok) return;
   renderSummary();
   showPage('summary');
 });
-
-$('backToCatalogFromSummary').addEventListener('click', ()=>{
-  renderCatalog();
-  showPage('catalog');
-});
+$('backToCatalogFromSummary').addEventListener('click', ()=>{ renderCatalog(); showPage('catalog'); });
 
 // ============================================================
-// 15. 汇总页
+// 汇总
 // ============================================================
 function renderSummary(){
   const c = $('summaryContent');
   c.innerHTML = '';
-
   function renderPart(partKey, label){
     const data = partKey==='part1'?part1Data:partKey==='part2'?part2Data:part3Data;
     const recs = state.records[partKey];
@@ -936,24 +870,14 @@ function renderSummary(){
     html += `</div>`;
     return html;
   }
-
-  let total = 0;
-  total += countRecords('part1');
-  total += countRecords('part2');
-  total += countRecords('part3');
-
+  let total = countRecords('part1') + countRecords('part2') + countRecords('part3');
   c.innerHTML += `<div style="text-align:center;color:#5a7a6a;font-size:0.95rem;margin-bottom:12px;">👤 ${state.userName} · 共 ${total} 条录音</div>`;
-
   let html = '';
   html += renderPart('part1','📋 Part 1');
   html += renderPart('part2','📌 Part 2');
   html += renderPart('part3','💬 Part 3');
-  if(!html){
-    html = '<div style="text-align:center;color:#999;padding:40px;">暂无练习记录</div>';
-  }
+  if(!html){ html = '<div style="text-align:center;color:#999;padding:40px;">暂无练习记录</div>'; }
   c.innerHTML += html;
-
-  // 下载按钮
   c.querySelectorAll('.dl-btn').forEach(b=>{
     b.addEventListener('click', ()=>{
       const a = document.createElement('a');
@@ -965,14 +889,9 @@ function renderSummary(){
 function countRecords(partKey){
   let n = 0;
   const recs = state.records[partKey];
-  Object.keys(recs).forEach(t=>{
-    Object.keys(recs[t]).forEach(q=>{
-      n += recs[t][q].length;
-    });
-  });
+  Object.keys(recs).forEach(t=>{ Object.keys(recs[t]).forEach(q=>{ n += recs[t][q].length; }); });
   return n;
 }
-
 $('exportAllBtn').addEventListener('click', ()=>{
   const all = [];
   ['part1','part2','part3'].forEach(p=>{
@@ -992,7 +911,6 @@ $('exportAllBtn').addEventListener('click', ()=>{
   });
   showToast('📥 正在导出 '+all.length+' 个文件...');
 });
-
 $('againBtn').addEventListener('click', async ()=>{
   const ok = await showModal('再来一次','确认清空本次练习记录，重新开始？','确认');
   if(!ok) return;
@@ -1003,7 +921,7 @@ $('againBtn').addEventListener('click', async ()=>{
 });
 
 // ============================================================
-// 16. 初始化
+// 初始化
 // ============================================================
 showPage('name');
 })();
