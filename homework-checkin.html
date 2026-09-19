@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reborn新生留学 · 每日作业打卡</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,'Segoe UI',Roboto,'Helvetica Neue',sans-serif;}
+body{background:#f5f7fa;min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:18px;}
+.app-container{max-width:1080px;width:100%;background:white;border-radius:44px;box-shadow:0 20px 60px rgba(0,20,30,0.12);overflow:hidden;padding:22px 22px 30px;}
+
+.header-title{text-align:center;padding:14px 12px 10px;border-radius:60px;margin-bottom:20px;background:#1b5e3a;box-shadow:0 4px 0 #0f3d26;}
+.main-title{font-size:1.6rem;font-weight:700;letter-spacing:1px;color:white;text-shadow:0 2px 0 #0f3d26;}
+.sub-title{font-size:1rem;font-weight:500;color:#e6f0ea;letter-spacing:2px;background:rgba(255,255,255,0.1);display:inline-block;padding:0 18px;border-radius:40px;margin-top:3px;}
+
+.top-info{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;background:#f8fafc;border:1.5px solid #dce5e0;border-radius:22px;padding:14px 20px;margin-bottom:18px;}
+.name-box{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.name-box label{font-size:0.9rem;color:#1b5e3a;font-weight:600;}
+.name-box input{padding:9px 18px;border:1.5px solid #bdd3c6;border-radius:40px;font-size:0.95rem;outline:none;width:150px;text-align:center;letter-spacing:1px;}
+.name-box input:focus{border-color:#1b5e3a;box-shadow:0 0 0 3px rgba(27,94,58,0.15);}
+.date-show{font-size:0.95rem;color:#1b5e3a;font-weight:600;background:#eaf3ee;padding:8px 18px;border-radius:40px;}
+
+.main-cols{display:grid;grid-template-columns:340px 1fr;gap:16px;margin-bottom:18px;}
+
+.sec{border:1.5px solid #dce5e0;border-radius:24px;padding:16px 18px 14px;background:#f8fafc;position:relative;}
+.sec-label{position:absolute;top:-13px;left:20px;background:#f2b705;color:#5a3d00;font-size:0.74rem;font-weight:800;padding:3px 14px;border-radius:20px;letter-spacing:1px;box-shadow:0 2px 0 #c99604;}
+
+.cal-head{display:flex;justify-content:center;align-items:center;gap:12px;margin:8px 0 10px;}
+.cal-head button{background:white;border:1.5px solid #1b5e3a;color:#1b5e3a;width:30px;height:30px;border-radius:50%;font-size:0.95rem;cursor:pointer;font-weight:700;line-height:1;}
+.cal-head button:hover{background:#e8f0ec;}
+.cal-title{font-size:1rem;font-weight:700;color:#1b5e3a;min-width:110px;text-align:center;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-wd{text-align:center;font-size:0.72rem;color:#5a7a6a;font-weight:700;padding:2px 0;}
+.cal-cell{aspect-ratio:1/1;display:flex;flex-direction:column;justify-content:center;align-items:center;border-radius:9px;border:1.2px solid #e2eae6;background:white;cursor:pointer;font-size:0.8rem;color:#1a2e24;position:relative;transition:0.15s;}
+.cal-cell:hover{border-color:#1b5e3a;background:#f0f7f3;}
+.cal-cell.empty{border:none;background:transparent;cursor:default;}
+.cal-cell.today{border-color:#2b7de9;box-shadow:0 0 0 2px rgba(43,125,233,0.15);}
+.cal-cell.has-record{background:#e8f0ec;border-color:#1b5e3a;font-weight:700;}
+.cal-cell.selected{background:#1b5e3a;color:white;border-color:#1b5e3a;}
+.cal-cell.selected .dot{background:white;}
+.cal-cell .dot{width:4px;height:4px;border-radius:50%;background:#1b5e3a;margin-top:2px;}
+.cal-cell .dot.hide{visibility:hidden;}
+
+.form-date{font-size:0.98rem;font-weight:700;color:#1b5e3a;margin:6px 0 14px;}
+
+.subject-row{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;}
+.subject-name{width:52px;flex-shrink:0;font-size:0.86rem;font-weight:700;color:#8a5a00;background:#fdf0cc;border:1px solid #f2d98a;border-radius:10px;padding:8px 0;text-align:center;margin-top:2px;}
+.subject-body{flex:1;min-width:0;}
+.subject-tools{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;}
+.subject-tools button{background:white;border:1.3px solid #1b5e3a;color:#1b5e3a;padding:4px 12px;border-radius:30px;font-size:0.76rem;cursor:pointer;font-weight:600;}
+.subject-tools button:hover{background:#e8f0ec;}
+.subject-row textarea{width:100%;min-height:44px;padding:9px 13px;border:1.5px solid #dce5e0;border-radius:12px;font-size:0.88rem;resize:vertical;outline:none;font-family:inherit;line-height:1.5;}
+.subject-row textarea:focus{border-color:#1b5e3a;box-shadow:0 0 0 3px rgba(27,94,58,0.12);}
+.subject-row.drop-active textarea{border-color:#f2b705;background:#fffdf3;}
+.subject-row.drop-active{outline:2px dashed #f2b705;outline-offset:4px;border-radius:14px;}
+
+.file-queue{margin-top:8px;}
+.file-item{display:flex;align-items:center;gap:8px;background:#fffdf3;border:1.5px solid #f2d98a;border-radius:10px;padding:6px 10px;margin-bottom:6px;font-size:0.82rem;color:#5a3d00;cursor:grab;}
+.file-item.dragging{opacity:0.45;}
+.file-item .fi-icon{flex-shrink:0;}
+.file-item .fi-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;}
+.file-item .fi-actions{display:flex;gap:4px;flex-shrink:0;}
+.file-item .fi-actions button{width:24px;height:24px;border-radius:6px;border:1px solid #e0c46a;background:white;color:#8a5a00;cursor:pointer;font-size:0.78rem;line-height:1;font-weight:700;display:flex;justify-content:center;align-items:center;}
+.file-item .fi-actions button:hover{background:#fdf0cc;}
+.file-item .fi-actions .ok{border-color:#1b5e3a;color:#1b5e3a;}
+.file-item .fi-actions .ok:hover{background:#e8f0ec;}
+.file-item .fi-actions .no{border-color:#b13e3e;color:#b13e3e;}
+.file-item .fi-actions .no:hover{background:#fdf0f0;}
+
+.thumb-area{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.thumb{position:relative;width:72px;height:72px;border-radius:10px;overflow:hidden;border:1.5px solid #dce5e0;background:#fff;}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.thumb .del{position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:rgba(177,62,62,0.9);color:white;border:none;font-size:0.7rem;cursor:pointer;line-height:1;font-weight:700;}
+.thumb .del:hover{background:#b13e3e;}
+
+.btn-main{background:#1b5e3a;color:white;border:none;padding:12px 36px;border-radius:60px;font-size:0.98rem;font-weight:600;cursor:pointer;box-shadow:0 4px 0 #0f3d26;}
+.btn-main:active{transform:translateY(2px);box-shadow:0 2px 0 #0f3d26;}
+.btn-outline{background:white;color:#1b5e3a;border:2px solid #1b5e3a;padding:10px 28px;border-radius:60px;font-size:0.98rem;font-weight:600;cursor:pointer;box-shadow:0 4px 0 #cbd5d0;}
+.btn-outline:active{transform:translateY(2px);box-shadow:0 2px 0 #cbd5d0;}
+.btn-pdf{background:#f2b705;color:#5a3d00;border:none;padding:12px 36px;border-radius:60px;font-size:0.98rem;font-weight:700;cursor:pointer;box-shadow:0 4px 0 #c99604;}
+.btn-pdf:active{transform:translateY(2px);box-shadow:0 2px 0 #c99604;}
+.btn-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;}
+
+.view-panel{display:none;margin-top:18px;}
+.view-panel.show{display:block;}
+.date-picker{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:6px 0 14px;}
+.date-picker label{font-size:0.9rem;color:#1b5e3a;font-weight:600;}
+.date-picker input[type=date]{padding:8px 14px;border:1.5px solid #bdd3c6;border-radius:40px;font-size:0.9rem;outline:none;}
+.record-day{background:white;border:1.5px solid #dce5e0;border-radius:18px;padding:14px 18px;margin-bottom:12px;}
+.record-day .rd-title{font-size:0.95rem;font-weight:700;color:#1b5e3a;margin-bottom:10px;padding-bottom:8px;border-bottom:1.5px solid #e8f0ec;}
+.record-day .rd-item{font-size:0.88rem;color:#1a2e24;line-height:1.7;margin-bottom:8px;white-space:pre-wrap;}
+.record-day .rd-item b{color:#8a5a00;background:#fdf0cc;padding:1px 8px;border-radius:8px;margin-right:6px;font-weight:700;}
+.rd-imgs{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+.rd-imgs img{width:110px;height:110px;object-fit:cover;border-radius:10px;border:1.5px solid #dce5e0;cursor:pointer;}
+
+.toast{position:fixed;top:24px;left:50%;transform:translateX(-50%);background:#1b5e3a;color:white;padding:12px 28px;border-radius:40px;font-weight:600;font-size:0.95rem;box-shadow:0 8px 24px rgba(0,0,0,0.2);z-index:9999;opacity:0;transition:opacity 0.3s;}
+.toast.show{opacity:1;}
+
+.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;justify-content:center;align-items:center;z-index:1000;}
+.modal-mask.show{display:flex;}
+.modal-box{background:white;border-radius:32px;padding:30px 34px;max-width:400px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+.modal-box h3{color:#1b5e3a;font-size:1.15rem;margin-bottom:14px;}
+.modal-box p{color:#2d4d3a;font-size:0.93rem;margin-bottom:24px;line-height:1.6;}
+.modal-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.modal-box input{width:100%;padding:11px 16px;border:1.5px solid #bdd3c6;border-radius:40px;font-size:0.95rem;outline:none;text-align:center;letter-spacing:1px;margin-bottom:18px;}
+.modal-box input:focus{border-color:#b13e3e;box-shadow:0 0 0 3px rgba(177,62,62,0.12);}
+
+.footer-note{text-align:center;font-size:0.8rem;color:#5a7a6a;margin-top:14px;}
+
+.img-mask{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;z-index:2000;cursor:zoom-out;}
+.img-mask.show{display:flex;}
+.img-mask img{max-width:90%;max-height:90%;border-radius:12px;}
+
+@media(max-width:820px){
+  .main-cols{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="app-container">
+
+  <div class="header-title">
+    <div class="main-title">Reborn新生留学</div>
+    <div class="sub-title">每日作业打卡</div>
+  </div>
+
+  <div class="top-info">
+    <div class="name-box">
+      <label>学生姓名</label>
+      <input type="text" id="nameInput" placeholder="请输入中文名" maxlength="20">
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <div class="date-show" id="todayShow">—</div>
+      <button class="btn-outline" id="clearAllBtn" style="padding:7px 18px;font-size:0.82rem;border-color:#b13e3e;color:#b13e3e;box-shadow:0 3px 0 #d6b8b8;">🧹 清空全部</button>
+    </div>
+  </div>
+
+  <div class="main-cols">
+    <div class="sec">
+      <div class="sec-label">打卡日历</div>
+      <div class="cal-head">
+        <button id="prevMonth">‹</button>
+        <div class="cal-title" id="calTitle">—</div>
+        <button id="nextMonth">›</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-label">当日打卡</div>
+      <div class="form-date" id="formDate">请点击日历选择日期</div>
+      <div id="subjectForm"></div>
+      <div class="btn-row">
+        <button class="btn-main" id="saveBtn">✅ 确认打卡</button>
+        <button class="btn-outline" id="viewBtn">📋 查看打卡记录</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec view-panel" id="viewPanel">
+    <div class="sec-label">查看打卡记录</div>
+    <div class="date-picker">
+      <label>开始</label><input type="date" id="startDate">
+      <label>结束</label><input type="date" id="endDate">
+      <button class="btn-main" id="queryBtn" style="padding:10px 28px;font-size:0.92rem;">查询并导出</button>
+      <button class="btn-pdf" id="pdfBtn" style="display:none;padding:10px 28px;font-size:0.92rem;">📄 导出带图作业</button>
+    </div>
+    <div id="recordResult"></div>
+  </div>
+
+  <div class="footer-note">🌟 天天进步，每日新生 · Reborn新生留学</div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="img-mask" id="imgMask"><img id="imgMaskImg" src="" alt=""></div>
+
+<div class="modal-mask" id="modalMask">
+  <div class="modal-box">
+    <h3 id="modalTitle">提示</h3>
+    <p id="modalText">确认操作？</p>
+    <div class="modal-btns">
+      <button class="btn-outline" id="modalCancel" style="padding:10px 26px;font-size:0.95rem;">取消</button>
+      <button class="btn-main" id="modalConfirm" style="padding:10px 26px;font-size:0.95rem;">确认</button>
+    </div>
+  </div>
+</div>
+
+<!-- 清空密码弹窗 -->
+<div class="modal-mask" id="pwMask">
+  <div class="modal-box">
+    <h3>🧹 清空全部记录</h3>
+    <p>此操作将删除<b>姓名、所有打卡记录、图片、导入的文本</b>，且不可恢复。<br>请输入密码确认：</p>
+    <input type="password" id="pwInput" placeholder="请输入密码" autocomplete="off">
+    <div class="modal-btns">
+      <button class="btn-outline" id="pwCancel" style="padding:10px 26px;font-size:0.95rem;">取消</button>
+      <button class="btn-main" id="pwConfirm" style="padding:10px 26px;font-size:0.95rem;background:#b13e3e;box-shadow:0 4px 0 #8e2a1e;">确认清空</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+const $ = id => document.getElementById(id);
+const SUBJECTS = ['词汇','听力','阅读','口语','写作','其他'];
+const STORE_KEY = 'reborn_homework_v1';
+const CLEAR_PASSWORD = 'thisisdelete';
+const SEP = '\n\n────────────────────\n\n';
+
+const state = {
+  name: '',
+  viewYear: new Date().getFullYear(),
+  viewMonth: new Date().getMonth(),
+  selectedDate: null,
+  records: {}
+};
+
+function pad(n){return String(n).padStart(2,'0');}
+function fmtDate(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function fmtCN(d){const wd=['日','一','二','三','四','五','六'][d.getDay()];return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 星期${wd}`;}
+
+let toastTimer=null;
+function showToast(msg){
+  const t=$('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
+}
+let modalResolve=null;
+function showModal(title,text,confirmText){
+  return new Promise(res=>{
+    $('modalTitle').textContent=title;
+    $('modalText').textContent=text;
+    $('modalConfirm').textContent=confirmText||'确认';
+    $('modalMask').classList.add('show');
+    modalResolve=res;
+  });
+}
+$('modalCancel').addEventListener('click',()=>{$('modalMask').classList.remove('show');if(modalResolve)modalResolve(false);});
+$('modalConfirm').addEventListener('click',()=>{$('modalMask').classList.remove('show');if(modalResolve)modalResolve(true);});
+
+$('imgMask').addEventListener('click',()=>$('imgMask').classList.remove('show'));
+function previewImg(src){ $('imgMaskImg').src=src; $('imgMask').classList.add('show'); }
+
+function saveStore(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify({name:state.name, records:state.records})); }
+  catch(e){ showToast('⚠️ 存储空间不足，请先导出记录'); }
+}
+function loadStore(){
+  try{
+    const raw=localStorage.getItem(STORE_KEY);
+    if(!raw) return;
+    const obj=JSON.parse(raw);
+    state.name=obj.name||'';
+    state.records=obj.records||{};
+    if(state.name) $('nameInput').value=state.name;
+  }catch(e){}
+}
+
+// ---------- 一键清空 ----------
+$('clearAllBtn').addEventListener('click', ()=>{
+  $('pwInput').value='';
+  $('pwMask').classList.add('show');
+  setTimeout(()=>$('pwInput').focus(),100);
+});
+$('pwCancel').addEventListener('click',()=>$('pwMask').classList.remove('show'));
+$('pwConfirm').addEventListener('click', ()=>{
+  const v=$('pwInput').value;
+  if(v!==CLEAR_PASSWORD){ showToast('❌ 密码错误'); $('pwInput').value=''; return; }
+  localStorage.removeItem(STORE_KEY);
+  state.name='';
+  state.records={};
+  $('nameInput').value='';
+  $('pwMask').classList.remove('show');
+  buildSubjectForm();
+  selectDate(fmtDate(new Date()));
+  renderCalendar();
+  $('recordResult').innerHTML='';
+  $('viewPanel').classList.remove('show');
+  $('pdfBtn').style.display='none';
+  showToast('🧹 已清空全部记录');
+});
+$('pwInput').addEventListener('keydown',e=>{ if(e.key==='Enter') $('pwConfirm').click(); });
+
+$('todayShow').textContent = fmtCN(new Date());
+$('nameInput').addEventListener('input', e=>{ state.name = e.target.value.trim(); saveStore(); });
+
+function buildSubjectForm(){
+  const box=$('subjectForm'); box.innerHTML='';
+  SUBJECTS.forEach(sub=>{
+    const row=document.createElement('div');
+    row.className='subject-row';
+    row.dataset.sub=sub;
+    row.innerHTML=`
+      <div class="subject-name">${sub}</div>
+      <div class="subject-body">
+        <div class="subject-tools">
+          <button type="button" data-act="img">🖼 图片</button>
+          <button type="button" data-act="txt">📄 文本</button>
+        </div>
+        <div class="file-queue"></div>
+        <textarea placeholder="今日${sub}作业……"></textarea>
+        <div class="thumb-area"></div>
+      </div>
+      <input type="file" accept="image/*" multiple style="display:none" data-file="img">
+      <input type="file" accept=".txt,text/plain" multiple style="display:none" data-file="txt">
+    `;
+    box.appendChild(row);
+
+    const ta=row.querySelector('textarea');
+    const queue=row.querySelector('.file-queue');
+    const imgInput=row.querySelector('[data-file="img"]');
+    const txtInput=row.querySelector('[data-file="txt"]');
+
+    row.querySelector('[data-act="img"]').addEventListener('click',()=>imgInput.click());
+    row.querySelector('[data-act="txt"]').addEventListener('click',()=>txtInput.click());
+
+    imgInput.addEventListener('change',e=>{
+      handleImages(sub, Array.from(e.target.files));
+      imgInput.value='';
+    });
+    txtInput.addEventListener('change',e=>{
+      handleTexts(sub, Array.from(e.target.files));
+      txtInput.value='';
+    });
+
+    row.addEventListener('dragover',e=>{e.preventDefault();row.classList.add('drop-active');});
+    row.addEventListener('dragleave',()=>row.classList.remove('drop-active'));
+    row.addEventListener('drop',e=>{
+      e.preventDefault();row.classList.remove('drop-active');
+      const files=Array.from(e.dataTransfer.files);
+      const imgs=files.filter(f=>f.type.startsWith('image/'));
+      const txts=files.filter(f=>f.type==='text/plain'||f.name.toLowerCase().endsWith('.txt'));
+      if(imgs.length) handleImages(sub, imgs);
+      if(txts.length) handleTexts(sub, txts);
+      if(!imgs.length && !txts.length && files.length) showToast('⚠️ 仅支持图片或 .txt 文本');
+    });
+
+    ta.addEventListener('paste',e=>{
+      const items=e.clipboardData && e.clipboardData.items;
+      if(!items) return;
+      const imgs=[];
+      for(const it of items){
+        if(it.type.startsWith('image/')){ const f=it.getAsFile(); if(f) imgs.push(f); }
+      }
+      if(imgs.length){ e.preventDefault(); handleImages(sub,imgs); }
+    });
+  });
+}
+
+function handleImages(sub, files){
+  files.forEach(f=>{
+    if(!f.type.startsWith('image/')) return;
+    compressImage(f, dataURL=>addThumb(sub, dataURL));
+  });
+  if(files.length) showToast('🖼 已添加 '+files.length+' 张图片');
+}
+function compressImage(file, cb){
+  const reader=new FileReader();
+  reader.onload=()=>{
+    const img=new Image();
+    img.onload=()=>{
+      const maxSide=1280;
+      let {width,height}=img;
+      if(width>maxSide||height>maxSide){
+        if(width>height){ height=Math.round(height*maxSide/width); width=maxSide; }
+        else { width=Math.round(width*maxSide/height); height=maxSide; }
+      }
+      const canvas=document.createElement('canvas');
+      canvas.width=width; canvas.height=height;
+      canvas.getContext('2d').drawImage(img,0,0,width,height);
+      cb(canvas.toDataURL('image/jpeg',0.7));
+    };
+    img.src=reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+function addThumb(sub, dataURL){
+  const row=document.querySelector(`.subject-row[data-sub="${sub}"]`);
+  const area=row.querySelector('.thumb-area');
+  const div=document.createElement('div');
+  div.className='thumb';
+  div.dataset.img=dataURL;
+  div.innerHTML=`<img src="${dataURL}" alt=""><button class="del" type="button">✕</button>`;
+  div.querySelector('img').addEventListener('click',()=>previewImg(dataURL));
+  div.querySelector('.del').addEventListener('click',()=>div.remove());
+  area.appendChild(div);
+}
+
+function handleTexts(sub, files){
+  const txts=files.filter(f=>f.type==='text/plain'||f.name.toLowerCase().endsWith('.txt'));
+  if(!txts.length){ showToast('⚠️ 未识别到文本文件'); return; }
+  let done=0;
+  txts.forEach(f=>{
+    const reader=new FileReader();
+    reader.onload=()=>{
+      addFileItem(sub, f.name, reader.result);
+      done++;
+      if(done===txts.length) showToast('📄 已导入 '+txts.length+' 个文本，待确认');
+    };
+    reader.onerror=()=>{ showToast('⚠️ 读取失败：'+f.name); };
+    reader.readAsText(f,'utf-8');
+  });
+}
+function addFileItem(sub, fileName, content){
+  const row=document.querySelector(`.subject-row[data-sub="${sub}"]`);
+  const queue=row.querySelector('.file-queue');
+  const div=document.createElement('div');
+  div.className='file-item';
+  div.draggable=true;
+  div.dataset.content=content;
+  div.innerHTML=`
+    <span class="fi-icon">📄</span>
+    <span class="fi-name">${escapeHtml(fileName)}</span>
+    <div class="fi-actions">
+      <button type="button" class="up" title="上移">↑</button>
+      <button type="button" class="down" title="下移">↓</button>
+      <button type="button" class="ok" title="确认导入">✓</button>
+      <button type="button" class="no" title="删除">✕</button>
+    </div>
+  `;
+  queue.appendChild(div);
+
+  div.querySelector('.up').addEventListener('click',()=>{
+    const prev=div.previousElementSibling;
+    if(prev) queue.insertBefore(div, prev);
+  });
+  div.querySelector('.down').addEventListener('click',()=>{
+    const next=div.nextElementSibling;
+    if(next) queue.insertBefore(next, div);
+  });
+  div.querySelector('.ok').addEventListener('click',()=>{
+    const ta=row.querySelector('textarea');
+    const text=div.dataset.content||'';
+    if(ta.value.trim()){
+      ta.value = ta.value.replace(/\s+$/,'') + SEP + text;
+    } else {
+      ta.value = text;
+    }
+    queue.removeChild(div);
+    showToast('✅ 已并入输入框');
+  });
+  div.querySelector('.no').addEventListener('click', async ()=>{
+    const ok=await showModal('删除文件','确认从待确认列表移除「'+fileName+'」？已并入输入框的内容不受影响。','移除');
+    if(!ok) return;
+    queue.removeChild(div);
+  });
+
+  div.addEventListener('dragstart',e=>{
+    e.stopPropagation();
+    div.classList.add('dragging');
+  });
+  div.addEventListener('dragend',()=>div.classList.remove('dragging'));
+  queue.addEventListener('dragover',e=>{
+    e.preventDefault();
+    const dragging=queue.querySelector('.dragging');
+    if(!dragging) return;
+    const after=getDragAfter(queue, e.clientY);
+    if(after==null) queue.appendChild(dragging);
+    else queue.insertBefore(dragging, after);
+  });
+}
+function getDragAfter(container, y){
+  const els=[...container.querySelectorAll('.file-item:not(.dragging)')];
+  return els.reduce((closest, child)=>{
+    const box=child.getBoundingClientRect();
+    const offset=y - box.top - box.height/2;
+    if(offset<0 && offset>closest.offset) return {offset, element:child};
+    return closest;
+  },{offset:-Infinity, element:null}).element;
+}
+
+function renderCalendar(){
+  const y=state.viewYear, m=state.viewMonth;
+  $('calTitle').textContent = `${y}年${m+1}月`;
+  const grid=$('calGrid'); grid.innerHTML='';
+  ['一','二','三','四','五','六','日'].forEach(w=>{
+    const d=document.createElement('div');d.className='cal-wd';d.textContent=w;grid.appendChild(d);
+  });
+  const firstDay=new Date(y,m,1);
+  let startCol=(firstDay.getDay()+6)%7;
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const todayStr=fmtDate(new Date());
+  for(let i=0;i<startCol;i++){
+    const c=document.createElement('div');c.className='cal-cell empty';grid.appendChild(c);
+  }
+  for(let d=1;d<=daysInMonth;d++){
+    const dateStr=`${y}-${pad(m+1)}-${pad(d)}`;
+    const cell=document.createElement('div');
+    cell.className='cal-cell';
+    if(dateStr===todayStr) cell.classList.add('today');
+    if(state.records[dateStr]) cell.classList.add('has-record');
+    if(dateStr===state.selectedDate) cell.classList.add('selected');
+    cell.innerHTML=`<span>${d}</span><span class="dot ${state.records[dateStr]?'':'hide'}"></span>`;
+    cell.addEventListener('click',()=>selectDate(dateStr));
+    grid.appendChild(cell);
+  }
+}
+$('prevMonth').addEventListener('click',()=>{
+  state.viewMonth--; if(state.viewMonth<0){state.viewMonth=11;state.viewYear--;}
+  renderCalendar();
+});
+$('nextMonth').addEventListener('click',()=>{
+  state.viewMonth++; if(state.viewMonth>11){state.viewMonth=0;state.viewYear++;}
+  renderCalendar();
+});
+
+function selectDate(dateStr){
+  state.selectedDate = dateStr;
+  const d=new Date(dateStr+'T00:00:00');
+  $('formDate').textContent = fmtCN(d) + ' 的作业打卡';
+  const rec = state.records[dateStr] || {};
+  SUBJECTS.forEach(sub=>{
+    const row=document.querySelector(`.subject-row[data-sub="${sub}"]`);
+    row.querySelector('textarea').value = (rec[sub] && rec[sub].text) || '';
+    row.querySelector('.file-queue').innerHTML='';
+    const area=row.querySelector('.thumb-area');
+    area.innerHTML='';
+    ((rec[sub] && rec[sub].imgs) || []).forEach(dataURL=>addThumb(sub,dataURL));
+  });
+  renderCalendar();
+}
+
+$('saveBtn').addEventListener('click', async ()=>{
+  if(!state.selectedDate){ showToast('请先在日历选择日期'); return; }
+  if(!state.name){ showToast('请先填写学生姓名'); $('nameInput').focus(); return; }
+  const data={};
+  let hasContent=false;
+  SUBJECTS.forEach(sub=>{
+    const row=document.querySelector(`.subject-row[data-sub="${sub}"]`);
+    const text=row.querySelector('textarea').value.trim();
+    const imgs=Array.from(row.querySelectorAll('.thumb')).map(t=>t.dataset.img);
+    data[sub]={text, imgs};
+    if(text||imgs.length) hasContent=true;
+  });
+  if(!hasContent){ showToast('请至少填写一科作业'); return; }
+  const d=new Date(state.selectedDate+'T00:00:00');
+  const ok = await showModal('确认打卡', `确认保存 ${fmtCN(d)} 的作业打卡？`, '确认保存');
+  if(!ok) return;
+  state.records[state.selectedDate] = data;
+  saveStore();
+  renderCalendar();
+  showToast('✅ 打卡已保存');
+});
+
+$('viewBtn').addEventListener('click', ()=>{
+  $('viewPanel').classList.toggle('show');
+  if($('viewPanel').classList.contains('show')){
+    $('viewPanel').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+});
+
+let lastQueryDates=null, lastQueryRange=null;
+
+$('queryBtn').addEventListener('click', ()=>{
+  const s=$('startDate').value, e=$('endDate').value;
+  if(!s||!e){ showToast('请选择开始和结束日期'); return; }
+  if(s>e){ showToast('开始日期不能晚于结束日期'); return; }
+  const dates=Object.keys(state.records).filter(d=>d>=s&&d<=e).sort();
+  const box=$('recordResult');
+  if(dates.length===0){
+    box.innerHTML='<div style="color:#999;font-size:0.9rem;padding:10px 0;">该日期段暂无打卡记录</div>';
+    $('pdfBtn').style.display='none';
+    return;
+  }
+  let hasImg=false;
+  box.innerHTML = dates.map(d=>{
+    const rec=state.records[d];
+    const dd=new Date(d+'T00:00:00');
+    const items = SUBJECTS.map(sub=>{
+      const item=rec[sub];
+      if(!item || (!item.text && !item.imgs.length)) return '';
+      let html=`<div class="rd-item"><b>${sub}</b>${item.text?escapeHtml(item.text).replace(/\n/g,'<br>'):''}`;
+      if(item.imgs.length){
+        hasImg=true;
+        html += `<div class="rd-imgs">` + item.imgs.map(src=>`<img src="${src}" alt="">`).join('') + `</div>`;
+      }
+      html += `</div>`;
+      return html;
+    }).join('');
+    return `<div class="record-day"><div class="rd-title">${fmtCN(dd)}</div>${items}</div>`;
+  }).join('');
+  box.querySelectorAll('.rd-imgs img').forEach(img=>{
+    img.addEventListener('click',()=>previewImg(img.src));
+  });
+  lastQueryDates=dates; lastQueryRange={s,e};
+  $('pdfBtn').style.display = hasImg ? 'inline-block' : 'none';
+  exportTxt(dates, s, e);
+});
+
+function exportTxt(dates, s, e){
+  const name = state.name || '学生';
+  let txt = `Reborn ${name}的作业统计\n日期段：${s} 至 ${e}\n生成时间：${fmtCN(new Date())}\n`;
+  txt += '='.repeat(40) + '\n\n';
+  dates.forEach(d=>{
+    const rec=state.records[d];
+    const dd=new Date(d+'T00:00:00');
+    txt += `【${fmtCN(dd)}】\n`;
+    SUBJECTS.forEach(sub=>{
+      const item=rec[sub];
+      if(!item) return;
+      if(item.text) txt += `  ${sub}：${item.text}\n`;
+      if(item.imgs && item.imgs.length){
+        if(!item.text) txt += `  ${sub}：\n`;
+        txt += `　　（需补充配图）\n`;
+      }
+    });
+    txt += '\n';
+  });
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`Reborn ${name}的作业统计 ${s}至${e}.txt`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  showToast('📥 已导出 txt');
+}
+
+$('pdfBtn').addEventListener('click', ()=>{
+  if(!lastQueryDates){ showToast('请先查询'); return; }
+  const name=state.name||'学生';
+  const s=lastQueryRange.s, e=lastQueryRange.e;
+  let body='';
+  lastQueryDates.forEach(d=>{
+    const rec=state.records[d];
+    const dd=new Date(d+'T00:00:00');
+    body += `<div class="pdf-day"><div class="pdf-day-title">${fmtCN(dd)}</div>`;
+    SUBJECTS.forEach(sub=>{
+      const item=rec[sub];
+      if(!item || (!item.text && !item.imgs.length)) return;
+      body += `<div class="pdf-subject">`;
+      body += `<div class="pdf-sub-name">${sub}</div>`;
+      body += `<div class="pdf-sub-body">`;
+      if(item.text) body += `<div class="pdf-text">${escapeHtml(item.text).replace(/\n/g,'<br>')}</div>`;
+      if(item.imgs.length){
+        body += `<div class="pdf-imgs">` + item.imgs.map(src=>`<img src="${src}">`).join('') + `</div>`;
+      }
+      body += `</div></div>`;
+    });
+    body += `</div>`;
+  });
+  const html = `<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">
+  <title>Reborn ${name}的作业统计 ${s}至${e}</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,'Segoe UI',Roboto,'Microsoft YaHei',sans-serif;}
+    body{background:#f5f7fa;padding:24px;color:#1a2e24;}
+    .pdf-wrap{max-width:800px;margin:0 auto;background:white;border-radius:20px;padding:28px 32px;box-shadow:0 10px 40px rgba(0,20,30,0.1);}
+    .pdf-header{text-align:center;padding:14px;border-radius:40px;background:#1b5e3a;color:white;margin-bottom:20px;}
+    .pdf-header .t1{font-size:1.3rem;font-weight:700;}
+    .pdf-header .t2{font-size:0.85rem;color:#e6f0ea;margin-top:3px;}
+    .pdf-meta{font-size:0.85rem;color:#5a7a6a;margin-bottom:16px;text-align:center;}
+    .pdf-day{margin-bottom:18px;break-inside:avoid;page-break-inside:avoid;}
+    .pdf-day-title{font-size:1rem;font-weight:700;color:#1b5e3a;padding-bottom:6px;border-bottom:2px solid #e8f0ec;margin-bottom:10px;}
+    .pdf-subject{display:flex;gap:10px;margin-bottom:10px;break-inside:avoid;page-break-inside:avoid;background:#f8fafc;border:1px solid #dce5e0;border-radius:12px;padding:10px 12px;}
+    .pdf-sub-name{flex-shrink:0;width:48px;font-size:0.85rem;font-weight:700;color:#8a5a00;background:#fdf0cc;border:1px solid #f2d98a;border-radius:8px;padding:4px 0;text-align:center;height:fit-content;}
+    .pdf-sub-body{flex:1;min-width:0;}
+    .pdf-text{font-size:0.88rem;line-height:1.7;margin-bottom:6px;}
+    .pdf-imgs{display:flex;gap:8px;flex-wrap:wrap;}
+    .pdf-imgs img{max-width:160px;max-height:160px;object-fit:cover;border-radius:8px;border:1px solid #dce5e0;}
+    .pdf-tip{text-align:center;font-size:0.82rem;color:#b13e3e;margin:14px 0;background:#fdf0f0;padding:10px;border-radius:10px;}
+    @media print{
+      body{background:white;padding:0;}
+      .pdf-wrap{box-shadow:none;border-radius:0;max-width:100%;padding:12px;}
+      .pdf-tip{display:none;}
+      .pdf-header{background:#1b5e3a !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+      .pdf-sub-name{background:#fdf0cc !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+      .pdf-subject{background:#f8fafc !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+      .pdf-day{break-inside:avoid;page-break-inside:avoid;}
+      .pdf-subject{break-inside:avoid;page-break-inside:avoid;}
+    }
+  </style></head><body>
+  <div class="pdf-wrap">
+    <div class="pdf-header"><div class="t1">Reborn新生留学 · 每日作业打卡</div><div class="t2">${name} 的作业统计</div></div>
+    <div class="pdf-meta">日期段：${s} 至 ${e} ｜ 生成时间：${fmtCN(new Date())}</div>
+    <div class="pdf-tip">💡 请在弹出的打印窗口中选择「另存为 PDF」保存文件</div>
+    ${body}
+  </div>
+  <script>window.onload=function(){setTimeout(function(){window.print();},400);};<\/script>
+  </body></html>`;
+  const w=window.open('','_blank');
+  w.document.write(html);
+  w.document.close();
+});
+
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+buildSubjectForm();
+loadStore();
+selectDate(fmtDate(new Date()));
+renderCalendar();
+})();
+</script>
+</body>
+</html>
