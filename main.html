@@ -363,6 +363,7 @@ body.light-mode .home-footer { border-top-color: #E0E0E0; color: #666666; }
         <iframe src="speaking-bank.html" allow="autoplay"></iframe>
     </section>
 
+    <!-- ⭐ 新增：口语自主练习 -->
     <section class="page" data-page="speaking-practice" data-back="speaking-entry" data-back-text="← 回口语题库">
         <iframe src="speaking-practice.html" allow="microphone; autoplay"></iframe>
     </section>
@@ -445,7 +446,7 @@ body.light-mode .home-footer { border-top-color: #E0E0E0; color: #666666; }
         </div>
     </section>
 
-    <!-- ⭐ 新增：作业提交页面 -->
+    <!-- ⭐ 新增：作业提交 -->
     <section class="page" data-page="homework-checkin" data-back="home" data-back-text="← 回主页">
         <iframe src="homework-checkin.html" allow="clipboard-read; clipboard-write"></iframe>
     </section>
@@ -491,7 +492,7 @@ body.light-mode .home-footer { border-top-color: #E0E0E0; color: #666666; }
     lockBtn.addEventListener('click', tryUnlock);
     lockInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
 
-    // 麦克风权限
+    // 麦克风权限：进首页申请一次，全站复用
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ audio: true })
             .then(function(stream) {
@@ -684,6 +685,7 @@ body.light-mode .home-footer { border-top-color: #E0E0E0; color: #666666; }
         });
     });
 
+    // 接收 iframe 消息
     window.addEventListener('message', function(e) {
         const data = e.data;
         if (!data || !data.type) return;
