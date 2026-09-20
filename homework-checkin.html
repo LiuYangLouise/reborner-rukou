@@ -90,8 +90,19 @@ body{background:#f5f7fa;min-height:100vh;display:flex;justify-content:center;ali
 .record-day .rd-title{font-size:0.95rem;font-weight:700;color:#1b5e3a;margin-bottom:10px;padding-bottom:8px;border-bottom:1.5px solid #e8f0ec;}
 .record-day .rd-item{font-size:0.88rem;color:#1a2e24;line-height:1.7;margin-bottom:8px;white-space:pre-wrap;}
 .record-day .rd-item b{color:#8a5a00;background:#fdf0cc;padding:1px 8px;border-radius:8px;margin-right:6px;font-weight:700;}
-.rd-imgs{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
-.rd-imgs img{width:110px;height:110px;object-fit:cover;border-radius:10px;border:1.5px solid #dce5e0;cursor:pointer;}
+
+/* ⭐ 改动2：查看记录页图片整行撑满、按原比例、竖排 */
+.rd-imgs{display:block;margin-top:8px;}
+.rd-imgs img{
+  display:block;
+  width:100%;
+  max-width:100%;
+  height:auto;
+  border-radius:10px;
+  border:1.5px solid #dce5e0;
+  cursor:pointer;
+  margin-bottom:12px;
+}
 
 .toast{position:fixed;top:24px;left:50%;transform:translateX(-50%);background:#1b5e3a;color:white;padding:12px 28px;border-radius:40px;font-weight:600;font-size:0.95rem;box-shadow:0 8px 24px rgba(0,0,0,0.2);z-index:9999;opacity:0;transition:opacity 0.3s;}
 .toast.show{opacity:1;}
@@ -352,26 +363,15 @@ function handleImages(sub, files){
   });
   if(files.length) showToast('🖼 已添加 '+files.length+' 张图片');
 }
+
+// ⭐ 改动1：完全不压缩，直接读原图 dataURL
 function compressImage(file, cb){
   const reader=new FileReader();
-  reader.onload=()=>{
-    const img=new Image();
-    img.onload=()=>{
-      const maxSide=1280;
-      let {width,height}=img;
-      if(width>maxSide||height>maxSide){
-        if(width>height){ height=Math.round(height*maxSide/width); width=maxSide; }
-        else { width=Math.round(width*maxSide/height); height=maxSide; }
-      }
-      const canvas=document.createElement('canvas');
-      canvas.width=width; canvas.height=height;
-      canvas.getContext('2d').drawImage(img,0,0,width,height);
-      cb(canvas.toDataURL('image/jpeg',0.7));
-    };
-    img.src=reader.result;
-  };
+  reader.onload=()=>{ cb(reader.result); };
+  reader.onerror=()=>{ showToast('⚠️ 读取图片失败'); };
   reader.readAsDataURL(file);
 }
+
 function addThumb(sub, dataURL){
   const row=document.querySelector(`.subject-row[data-sub="${sub}"]`);
   const area=row.querySelector('.thumb-area');
@@ -653,12 +653,27 @@ $('pdfBtn').addEventListener('click', ()=>{
     .pdf-sub-name{flex-shrink:0;width:48px;font-size:0.85rem;font-weight:700;color:#8a5a00;background:#fdf0cc;border:1px solid #f2d98a;border-radius:8px;padding:4px 0;text-align:center;height:fit-content;}
     .pdf-sub-body{flex:1;min-width:0;}
     .pdf-text{font-size:0.88rem;line-height:1.7;margin-bottom:6px;}
-    .pdf-imgs{display:flex;gap:8px;flex-wrap:wrap;}
-    .pdf-imgs img{max-width:160px;max-height:160px;object-fit:cover;border-radius:8px;border:1px solid #dce5e0;}
+
+    /* ⭐ 改动3：PDF 里图片整行撑满、按原比例、竖排、不跨页 */
+    .pdf-imgs{display:block;margin-top:8px;}
+    .pdf-imgs img{
+      display:block;
+      width:100%;
+      max-width:100%;
+      height:auto;
+      border-radius:8px;
+      border:1px solid #dce5e0;
+      margin-bottom:14px;
+      break-inside:avoid;
+      page-break-inside:avoid;
+    }
+
     .pdf-tip{text-align:center;font-size:0.82rem;color:#b13e3e;margin:14px 0;background:#fdf0f0;padding:10px;border-radius:10px;}
     @media print{
       body{background:white;padding:0;}
       .pdf-wrap{box-shadow:none;border-radius:0;max-width:100%;padding:12px;}
+      /* ⭐ 改动4：打印时图片不跨页断裂 */
+      .pdf-imgs img{break-inside:avoid;page-break-inside:avoid;}
       .pdf-tip{display:none;}
       .pdf-header{background:#1b5e3a !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
       .pdf-sub-name{background:#fdf0cc !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
