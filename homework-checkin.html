@@ -91,7 +91,6 @@ body{background:#f5f7fa;min-height:100vh;display:flex;justify-content:center;ali
 .record-day .rd-item{font-size:0.88rem;color:#1a2e24;line-height:1.7;margin-bottom:8px;white-space:pre-wrap;}
 .record-day .rd-item b{color:#8a5a00;background:#fdf0cc;padding:1px 8px;border-radius:8px;margin-right:6px;font-weight:700;}
 
-/* ⭐ 改动2：查看记录页图片整行撑满、按原比例、竖排 */
 .rd-imgs{display:block;margin-top:8px;}
 .rd-imgs img{
   display:block;
@@ -251,8 +250,8 @@ $('imgMask').addEventListener('click',()=>$('imgMask').classList.remove('show'))
 function previewImg(src){ $('imgMaskImg').src=src; $('imgMask').classList.add('show'); }
 
 function saveStore(){
-  try{ localStorage.setItem(STORE_KEY, JSON.stringify({name:state.name, records:state.records})); }
-  catch(e){ showToast('⚠️ 存储空间不足，请先导出记录'); }
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify({name:state.name, records:state.records})); return true; }
+  catch(e){ showToast('⚠️ 存储空间不足，请先导出记录再继续'); return false; }
 }
 function loadStore(){
   try{
@@ -324,12 +323,15 @@ function buildSubjectForm(){
     row.querySelector('[data-act="txt"]').addEventListener('click',()=>txtInput.click());
 
     imgInput.addEventListener('change',e=>{
-      handleImages(sub, Array.from(e.target.files));
-      imgInput.value='';
+      const files = Array.from(e.target.files);
+      // ⭐ 修复：先拿到文件再清空，避免竞态
+      handleImages(sub, files);
+      setTimeout(()=>{ imgInput.value=''; }, 0);
     });
     txtInput.addEventListener('change',e=>{
-      handleTexts(sub, Array.from(e.target.files));
-      txtInput.value='';
+      const files = Array.from(e.target.files);
+      handleTexts(sub, files);
+      setTimeout(()=>{ txtInput.value=''; }, 0);
     });
 
     row.addEventListener('dragover',e=>{e.preventDefault();row.classList.add('drop-active');});
@@ -356,28 +358,72 @@ function buildSubjectForm(){
   });
 }
 
+// ⭐ 修复：并发安全 + 逐张完成提示 + 失败计数
 function handleImages(sub, files){
-  files.forEach(f=>{
-    if(!f.type.startsWith('image/')) return;
-    compressImage(f, dataURL=>addThumb(sub, dataURL));
+  const imgs = files.filter(f=>f && f.type && f.type.startsWith('image/'));
+  if(!imgs.length) return;
+  let done = 0, ok = 0;
+  const total = imgs.length;
+  showToast('⏳ 正在处理 '+total+' 张图片…');
+  imgs.forEach(f=>{
+    compressImage(f, dataURL=>{
+      done++;
+      if(dataURL){
+        addThumb(sub, dataURL);
+        ok++;
+      }
+      if(done === total){
+        if(ok === total) showToast('🖼 已添加 '+total+' 张图片');
+        else showToast('⚠️ 成功 '+ok+' / '+total+' 张，有 '+(total-ok)+' 张读取失败');
+      }
+    });
   });
-  if(files.length) showToast('🖼 已添加 '+files.length+' 张图片');
 }
 
-// ⭐ 改动1：完全不压缩，直接读原图 dataURL
+// ⭐ 修复：加压缩，避免 localStorage 爆掉
 function compressImage(file, cb){
-  const reader=new FileReader();
-  reader.onload=()=>{ cb(reader.result); };
-  reader.onerror=()=>{ showToast('⚠️ 读取图片失败'); };
+  const reader = new FileReader();
+  reader.onload = () => {
+    const rawURL = reader.result;
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const MAX = 1600;               // 长边最大 1600px
+        let { width, height } = img;
+        if(width > MAX || height > MAX){
+          if(width >= height){ height = Math.round(height * MAX / width); width = MAX; }
+          else { width = Math.round(width * MAX / height); height = MAX; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, width, height);
+        ctx.drawImage(img, 0, 0, width, height);
+        const out = canvas.toDataURL('image/jpeg', 0.82);
+        cb(out);
+      } catch(e){
+        // 压缩失败就退回原图
+        cb(rawURL);
+      }
+    };
+    img.onerror = () => cb(rawURL);
+    img.src = rawURL;
+  };
+  reader.onerror = () => { cb(null); showToast('⚠️ 读取图片失败：'+(file.name||'')); };
   reader.readAsDataURL(file);
 }
 
+let thumbSeq = 0;
 function addThumb(sub, dataURL){
   const row=document.querySelector(`.subject-row[data-sub="${sub}"]`);
+  if(!row) return;
   const area=row.querySelector('.thumb-area');
   const div=document.createElement('div');
   div.className='thumb';
   div.dataset.img=dataURL;
+  div.dataset.id = 'th_'+(++thumbSeq);
   div.innerHTML=`<img src="${dataURL}" alt=""><button class="del" type="button">✕</button>`;
   div.querySelector('img').addEventListener('click',()=>previewImg(dataURL));
   div.querySelector('.del').addEventListener('click',()=>div.remove());
@@ -534,8 +580,16 @@ $('saveBtn').addEventListener('click', async ()=>{
   const d=new Date(state.selectedDate+'T00:00:00');
   const ok = await showModal('确认打卡', `确认保存 ${fmtCN(d)} 的作业打卡？`, '确认保存');
   if(!ok) return;
+
+  // ⭐ 先试存，失败就还原
+  const prev = state.records[state.selectedDate];
   state.records[state.selectedDate] = data;
-  saveStore();
+  if(!saveStore()){
+    if(prev === undefined) delete state.records[state.selectedDate];
+    else state.records[state.selectedDate] = prev;
+    showToast('❌ 保存失败：图片太多，请减少图片或先导出旧记录');
+    return;
+  }
   renderCalendar();
   showToast('✅ 打卡已保存');
 });
@@ -566,7 +620,7 @@ $('queryBtn').addEventListener('click', ()=>{
     const dd=new Date(d+'T00:00:00');
     const items = SUBJECTS.map(sub=>{
       const item=rec[sub];
-      if(!item || (!item.text && !item.imgs.length)) return '';
+      if(!item || (!item.text && item.imgs.length)) return '';
       let html=`<div class="rd-item"><b>${sub}</b>${item.text?escapeHtml(item.text).replace(/\n/g,'<br>'):''}`;
       if(item.imgs.length){
         hasImg=true;
@@ -653,8 +707,6 @@ $('pdfBtn').addEventListener('click', ()=>{
     .pdf-sub-name{flex-shrink:0;width:48px;font-size:0.85rem;font-weight:700;color:#8a5a00;background:#fdf0cc;border:1px solid #f2d98a;border-radius:8px;padding:4px 0;text-align:center;height:fit-content;}
     .pdf-sub-body{flex:1;min-width:0;}
     .pdf-text{font-size:0.88rem;line-height:1.7;margin-bottom:6px;}
-
-    /* ⭐ 改动3：PDF 里图片整行撑满、按原比例、竖排、不跨页 */
     .pdf-imgs{display:block;margin-top:8px;}
     .pdf-imgs img{
       display:block;
@@ -667,12 +719,10 @@ $('pdfBtn').addEventListener('click', ()=>{
       break-inside:avoid;
       page-break-inside:avoid;
     }
-
     .pdf-tip{text-align:center;font-size:0.82rem;color:#b13e3e;margin:14px 0;background:#fdf0f0;padding:10px;border-radius:10px;}
     @media print{
       body{background:white;padding:0;}
       .pdf-wrap{box-shadow:none;border-radius:0;max-width:100%;padding:12px;}
-      /* ⭐ 改动4：打印时图片不跨页断裂 */
       .pdf-imgs img{break-inside:avoid;page-break-inside:avoid;}
       .pdf-tip{display:none;}
       .pdf-header{background:#1b5e3a !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
