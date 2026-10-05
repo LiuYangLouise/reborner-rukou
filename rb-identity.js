@@ -16,8 +16,9 @@
 
   var NAME_KEY = 'rb_student_name';
   var LOGIN_KEY = 'rb_student_logged_in';
-  // 老师口令：改姓名 / 进老师端用。不向学生显示任何提示。
+  // 老师口令：改姓名用 reborn2016；老师端查询用 reborn2024。不向学生显示任何提示。
   var ADMIN_PW = 'reborn2016';
+  var TEACHER_PW = 'reborn2024';
 
   function readLS(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
   function writeLS(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
@@ -55,9 +56,13 @@
   function checkAdmin(pw) {
     return String(pw || '').trim() === ADMIN_PW;
   }
+  function checkTeacher(pw) {
+    return String(pw || '').trim() === TEACHER_PW;
+  }
 
-  // ---------- 通用密码弹窗（不写用途提示） ----------
-  function askPassword(title) {
+  // ---------- 通用密码弹窗（不写用途提示；expected 决定校验哪个口令） ----------
+  function askPassword(title, expected) {
+    var verify = expected === 'teacher' ? checkTeacher : checkAdmin;
     return new Promise(function (resolve) {
       var wrap = document.createElement('div');
       wrap.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99999;' +
@@ -83,7 +88,7 @@
       wrap.querySelector('#__rbPwOk').onclick = function () {
         var v = inp.value;
         if (!v) { err.textContent = '请输入密码'; return; }
-        if (!checkAdmin(v)) { err.textContent = '密码错误'; inp.value = ''; inp.focus(); return; }
+        if (!verify(v)) { err.textContent = '密码错误'; inp.value = ''; inp.focus(); return; }
         done(v);
       };
       wrap.querySelector('#__rbPwCancel').onclick = function () { done(''); };
@@ -182,6 +187,7 @@
     ensure: ensure,
     onChange: onChange,
     checkAdmin: checkAdmin,
+    checkTeacher: checkTeacher,
     askPassword: askPassword,
     changeNameFlow: changeNameFlow,
     logout: function () {

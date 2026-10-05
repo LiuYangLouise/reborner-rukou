@@ -262,6 +262,7 @@ body.light-mode .home-footer { border-top-color: #E0E0E0; color: #666666; }
     .home-container { padding: 24px 16px; min-height: 500px; }
 }
 </style>
+<script src="rb-identity.js"></script>
 </head>
 <body>
 
@@ -493,6 +494,8 @@ body.light-mode .home-footer { border-top-color: #E0E0E0; color: #666666; }
         setTimeout(() => {
             lockScreen.style.display = 'none';
             app.classList.add('ready');
+            // ⭐ 进站后确认学生姓名：全站练习页靠它共享身份
+            try { if (window.RBIdentity && RBIdentity.ensure) RBIdentity.ensure(); } catch (e) {}
         }, 500);
     }
 
@@ -550,10 +553,14 @@ body.light-mode .home-footer { border-top-color: #E0E0E0; color: #666666; }
 
     function getPage(name) { return document.querySelector(`.page[data-page="${name}"]`); }
 
-    function navigateTo(targetName, pushHistory) {
+    function navigateTo(targetName, pushHistory, force) {
         const current = document.querySelector('.page.active');
         const target = getPage(targetName);
-        if (!target || (current && current.dataset.page === targetName)) return;
+        if (!target) return;
+        const samePage = current && current.dataset.page === targetName;
+        // force：目标即当前页时仍重载其 iframe。
+        // 用于「子页用 location.href 就地把 iframe 换掉后需要复位」的场景。
+        if (samePage && !force) return;
 
         if (current) {
             current.classList.remove('active');
@@ -563,11 +570,17 @@ body.light-mode .home-footer { border-top-color: #E0E0E0; color: #666666; }
         target.classList.add('active');
 
         const iframe = target.querySelector('iframe');
-        if (iframe) setTimeout(() => syncIframeTheme(iframe), 100);
+        if (iframe) {
+            if (samePage && force) {
+                const src = iframe.getAttribute('src');
+                if (src) { iframe.src = 'about:blank'; setTimeout(function(){ iframe.src = src; }, 30); }
+            }
+            setTimeout(() => syncIframeTheme(iframe), 100);
+        }
 
         updateNavButtons(targetName);
 
-        if (pushHistory !== false && current) historyStack.push(current.dataset.page);
+        if (pushHistory !== false && current && !samePage) historyStack.push(current.dataset.page);
     }
 
     function goBack() {
@@ -697,7 +710,7 @@ body.light-mode .home-footer { border-top-color: #E0E0E0; color: #666666; }
         const data = e.data;
         if (!data || !data.type) return;
         if (data.type === 'navigate' && data.page) {
-            navigateTo(data.page);
+            navigateTo(data.page, undefined, !!data.force);
         }
         if (data.type === 'requestMic') {
             if (window.__micStream && window.__micStream.active) {
@@ -768,6 +781,14 @@ body.light-mode .home-footer { border-top-color: #E0E0E0; color: #666666; }
 
     checkAuth();
     updateNavButtons('home');
+    // ⭐ 兜底：若未填姓名，进入首页后也补一次（覆盖跳过密码锁的进入方式）
+    setTimeout(function () {
+        try {
+            if (window.RBIdentity && RBIdentity.ensure) {
+                if (!RBIdentity.getName()) RBIdentity.ensure();
+            }
+        } catch (e) {}
+    }, 1200);
 
 })();
 </script>

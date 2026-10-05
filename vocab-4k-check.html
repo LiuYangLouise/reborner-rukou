@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>4000+必刷词 · 默写检查</title>
+<style>
+  :root{--g:#2E5938;--beige:#F2E9D2;--bg:#F8F7F0;--card:#F5F4EB;--in:#fff;--err:#b13e3e;--or:#cc6b2c;--r:24px;--rb:16px;--ri:12px}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Noto Sans SC',sans-serif;background:var(--bg);color:#222;display:flex;justify-content:center;align-items:flex-start;min-height:100vh;padding:22px 14px}
+  .app{max-width:680px;width:100%;display:flex;flex-direction:column;gap:24px}
+  .brand{background:var(--card);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.06);padding:24px 20px 18px;text-align:center}
+  .brand h1{font-size:26px;font-weight:700;color:var(--g);letter-spacing:1px}
+  .brand .sub{font-size:14px;font-weight:300;color:#999;letter-spacing:3px;margin-top:4px}
+  .qcard{background:var(--card);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.06);padding:26px 22px 22px}
+  .qhead{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+  .badge{background:var(--g);color:#fff;font-size:13px;font-weight:500;padding:4px 15px;border-radius:999px}
+  .snd{background:var(--beige);border-radius:var(--ri);padding:18px 12px;text-align:center;color:#999;cursor:pointer;transition:.2s;border:1px dashed #d6d0c0;margin-bottom:16px}
+  .snd:hover{background:#ede6d6}
+  .snd .ic{font-size:30px;display:block;margin-bottom:4px}
+  .snd.play{color:var(--g);font-weight:500;border-color:var(--g)}
+  .irow{display:flex;gap:12px;align-items:center;margin-bottom:16px}
+  .irow .w{flex:1;min-width:0}
+  .irow input{width:100%;padding:14px 16px;background:var(--in);border:1.5px solid #ddd;border-radius:var(--ri);font-size:18px;outline:none;font-family:inherit}
+  .irow input:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(46,89,56,.12)}
+  .irow input:disabled{background:#f2f2f2;color:#888}
+  .btn{background:var(--g);color:#fff;border:none;padding:14px 22px;border-radius:var(--rb);font-weight:600;font-size:15px;cursor:pointer;font-family:inherit;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:.15s}
+  .btn:hover{background:#1f452b}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .btn-o{background:#fff;border:1.5px solid var(--g);color:var(--g);padding:8px 20px;border-radius:var(--rb);font-weight:500;font-size:14px;cursor:pointer;font-family:inherit;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .btn-o:hover{background:#f0f5ec}
+  .hint{font-size:13px;color:#999}
+  .arow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+  .arow .l{display:flex;gap:9px;flex-wrap:wrap}
+  .res{background:var(--card);border-radius:var(--r);box-shadow:0 2px 8px rgba(0,0,0,.06);padding:26px 22px 22px;display:none}
+  .res.vis{display:block;animation:fu .4s ease}
+  @keyframes fu{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:none}}
+  .rtitle{text-align:center;font-size:22px;font-weight:600;margin:6px 0 12px}
+  .rtitle.g{color:var(--g)} .rtitle.o{color:var(--or)} .rtitle.r{color:var(--err)}
+  .uinfo{background:#fff;border-radius:var(--ri);padding:12px 15px;margin-bottom:14px;border-left:4px solid var(--g);font-size:13px;color:#444;line-height:1.7}
+  .uinfo .lb{font-weight:700;color:var(--g);margin-right:6px}
+  .uinfo .it{display:inline-block;background:#f0f5ec;color:var(--g);border-radius:20px;padding:2px 11px;margin:3px 5px 3px 0;font-size:12.5px;font-weight:500}
+  .stats{display:flex;flex-wrap:wrap;justify-content:center;gap:14px 28px;background:#fff;padding:15px 18px;border-radius:var(--rb);box-shadow:0 1px 3px rgba(0,0,0,.04);margin-bottom:16px}
+  .stats .s{display:flex;align-items:baseline;gap:6px}
+  .stats .s .n{font-size:24px;font-weight:700;color:var(--g)}
+  .stats .s .n.r{color:var(--err)} .stats .s .n.g{color:#888}
+  .stats .s .l{color:#999;font-size:14px}
+  .errs{background:#fff;border-radius:var(--ri);padding:12px 15px;margin:10px 0 16px;border-left:4px solid var(--g);font-size:14.5px}
+  .errs .r{display:flex;gap:9px;padding:5px 0;border-bottom:1px solid #f0f0f0;flex-wrap:wrap;align-items:baseline}
+  .errs .r:last-child{border-bottom:none}
+  .errs .w{color:var(--err)}
+  .rrow{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:6px}
+  .btn-p{background:#fff;border:1.5px solid var(--or);color:var(--or);padding:8px 20px;border-radius:var(--rb);font-weight:500;font-size:14px;cursor:pointer;font-family:inherit;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .btn-p:hover{background:#fdf0e8}
+  .btn-h{background:var(--beige);border:1.5px solid var(--g);color:var(--g);padding:8px 20px;border-radius:var(--rb);font-weight:500;font-size:14px;cursor:pointer;font-family:inherit;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .btn-h:hover{background:#e6dbc4}
+  .toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--g);color:#fff;padding:11px 26px;border-radius:40px;font-size:14px;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,.18);opacity:0;transition:.3s;z-index:999;pointer-events:none}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .load{text-align:center;padding:36px 18px;color:#999;font-size:15px}
+  @media(max-width:500px){
+    .brand h1{font-size:21px}
+    .irow{flex-wrap:wrap}
+    .irow .btn{width:100%;padding:12px}
+    .arow{flex-direction:column;align-items:stretch}
+    .arow .l{justify-content:center}
+    .rrow{flex-direction:column;align-items:stretch}
+    .rrow button{width:100%}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="toast" id="toast"></div>
+  <div class="brand">
+    <h1>4000+ 必刷词</h1>
+    <div class="sub">默写检查 · 天天进步</div>
+  </div>
+  <div class="qcard" id="qcard"><div class="load">准备中…</div></div>
+  <div class="res" id="res"></div>
+</div>
+
+<script src="rb-identity.js"></script>
+<script src="practice-sync.js"></script>
+<script src="vocabulary-4k.js"></script>
+<script>
+window.addEventListener('load', function(){
+  'use strict';
+  var $ = id => document.getElementById(id);
+  var DATA = window.VOCABULARY_4K || {};
+  var QN = 20;   // 每轮抽词数
+
+  var urlP = new URLSearchParams(location.search);
+  var units = (urlP.get('units')||'').split(',').filter(Boolean);
+
+  if(!units.length){ $('qcard').innerHTML='<div class="load">⚠️ 未选择单元<br><span style="font-size:13px;">请返回重新选择</span></div>'; return; }
+
+  var pool=[];
+  units.forEach(function(id){ if(DATA[id]) pool = pool.concat(DATA[id].words); });
+  if(!pool.length){ $('qcard').innerHTML='<div class="load">⚠️ 所选单元暂无词汇</div>'; return; }
+
+  // 洗牌抽词
+  var sh=pool.slice();
+  for(var i=sh.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=sh[i]; sh[i]=sh[j]; sh[j]=t; }
+  var words=sh.slice(0, Math.min(QN, sh.length));
+
+  var idx=0, results=[], answered=false, timer=null, left=15, tt=null;
+  var toast=function(m){ var t=$('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(tt); tt=setTimeout(function(){t.classList.remove('show');},1900); };
+
+  function play(){
+    var w=words[idx];
+    if(!w) return;
+    var snd=$('snd');
+    if(!snd) return;
+    snd.classList.add('play');
+    snd.innerHTML='<span class="ic">🔊</span><span id="sndT">播放中…</span>';
+    try{
+      if(window.parent && window.parent!==window){
+        window.parent.postMessage({type:'speak',text:w.word,accent:'uk'},'*');
+      } else if('speechSynthesis' in window){
+        speechSynthesis.cancel();
+        var u=new SpeechSynthesisUtterance(w.word);
+        u.lang='en-GB'; u.rate=0.9;
+        speechSynthesis.speak(u);
+      }
+    }catch(e){}
+    setTimeout(function(){
+      var s2=$('snd');
+      if(!s2) return;
+      s2.classList.remove('play');
+      s2.innerHTML='<span class="ic">🔊</span><span id="sndT">点击「再放一次」再听</span>';
+    },1100);
+  }
+
+  function shell(){
+    $('qcard').style.display='block';
+    $('res').classList.remove('vis'); $('res').style.display='none';
+    $('qcard').innerHTML=
+      '<div class="qhead"><span class="badge" id="pb">1 / '+words.length+'</span>'+
+      '<span class="hint" id="tm">15s</span></div>'+
+      '<div class="snd" id="snd"><span class="ic">🔊</span><span id="sndT">点击听发音</span></div>'+
+      '<div class="irow"><div class="w"><input type="text" id="ans" placeholder="请输入单词..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>'+
+      '<button class="btn" id="ok">确认</button></div>'+
+      '<div class="arow"><div class="l">'+
+      '<button class="btn-o" id="again">🔊 再放一次</button>'+
+      '<button class="btn-o" id="skip">⏭ 跳过</button></div>'+
+      '<span class="hint" id="eh">按 Enter 提交</span></div>';
+    bind();
+  }
+
+  function bind(){
+    $('ok').onclick=submit;
+    $('again').onclick=play;
+    $('snd').onclick=play;
+    $('skip').onclick=function(){ if(answered)return; record('(跳过)','skipped'); next(400); };
+    $('ans').onkeydown=function(e){ if(e.key==='Enter'){ e.preventDefault(); submit(); } };
+    $('ans').oninput=function(e){
+      var v=e.target.value;
+      if(/[^a-zA-Z\s\-'.]/.test(v)){ e.target.value=v.replace(/[^a-zA-Z\s\-'.]/g,''); toast('⚠️ 仅支持英文输入'); }
+    };
+  }
+
+  function clearTimer(){ if(timer){ clearInterval(timer); timer=null; } }
+  function startTimer(){
+    clearTimer();
+    timer=setInterval(function(){
+      left-=0.2;
+      if(left<=0){ left=0; clearTimer(); if(!answered){ record('(超时未填)','skipped'); next(500); } return; }
+      $('tm').textContent=Math.ceil(left)+'s';
+    },200);
+  }
+
+  function record(input,status){
+    if(answered) return;
+    answered=true;
+    results.push({word:words[idx].word, meaning:words[idx].meaning, user:input, status:status});
+    $('ans').disabled=true; $('ok').disabled=true;
+    clearTimer();
+    $('eh').textContent = status==='correct' ? '✅ 正确！' : '❌ 正确：'+words[idx].word;
+  }
+  function submit(){
+    if(answered) return;
+    var v=$('ans').value.trim();
+    if(!v){ record('(未填)','skipped'); next(500); return; }
+    var ok = v.toLowerCase().trim()===words[idx].word.toLowerCase().trim();
+    record(v, ok?'correct':'wrong');
+    next(ok?650:1000);
+  }
+  function next(delay){ setTimeout(function(){ idx++; render(); }, delay); }
+
+  function render(){
+    if(idx>=words.length){ showResult(); return; }
+    answered=false; left=15;
+    $('pb').textContent=(idx+1)+' / '+words.length;
+    $('tm').textContent='15s';
+    $('ans').value=''; $('ans').disabled=false; $('ok').disabled=false;
+    $('eh').textContent='按 Enter 或点击「确认」提交';
+    $('snd').classList.remove('play');
+    $('snd').innerHTML='<span class="ic">🔊</span><span id="sndT">点击听发音</span>';
+    setTimeout(function(){ $('ans').focus(); },40);
+    startTimer();
+    setTimeout(play,260);
+  }
+
+  function showResult(){
+    clearTimer();
+    if('speechSynthesis' in window) speechSynthesis.cancel();
+    $('qcard').style.display='none';
+    var r=$('res'); r.style.display='block';
+    requestAnimationFrame(function(){ r.classList.add('vis'); });
+
+    var right=0,wrong=0,skip=0;
+    results.forEach(function(x){
+      if(x.status==='correct') right++;
+      else if(x.status==='wrong') wrong++;
+      else skip++;
+    });
+    var total=results.length, rate=total?right/total*100:0;
+
+    var unitNames=units.map(function(id){ return DATA[id]?DATA[id].name:id; });
+    var t,rC='';
+    if(rate>=80){ t='💡 完美通关！继续加油！'; rC='g'; }
+    else if(rate>=70){ t='💡 差一丢丢就过关了哦~'; rC='o'; }
+    else { t='💡 错误偏多，再复习一下~'; rC='r'; }
+
+    var ui='<div class="lb">📚 本次检查单元：</div>';
+    unitNames.forEach(function(n){ ui+='<span class="it">'+n+'</span>'; });
+    ui+='<div style="margin-top:5px;font-size:12.5px;color:#888;">'+units.length+' 个单元 · 随机抽 '+words.length+' 词</div>';
+
+    var errs=results.filter(function(x){ return x.status!=='correct'; });
+    var eh='';
+    if(!errs.length) eh='<div style="padding:6px 0;color:var(--g);font-weight:500;">🎉 全部正确，太棒了！</div>';
+    else eh=errs.map(function(x){
+      var c=x.status==='wrong'?'w':'';
+      return '<div class="r"><span class="'+c+'">💡 '+x.word+'</span>'+(x.meaning?'<span style="color:#888;font-size:13px;">'+x.meaning+'</span>':'')+
+             ' → <span>'+x.user+'</span></div>';
+    }).join('');
+
+    r.innerHTML =
+      '<div style="font-size:30px;letter-spacing:6px;text-align:center;padding:2px 0;">✨ 🎉 ✨ 🎊 ✨</div>' +
+      '<div class="rtitle '+rC+'">'+t+'</div>' +
+      '<div class="uinfo">'+ui+'</div>' +
+      '<div class="stats">'+
+        '<div class="s"><span class="n">'+right+'</span><span class="l">正确</span></div>'+
+        '<div class="s"><span class="n r">'+wrong+'</span><span class="l">错误</span></div>'+
+        '<div class="s"><span class="n g">'+skip+'</span><span class="l">未填</span></div>'+
+        '<div class="s"><span class="n" style="font-size:20px;">'+rate.toFixed(1)+'%</span><span class="l">正确率</span></div>'+
+      '</div>' +
+      '<div style="font-weight:500;margin-bottom:6px;">📋 需要复习的词汇</div>' +
+      '<div class="errs">'+eh+'</div>' +
+      '<div class="rrow">'+
+        '<button class="btn-p" id="exp">📤 导出错词 (TXT)</button>'+
+        '<button class="btn-o" id="rt">🔄 再来一次</button>'+
+        '<button class="btn-h" id="pk">📚 换单元</button>'+
+        '<button class="btn-h" id="hm">🏠 回到首页</button>'+
+      '</div>';
+
+    // ⭐ 自动同步到作业打卡系统
+    try{
+      if(window.PracticeSync){
+        var wrongs=errs.filter(function(x){return x.status==='wrong';}).map(function(x){return x.word;});
+        var skips=errs.filter(function(x){return x.status==='skipped';}).map(function(x){return x.word+'(未答)';});
+        PracticeSync.log('词汇',{
+          topic: unitNames.join('、'),
+          subType: '4000必刷词默写',
+          detail: '4000+必刷词 · '+unitNames.join('、')+'（'+units.length+'单元 · 抽'+words.length+'词）',
+          scoreText:'正确 '+right+'/'+total+'（'+rate.toFixed(1)+'%）',
+          correct:right, total:total,
+          wrongItems: wrongs.concat(skips),
+          extra:{ 题型:'4000必刷词默写', 词表:'4000+必刷词', 单元数:units.length, 抽词数:words.length,
+                  正确:right, 错误:wrong, 未填:skip, 正确率:rate.toFixed(1)+'%',
+                  错词明细: errs.map(function(x){return x.word+'→'+(x.user||'未填');}) }
+        });
+      }
+    }catch(e){ console.warn('记录同步失败',e); }
+
+    $('rt').onclick=function(){ location.reload(); };
+    // ⭐ 重新选单元：用 postMessage 让外层切页并强制重载，
+    // 直接改 location.href 会把 iframe 自身替换掉，父级页名会与实际内容不一致。
+    $('pk').onclick=function(){
+      if(window.parent && window.parent!==window)
+        window.parent.postMessage({type:'navigate',page:'vocab-4k',force:true},'*');
+      else location.href='vocab-4k-quiz.html';
+    };
+    $('hm').onclick=function(){
+      if(window.parent && window.parent!==window) window.parent.postMessage({type:'navigate',page:'home'},'*');
+      else location.href='main.html';
+    };
+    $('exp').onclick=function(){
+      if(!errs.length){ toast('🎉 没有错词需要导出'); return; }
+      var L=['📘 4000+必刷词 · 错词导出','导出时间: '+new Date().toLocaleString(),'检查单元: '+unitNames.join(', '),'─'.repeat(38)];
+      errs.forEach(function(x,i){ L.push((i+1)+'. '+x.word+(x.meaning?'（'+x.meaning+'）':'')+'  →  你的答案: '+(x.user||'未填')); });
+      L.push('─'.repeat(38),'📝 共 '+errs.length+' 个需要复习的词汇');
+      var a=document.createElement('a');
+      a.href=URL.createObjectURL(new Blob([L.join('\n')],{type:'text/plain;charset=utf-8'}));
+      a.download='错词列表_4000必刷词_'+new Date().toISOString().slice(0,10)+'.txt';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
+      toast('✅ 错词已导出');
+    };
+  }
+
+  shell(); render();
+});
+</script>
+</body>
+</html>

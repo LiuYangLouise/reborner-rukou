@@ -622,18 +622,22 @@
             skipBtn.addEventListener('click', handleSkip);
             soundHint.addEventListener('click', handleReplay);
             retryBtn.addEventListener('click', retryQuiz);
-            // ⭐ 换单元：让外层 main.html 导航回选单元页
-            // 直接改 location.href 只会把 iframe 自身换掉，外层框架结构会乱
+            // ⭐ 换单元：让外层强制重载选单元页
+            // 背景：listening-quiz.html 用 location.href 跳到本页，把 iframe 自身
+            // 替换成了 quiz.html。因此外层 listening-quiz section 的 iframe 里
+            // 装的其实是 quiz.html —— 若再让外层普通 navigateTo('listening-quiz')，
+            // 会被「同页直接 return」短路，表现为点击无反应。
+            // 解法：带 force=true，让外层重置该页 iframe，回到真正的选单元界面。
             pickBtn.addEventListener('click', function() {
-                // 538 词汇走 vocab-4k-quiz.html，其余走听力词汇的选单元页
-                var target = 'listening-quiz';
-                if (/reading-538|vocab-4k|4000/.test(document.referrer)) target = 'vocab-4k-quiz';
+                var is4k = /reading-538|vocab-4k|4000/.test(document.referrer);
                 if (window.parent && window.parent !== window) {
-                    // 在 iframe 内 → 让外层切页
-                    window.parent.postMessage({ type: 'navigate', page: target }, '*');
+                    window.parent.postMessage({
+                        type: 'navigate',
+                        page: is4k ? 'vocab-4k' : 'listening-quiz',
+                        force: true
+                    }, '*');
                 } else {
-                    // 独立打开 → 直接跳
-                    location.href = target === 'vocab-4k-quiz' ? 'vocab-4k-quiz.html' : 'listening-quiz.html';
+                    location.href = is4k ? 'vocab-4k.html' : 'listening-quiz.html';
                 }
             });
             homeBtn.addEventListener('click', function() {
