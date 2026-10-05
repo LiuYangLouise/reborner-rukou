@@ -191,6 +191,7 @@
     </div>
 
     <script src="vocabulary.js"></script>
+    <script src="practice-sync.js"></script>
     <script>
         // 主题同步
         (function() {
@@ -513,6 +514,37 @@
                     '<div class="stat"><span class="num" style="font-size:22px;">' + rate.toFixed(2) + '%</span><span class="label">正确率</span></div>';
 
                 var errors = results.filter(function(r) { return r.status === 'wrong' || r.status === 'skipped'; });
+
+                // ⭐ 同步练习记录到作业系统（不影响原有流程，失败也不打断）
+                try {
+                    if (window.PracticeSync) {
+                        var unitNames = units.map(function(id){
+                            var u = window.VOCABULARY_DATA[id];
+                            return id + ' ' + (u ? (u.name||'') : '');
+                        }).join('、');
+                        var wrongWords = errors.filter(function(r){return r.status==='wrong';})
+                                              .map(function(r){return r.word;});
+                        // 累计轮次：同一批单元第几次练
+                        var roundKey = 'vocab_round_' + units.slice().sort().join('_');
+                        var prev = 0;
+                        try { prev = parseInt(localStorage.getItem(roundKey) || '0', 10) || 0; } catch(e){}
+                        prev += 1;
+                        try { localStorage.setItem(roundKey, String(prev)); } catch(e){}
+
+                        PracticeSync.log('词汇', {
+                            detail: unitNames + (prev > 1 ? ' · 第' + prev + '轮' : ''),
+                            scoreText: '正确 ' + correct + '/' + total + '（' + rate.toFixed(1) + '%）',
+                            wrongItems: wrongWords,
+                            extra: {
+                                单元: unitNames, 单元数: units.length, 抽词数: quizWords.length,
+                                正确: correct, 错误: wrong, 未填: skipped,
+                                正确率: rate.toFixed(1) + '%', 轮次: prev,
+                                错词明细: errors.map(function(r){ return r.word + '→' + (r.userAnswer || '未填'); })
+                            }
+                        });
+                    }
+                } catch (e) { console.warn('练习记录同步失败', e); }
+
                 if (errors.length === 0) {
                     errorList.innerHTML = '<div style="padding:6px 0; color:var(--color-main-green);">🎉 全部正确，太棒了！</div>';
                 } else {

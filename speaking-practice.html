@@ -618,6 +618,35 @@ function pushRecord(blob,url,duration){
   const fileName=`${state.userName}_${partName}_${t.title.replace(/[\\/:*?"<>|]/g,'_')}_Q${qIdx+1}_第${recIdx}次.wav`;
   state.records[part][key][qIdx].push({recIdx,blob,url,duration,fileName,qText,topicTitle:t.title});
   renderRecList(); showToast('✅ 已保存 第'+recIdx+'次录音');
+
+  // ⭐ 同步练习记录到作业系统（不影响原有流程）
+  try{
+    if(window.PracticeSync){
+      if(state.userName) PracticeSync.setName(state.userName);
+      const partCn = part==='part1'?'口语 Part 1':part==='part2'?'口语 Part 2':'口语 Part 3';
+      PracticeSync.log('口语', {
+        detail: partCn + ' · ' + t.title,
+        scoreText: '第' + recIdx + '次练习 · ' + fmtDur(duration),
+        wrongItems: [],
+        extra: {
+          部分: partCn,
+          话题: t.title,
+          题目: qText,
+          小题: 'Q' + (qIdx+1),
+          第几次练习: recIdx,
+          时长: fmtDur(duration),
+          题量: state.records[part][key][qIdx].length,
+          录音文件: fileName
+        }
+      });
+    }
+  }catch(e){ console.warn('口语记录同步失败', e); }
+}
+// 录音时长格式化
+function fmtDur(sec){
+  sec = Math.max(0, Math.round(sec||0));
+  const m = Math.floor(sec/60), s = sec%60;
+  return m ? (m+'分'+s+'秒') : (s+'秒');
 }
 function audioBufferToWav(buffer){
   const numChannels=buffer.numberOfChannels;
@@ -847,5 +876,6 @@ $('againBtn').addEventListener('click', async ()=>{
 showPage('name');
 })();
 </script>
+<script src="practice-sync.js"></script>
 </body>
 </html>
