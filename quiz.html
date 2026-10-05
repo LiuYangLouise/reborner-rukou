@@ -125,6 +125,9 @@
         .btn-home { background: var(--color-aux-beige); border: 1.5px solid var(--color-main-green); color: var(--color-main-green); padding: 8px 22px; border-radius: var(--radius-btn); font-weight: 500; font-size: 15px; box-shadow: var(--shadow-btn); cursor: pointer; transition: background 0.15s, transform 0.1s; font-family: inherit; }
         .btn-home:hover { background: #e6dbc4; }
         .btn-home:active { transform: scale(0.97); }
+        .btn-pick { background: #fff; border: 1.5px solid var(--color-orange); color: var(--color-orange); padding: 8px 22px; border-radius: var(--radius-btn); font-weight: 500; font-size: 15px; box-shadow: var(--shadow-btn); cursor: pointer; transition: background 0.15s, transform 0.1s; font-family: inherit; }
+        .btn-pick:hover { background: #fdf0e8; }
+        .btn-pick:active { transform: scale(0.97); }
         .loading-text { text-align: center; padding: 40px 20px; color: var(--color-text-placeholder); font-size: 16px; }
         @media (max-width: 500px) {
             .brand-card h1 { font-size: 24px; }
@@ -185,12 +188,14 @@
             <div class="result-actions">
                 <button class="btn-outline-export" id="exportBtn">📤 导出错词 (TXT)</button>
                 <button class="btn-retry" id="retryBtn">🔄 再来一次</button>
+                <button class="btn-pick" id="pickBtn">📚 换单元 / 重新选题</button>
                 <button class="btn-home" id="homeBtn">🏠 回到首页</button>
             </div>
         </div>
     </div>
 
     <script src="vocabulary.js"></script>
+    <script src="rb-identity.js"></script>
     <script src="practice-sync.js"></script>
     <script>
         // 主题同步
@@ -278,6 +283,7 @@
             var errorList = document.getElementById('errorList');
             var retryBtn = document.getElementById('retryBtn');
             var homeBtn = document.getElementById('homeBtn');
+            var pickBtn = document.getElementById('pickBtn');
             var exportBtn = document.getElementById('exportBtn');
             var resultTitle = document.getElementById('resultTitle');
             var unitsInfo = document.getElementById('unitsInfo');   // ⭐ 新增
@@ -515,7 +521,7 @@
 
                 var errors = results.filter(function(r) { return r.status === 'wrong' || r.status === 'skipped'; });
 
-                // ⭐ 同步练习记录到作业系统（不影响原有流程，失败也不打断）
+                // ⭐ 同步练习记录到作业系统（自动归档，不影响原有流程）
                 try {
                     if (window.PracticeSync) {
                         var unitNames = units.map(function(id){
@@ -524,21 +530,19 @@
                         }).join('、');
                         var wrongWords = errors.filter(function(r){return r.status==='wrong';})
                                               .map(function(r){return r.word;});
-                        // 累计轮次：同一批单元第几次练
-                        var roundKey = 'vocab_round_' + units.slice().sort().join('_');
-                        var prev = 0;
-                        try { prev = parseInt(localStorage.getItem(roundKey) || '0', 10) || 0; } catch(e){}
-                        prev += 1;
-                        try { localStorage.setItem(roundKey, String(prev)); } catch(e){}
-
+                        var skipWords = errors.filter(function(r){return r.status==='skipped';})
+                                              .map(function(r){return r.word + '(未答)';});
                         PracticeSync.log('词汇', {
-                            detail: unitNames + (prev > 1 ? ' · 第' + prev + '轮' : ''),
+                            topic: unitNames,
+                            subType: '听力默写',
+                            detail: unitNames + '（' + units.length + '单元 · 抽' + quizWords.length + '词）',
                             scoreText: '正确 ' + correct + '/' + total + '（' + rate.toFixed(1) + '%）',
-                            wrongItems: wrongWords,
+                            correct: correct, total: total,
+                            wrongItems: wrongWords.concat(skipWords),
                             extra: {
-                                单元: unitNames, 单元数: units.length, 抽词数: quizWords.length,
+                                题型: '听力默写', 单元数: units.length, 抽词数: quizWords.length,
                                 正确: correct, 错误: wrong, 未填: skipped,
-                                正确率: rate.toFixed(1) + '%', 轮次: prev,
+                                正确率: rate.toFixed(1) + '%',
                                 错词明细: errors.map(function(r){ return r.word + '→' + (r.userAnswer || '未填'); })
                             }
                         });
@@ -618,12 +622,25 @@
             skipBtn.addEventListener('click', handleSkip);
             soundHint.addEventListener('click', handleReplay);
             retryBtn.addEventListener('click', retryQuiz);
+            // ⭐ 换单元：让外层 main.html 导航回选单元页
+            // 直接改 location.href 只会把 iframe 自身换掉，外层框架结构会乱
+            pickBtn.addEventListener('click', function() {
+                // 538 词汇走 vocab-4k-quiz.html，其余走听力词汇的选单元页
+                var target = 'listening-quiz';
+                if (/reading-538|vocab-4k|4000/.test(document.referrer)) target = 'vocab-4k-quiz';
+                if (window.parent && window.parent !== window) {
+                    // 在 iframe 内 → 让外层切页
+                    window.parent.postMessage({ type: 'navigate', page: target }, '*');
+                } else {
+                    // 独立打开 → 直接跳
+                    location.href = target === 'vocab-4k-quiz' ? 'vocab-4k-quiz.html' : 'listening-quiz.html';
+                }
+            });
             homeBtn.addEventListener('click', function() {
-                if (!confirm('回到首页，当前进度将丢失。')) return;
                 if (window.parent && window.parent !== window) {
                     window.parent.postMessage({ type: 'navigate', page: 'home' }, '*');
                 } else {
-                    window.location.href = 'index.html';
+                    location.href = 'index.html';
                 }
             });
             exportBtn.addEventListener('click', exportErrors);
