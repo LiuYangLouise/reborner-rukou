@@ -198,7 +198,9 @@ body{background:#f5f7fa;min-height:100vh;display:flex;justify-content:center;ali
   </div>
 </div>
 
-<script>
+<script src="rb-identity.js"></script>
+    <script src="practice-sync.js"></script>
+    <script>
 (function(){
 "use strict";
 const $ = id => document.getElementById(id);
@@ -370,17 +372,27 @@ const state = {
 const pages = { name:$('namePage'), catalog:$('catalogPage'), practice:$('practicePage'), summary:$('summaryPage') };
 function showPage(name){ Object.keys(pages).forEach(k=>{ pages[k].classList.toggle('active', k===name); }); window.scrollTo({top:0,behavior:'smooth'}); }
 
-// ============ 名字 ============
+// ============ 名字（统一走全站身份，全站只填一次）============
 $('nameBtn').addEventListener('click', ()=>{
-  const v = $('nameInput').value.trim();
+  const v = ($('nameInput').value.trim()) || (window.RBIdentity ? RBIdentity.getName() : '');
   if(!v){ $('nameError').textContent='请输入中文名'; return; }
-  if(!/^[\u4e00-\u9fa5]+$/.test(v)){ $('nameError').textContent='请输入中文（仅汉字）'; return; }
   state.userName = v; $('nameError').textContent='';
+  if(window.RBIdentity) RBIdentity.setName(v);
   $('userBadge').textContent='👤 '+v; $('userBadge2').textContent='👤 '+v; $('userBadge3').textContent='👤 '+v;
   renderCatalog(); showPage('catalog');
 });
 $('nameInput').addEventListener('keydown', e=>{ if(e.key==='Enter') $('nameBtn').click(); });
 $('backToName').addEventListener('click', ()=>{ if(state.isRecording) stopRecording(); showPage('name'); });
+
+// 全站已填过姓名 → 直接进目录，不再重复询问
+(function autoEnter(){
+  var n = window.RBIdentity ? RBIdentity.getName() : '';
+  if(n){ state.userName = n;
+    $('userBadge').textContent='👤 '+n; $('userBadge2').textContent='👤 '+n; $('userBadge3').textContent='👤 '+n;
+    $('nameInput').value = n;
+    setTimeout(function(){ renderCatalog(); showPage('catalog'); }, 60);
+  }
+})();
 
 // ============ 目录渲染（修复版：使用 insertAdjacentHTML + appendChild，避免破坏事件）============
 function renderCatalog(){
@@ -617,36 +629,108 @@ function pushRecord(blob,url,duration){
   const partName=part==='part1'?'PART1':part==='part2'?'PART2':'PART3';
   const fileName=`${state.userName}_${partName}_${t.title.replace(/[\\/:*?"<>|]/g,'_')}_Q${qIdx+1}_第${recIdx}次.wav`;
   state.records[part][key][qIdx].push({recIdx,blob,url,duration,fileName,qText,topicTitle:t.title});
-  renderRecList(); showToast('✅ 已保存 第'+recIdx+'次录音');
-
-  // ⭐ 同步练习记录到作业系统（不影响原有流程）
+  // ⭐ 把这次录音累加进「当天统计」（localStorage，刷新不丢）
   try{
-    if(window.PracticeSync){
-      if(state.userName) PracticeSync.setName(state.userName);
-      const partCn = part==='part1'?'口语 Part 1':part==='part2'?'口语 Part 2':'口语 Part 3';
-      PracticeSync.log('口语', {
-        detail: partCn + ' · ' + t.title,
-        scoreText: '第' + recIdx + '次练习 · ' + fmtDur(duration),
-        wrongItems: [],
-        extra: {
-          部分: partCn,
-          话题: t.title,
-          题目: qText,
-          小题: 'Q' + (qIdx+1),
-          第几次练习: recIdx,
-          时长: fmtDur(duration),
-          题量: state.records[part][key][qIdx].length,
-          录音文件: fileName
-        }
-      });
-    }
+    const map = spkLoadDay();
+    const k = part + '|' + t.title + '|Q' + (qIdx+1);
+    if(map[k]){ map[k].n += 1; map[k].sec = (map[k].sec||0) + (duration||0); }
+    else map[k] = { n:1, sec:(duration||0), title:t.title, q:qIdx+1, part:part, qText:qText };
+    spkSaveDay(map);
+  }catch(e){}
+  // ⭐ 自动同步：以「当天全部录音」为单位聚合成一条记录，写入作业打卡系统
+  // 每次新录音都会重算并覆盖当天这条，所以作业系统里始终是当天的完整汇总，
+  // 而不是「一次录音一条」的流水账。
+  try{
+    if(window.PracticeSync) syncSpeakingSummary();
   }catch(e){ console.warn('口语记录同步失败', e); }
+  renderRecList(); showToast('✅ 已保存 第'+recIdx+'次录音');
 }
-// 录音时长格式化
-function fmtDur(sec){
+
+// 汇总当天所有口语练习：按 Part → 话题 → 小题 统计各题录音次数
+// 说明：录音本身在内存（state.records，刷新即失），但统计口径持久化到 localStorage，
+// 保证同一天多次进入页面练习时，累计次数不会因刷新而归零。
+const SPK_DAY_KEY = 'rb_spk_stats_';
+
+function spkTodayKey(){
+  const d = new Date();
+  const p = n => String(n).padStart(2,'0');
+  return SPK_DAY_KEY + d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate());
+}
+
+// 读取当天累计统计 { 'part1|话题|Q1': {n:次数, sec:秒数, title, qText} }
+function spkLoadDay(){
+  try{ return JSON.parse(localStorage.getItem(spkTodayKey()) || '{}'); }
+  catch(e){ return {}; }
+}
+function spkSaveDay(map){
+  try{ localStorage.setItem(spkTodayKey(), JSON.stringify(map)); }catch(e){}
+}
+
+// 秒 → 「2分05秒」，比 mm:ss 更适合写在作业描述里
+function spkDur(sec){
   sec = Math.max(0, Math.round(sec||0));
   const m = Math.floor(sec/60), s = sec%60;
-  return m ? (m+'分'+s+'秒') : (s+'秒');
+  return m ? (m+'分'+String(s).padStart(2,'0')+'秒') : (s+'秒');
+}
+
+function syncSpeakingSummary(){
+  if(!window.PracticeSync) return;
+  const map = spkLoadDay();
+  const isToday = spkTodayKey();
+  let totalRec = 0, totalSec = 0;
+  const topicSet = new Set(), qSet = new Set();
+
+  Object.keys(map).forEach(function(k){
+    const it = map[k];
+    if(!it || !it.n) return;
+    totalRec += it.n;
+    totalSec += it.sec || 0;
+    topicSet.add(it.title || '');
+    qSet.add(it.title + '｜Q' + it.q);
+  });
+  if(!totalRec) return;
+
+  // 按 Part 分组输出
+  const parts = {};
+  Object.keys(map).forEach(function(k){
+    const it = map[k];
+    if(!it || !it.n) return;
+    const p = it.part || 'part1';
+    (parts[p] = parts[p] || {});
+    (parts[p][it.title] = parts[p][it.title] || []).push(it);
+  });
+
+  const lines = [];
+  ['part1','part2','part3'].forEach(function(p){
+    if(!parts[p]) return;
+    const partName = p === 'part1' ? 'Part 1' : p === 'part2' ? 'Part 2' : 'Part 3';
+    lines.push('【' + partName + '】');
+    Object.keys(parts[p]).forEach(function(title){
+      const items = parts[p][title].sort(function(a,b){ return a.q - b.q; });
+      const qsDesc = items.map(function(it){
+        return 'Q' + it.q + ' 练' + it.n + '次';
+      }).join('，');
+      const tSec = items.reduce(function(s,it){ return s + (it.sec||0); }, 0);
+      lines.push('· ' + title + '｜' + qsDesc + '（' + spkDur(tSec) + '）');
+    });
+  });
+
+  PracticeSync.logReplace('口语', {
+    topic: Array.from(topicSet).filter(Boolean).join('、'),
+    subType: '自主练习',
+    detail: Array.from(topicSet).filter(Boolean).join('、'),
+    scoreText: topicSet.size + '个话题 · ' + qSet.size + '个小题 · 共' + totalRec + '次录音（' + spkDur(totalSec) + '）',
+    correct: totalRec, total: totalRec,
+    wrongItems: [],
+    extra: {
+      话题数: topicSet.size,
+      小题数: qSet.size,
+      录音总数: totalRec,
+      总时长: spkDur(totalSec),
+      逐题明细: lines.join('\n'),
+      话题列表: Array.from(topicSet).filter(Boolean)
+    }
+  });
 }
 function audioBufferToWav(buffer){
   const numChannels=buffer.numberOfChannels;
@@ -876,6 +960,5 @@ $('againBtn').addEventListener('click', async ()=>{
 showPage('name');
 })();
 </script>
-<script src="practice-sync.js"></script>
 </body>
 </html>
